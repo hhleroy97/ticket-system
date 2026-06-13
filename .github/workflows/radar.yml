@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: radar-push-main
@@ -38,3 +39,19 @@ jobs:
           chmod +x scripts/push_to_main.sh
           DATE=$(date -u +%Y-%m-%d)
           scripts/push_to_main.sh "radar: weekly findings ${DATE}" docs/
+
+      - name: Ensure labels exist
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh label create "radar:proposed" --color "fbca04" --description "RADAR draft — not actionable until approved" 2>/dev/null || true
+          gh label create "radar:approved" --color "0e8a16" --description "Human or auto approved — executor may run" 2>/dev/null || true
+          gh label create "radar:auto-merge" --color "1d76db" --description "Low risk — auto-merge executor PR when tests pass" 2>/dev/null || true
+
+      - name: Create RADAR issues
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x scripts/create_radar_issues.py
+          FILE=$(ls -1 docs/radar/[0-9][0-9][0-9][0-9]-*.md | tail -1)
+          python3 scripts/create_radar_issues.py "$FILE"
