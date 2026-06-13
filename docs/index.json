@@ -4,9 +4,9 @@
     "name": "ticket-sys",
     "path": "/home/hartley/projects/personal/ticket-sys",
     "branch": "main",
-    "head": "c7fd6b4",
+    "head": "fd6cf78",
     "total_commits": 57,
-    "generated_at": "2026-06-13 23:24 UTC"
+    "generated_at": "2026-06-13 23:25 UTC"
   },
   "package_roots": {},
   "stats": {
@@ -196,7 +196,7 @@
       "path": "docs/dashboard.html",
       "lang": "HTML",
       "loc": 815,
-      "size": 68503,
+      "size": 73326,
       "commits": 16,
       "last_commit": "2026-06-13"
     },
@@ -204,7 +204,7 @@
       "path": "docs/index.db",
       "lang": "Other",
       "loc": 0,
-      "size": 36864,
+      "size": 28672,
       "commits": 16,
       "last_commit": "2026-06-13"
     },
@@ -212,7 +212,7 @@
       "path": "docs/index.json",
       "lang": "Config",
       "loc": 0,
-      "size": 42900,
+      "size": 49727,
       "commits": 16,
       "last_commit": "2026-06-13"
     },
@@ -636,11 +636,11 @@
   "edges": [
     {
       "source": "scripts/create_radar_issues.py",
-      "target": "scripts/radar_ticket_lib.py"
+      "target": "draft_issues.py"
     },
     {
       "source": "scripts/create_radar_issues.py",
-      "target": "draft_issues.py"
+      "target": "scripts/radar_ticket_lib.py"
     },
     {
       "source": "scripts/dashboard_api.py",
@@ -692,23 +692,19 @@
     },
     {
       "source": "tests/test_github_intel.py",
-      "target": "scripts/github_intel.py"
-    },
-    {
-      "source": "tests/test_github_intel.py",
       "target": "serve_dashboard.py"
     },
     {
-      "source": "tests/test_pipeline_lib.py",
-      "target": "scripts/finalize_agent_run.py"
+      "source": "tests/test_github_intel.py",
+      "target": "scripts/github_intel.py"
     },
     {
       "source": "tests/test_pipeline_lib.py",
       "target": "scripts/pipeline_lib.py"
     },
     {
-      "source": "tests/test_radar_report.py",
-      "target": "scan.py"
+      "source": "tests/test_pipeline_lib.py",
+      "target": "scripts/finalize_agent_run.py"
     },
     {
       "source": "tests/test_radar_report.py",
@@ -719,8 +715,12 @@
       "target": "draft_issues.py"
     },
     {
+      "source": "tests/test_radar_report.py",
+      "target": "scan.py"
+    },
+    {
       "source": "tests/test_radar_tickets.py",
-      "target": "scripts/radar_ticket_lib.py"
+      "target": "scripts/create_radar_issues.py"
     },
     {
       "source": "tests/test_radar_tickets.py",
@@ -728,7 +728,7 @@
     },
     {
       "source": "tests/test_radar_tickets.py",
-      "target": "scripts/create_radar_issues.py"
+      "target": "scripts/radar_ticket_lib.py"
     },
     {
       "source": "tests/test_repo_sync.py",
@@ -1255,7 +1255,20 @@
       "deletions": 26
     }
   ],
-  "open_pull_requests": [],
+  "open_pull_requests": [
+    {
+      "number": 31,
+      "title": "fix: #30 Dependency Graph Coverage Looks Adequate",
+      "state": "OPEN",
+      "head_ref": "issue-30",
+      "issue_numbers": [
+        30
+      ],
+      "additions": 52,
+      "deletions": 1,
+      "url": "https://github.com/hhleroy97/ticket-system/pull/31"
+    }
+  ],
   "issues": [
     {
       "number": 30,
@@ -1264,12 +1277,53 @@
       "labels": [
         "radar:approved"
       ],
-      "linked_prs": [],
-      "stage": "approved",
-      "stage_label": "Approved",
-      "agent_run": null,
+      "linked_prs": [
+        31
+      ],
+      "stage": "pr_open",
+      "stage_label": "PR open",
+      "agent_run": {
+        "issue_number": 30,
+        "branch": "issue-30",
+        "commits": [
+          {
+            "sha": "d1f038c",
+            "full_sha": "d1f038c0dcfc9bb04bbe94b61fa00d7f4d3a3002",
+            "message": "docs: document dependency graph coverage RADAR heuristic (#30)",
+            "files": [
+              "docs/radar/README.md"
+            ]
+          },
+          {
+            "sha": "3b94631",
+            "full_sha": "3b94631ad5f68425dff2764ccef21d7195a5e163",
+            "message": "test: cover dependency graph adequacy RADAR heuristic (#30)",
+            "files": [
+              "tests/test_radar_report.py"
+            ]
+          }
+        ],
+        "files": [
+          "docs/radar/README.md",
+          "tests/test_radar_report.py"
+        ],
+        "commit_count": 2,
+        "file_count": 2,
+        "source": "origin/issue-30"
+      },
       "executor_run": null,
-      "open_pr": null
+      "open_pr": {
+        "number": 31,
+        "title": "fix: #30 Dependency Graph Coverage Looks Adequate",
+        "state": "OPEN",
+        "head_ref": "issue-30",
+        "issue_numbers": [
+          30
+        ],
+        "additions": 52,
+        "deletions": 1,
+        "url": "https://github.com/hhleroy97/ticket-system/pull/31"
+      }
     },
     {
       "number": 29,
@@ -1338,16 +1392,26 @@
   ],
   "workflow_runs": [
     {
+      "id": 27482192856,
+      "name": "test",
+      "status": "completed",
+      "conclusion": "action_required",
+      "branch": "issue-30",
+      "event": "pull_request",
+      "created_at": "2026-06-13T23:24:26Z",
+      "updated_at": "2026-06-13T23:24:26Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482192856"
+    },
+    {
       "id": 27482157911,
       "name": "executor",
-      "status": "in_progress",
-      "conclusion": "",
+      "status": "completed",
+      "conclusion": "success",
       "branch": "main",
       "event": "issues",
       "created_at": "2026-06-13T23:22:43Z",
-      "updated_at": "2026-06-13T23:22:48Z",
-      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482157911",
-      "jobs": []
+      "updated_at": "2026-06-13T23:24:27Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482157911"
     },
     {
       "id": 27482071814,
@@ -1656,17 +1720,6 @@
       "created_at": "2026-06-13T22:44:24Z",
       "updated_at": "2026-06-13T22:44:38Z",
       "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27481350925"
-    },
-    {
-      "id": 27481350525,
-      "name": "radar",
-      "status": "completed",
-      "conclusion": "cancelled",
-      "branch": "main",
-      "event": "workflow_dispatch",
-      "created_at": "2026-06-13T22:44:23Z",
-      "updated_at": "2026-06-13T22:44:31Z",
-      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27481350525"
     }
   ],
   "pipeline": {
@@ -1804,17 +1857,71 @@
         "labels": [
           "radar:approved"
         ],
-        "stage": "approved",
-        "stage_label": "Approved",
-        "stage_order": 1,
-        "linked_prs": [],
-        "open_pr": null,
+        "stage": "pr_open",
+        "stage_label": "PR open",
+        "stage_order": 4,
+        "linked_prs": [
+          31
+        ],
+        "open_pr": {
+          "number": 31,
+          "title": "fix: #30 Dependency Graph Coverage Looks Adequate",
+          "state": "OPEN",
+          "head_ref": "issue-30",
+          "issue_numbers": [
+            30
+          ],
+          "additions": 52,
+          "deletions": 1,
+          "url": "https://github.com/hhleroy97/ticket-system/pull/31"
+        },
         "executor_run": null,
-        "agent_run": null
+        "agent_run": {
+          "issue_number": 30,
+          "branch": "issue-30",
+          "commits": [
+            {
+              "sha": "d1f038c",
+              "full_sha": "d1f038c0dcfc9bb04bbe94b61fa00d7f4d3a3002",
+              "message": "docs: document dependency graph coverage RADAR heuristic (#30)",
+              "files": [
+                "docs/radar/README.md"
+              ]
+            },
+            {
+              "sha": "3b94631",
+              "full_sha": "3b94631ad5f68425dff2764ccef21d7195a5e163",
+              "message": "test: cover dependency graph adequacy RADAR heuristic (#30)",
+              "files": [
+                "tests/test_radar_report.py"
+              ]
+            }
+          ],
+          "files": [
+            "docs/radar/README.md",
+            "tests/test_radar_report.py"
+          ],
+          "commit_count": 2,
+          "file_count": 2,
+          "source": "origin/issue-30"
+        }
       }
     ],
-    "open_pull_requests": [],
-    "updated_at": "2026-06-13 23:24:23 UTC"
+    "open_pull_requests": [
+      {
+        "number": 31,
+        "title": "fix: #30 Dependency Graph Coverage Looks Adequate",
+        "state": "OPEN",
+        "head_ref": "issue-30",
+        "issue_numbers": [
+          30
+        ],
+        "additions": 52,
+        "deletions": 1,
+        "url": "https://github.com/hhleroy97/ticket-system/pull/31"
+      }
+    ],
+    "updated_at": "2026-06-13 23:25:57 UTC"
   },
   "github": {
     "repo": "hhleroy97/ticket-system",
