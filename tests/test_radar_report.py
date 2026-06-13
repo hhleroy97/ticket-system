@@ -14,6 +14,7 @@ import sys
 
 sys.path.insert(0, str(HERE))
 from radar_report import CHURN_THRESHOLD, check_stale_high_churn
+from draft_issues import ISSUE_KEYS
 
 
 class StaleHighChurnTests(unittest.TestCase):
@@ -44,11 +45,11 @@ class StaleHighChurnTests(unittest.TestCase):
         report = check_stale_high_churn(files, edges)
         self.assertIn("No Stale High-Churn Modules Detected", report)
 
-    def test_primary_index_flags_draft_issues(self):
+    def test_primary_index_no_stale_draft_issues_hotspot(self):
         index = json.loads((HERE / "docs" / "index.json").read_text())
         report = check_stale_high_churn(index["files"], index["edges"])
-        self.assertIn("Stale High-Churn Modules With Quiet Dependents", report)
-        self.assertIn("`draft_issues.py`", report)
+        self.assertIn("No Stale High-Churn Modules Detected", report)
+        self.assertNotIn("`draft_issues.py`", report)
 
 
 class RadarReportTests(unittest.TestCase):
@@ -101,9 +102,11 @@ class RadarReportTests(unittest.TestCase):
         issues = json.loads(proc.stdout)
         self.assertGreaterEqual(len(issues), 2)
         for item in issues:
+            self.assertEqual(set(item), set(ISSUE_KEYS))
             self.assertIn("title", item)
             self.assertIn("body", item)
             self.assertIn("rationale", item)
+            self.assertIn("files", item)
 
     def test_fixture_flags_untested_production_module(self):
         self.run_scan(FIXTURE)

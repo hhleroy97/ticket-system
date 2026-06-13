@@ -14,9 +14,14 @@ from radar_ticket_lib import (
     select_issues,
 )
 import create_radar_issues
+from draft_issues import validate_issue
 
 
 class CreateRadarIssuesTests(unittest.TestCase):
+    def test_validation_error_lists_issue_keys(self):
+        err = create_radar_issues.validation_error({"title": "T"}, ["files"])
+        self.assertIn("expected title, body, rationale, files", err)
+
     def test_candidates_from_report_parses_radar_shape(self):
         sample = """# RADAR 2026-06-13
 
@@ -32,6 +37,7 @@ class CreateRadarIssuesTests(unittest.TestCase):
         self.assertEqual(len(issues), 1)
         self.assertEqual(issues[0]["title"], "Stale High-Churn Modules With Quiet Dependents")
         self.assertIn("draft_issues.py", issues[0]["files"])
+        self.assertEqual(validate_issue(issues[0]), [])
         self.assertFalse(is_low_risk(issues[0]))
 
 
