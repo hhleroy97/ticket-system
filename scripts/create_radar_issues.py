@@ -13,6 +13,22 @@ sys.path.insert(0, str(HERE / "scripts"))
 from draft_issues import parse_findings
 from radar_ticket_lib import labels_for_issue, select_issues
 
+REQUIRED_ISSUE_KEYS = ("title", "body", "rationale", "files")
+
+
+def candidates_from_report(path):
+    """Parse RADAR markdown and enforce the draft_issues.py issue shape."""
+    issues = []
+    for issue in parse_findings(path.read_text()):
+        missing = [key for key in REQUIRED_ISSUE_KEYS if not issue.get(key)]
+        if missing:
+            raise ValueError(
+                f"finding {issue.get('title', '?')!r} missing {', '.join(missing)}; "
+                "re-run radar_report.py or update draft_issues.py"
+            )
+        issues.append(issue)
+    return issues
+
 
 def list_open_titles(repo):
     proc = subprocess.run(
@@ -62,7 +78,7 @@ def main():
         check=True,
     ).stdout.strip()
 
-    candidates = parse_findings(path.read_text())
+    candidates = candidates_from_report(path)
     existing = list_open_titles(repo)
     chosen = select_issues(candidates, existing)
 
