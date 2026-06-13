@@ -10,17 +10,15 @@ HERE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE / "scripts"))
 
-from draft_issues import parse_findings
+from draft_issues import parse_findings, validate_issue
 from radar_ticket_lib import labels_for_issue, select_issues
-
-REQUIRED_ISSUE_KEYS = ("title", "body", "rationale", "files")
 
 
 def candidates_from_report(path):
     """Parse RADAR markdown and enforce the draft_issues.py issue shape."""
     issues = []
     for issue in parse_findings(path.read_text()):
-        missing = [key for key in REQUIRED_ISSUE_KEYS if not issue.get(key)]
+        missing = validate_issue(issue)
         if missing:
             raise ValueError(
                 f"finding {issue.get('title', '?')!r} missing {', '.join(missing)}; "
