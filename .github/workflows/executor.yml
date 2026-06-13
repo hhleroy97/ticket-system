@@ -37,6 +37,12 @@ jobs:
           cursor-agent -p --force --model composer-2.5 \
             "Implement GitHub issue #${ISSUE_NUM}: ${ISSUE_TITLE}. \
              Run python3 run_tests.py. Keep the diff minimal and focused."
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes produced by agent."
+            exit 1
+          fi
+          git commit -m "fix: #${ISSUE_NUM} ${ISSUE_TITLE}"
 
       - name: Open pull request
         env:
@@ -47,4 +53,5 @@ jobs:
           gh pr create \
             --title "fix: #${ISSUE_NUM}" \
             --body "Implements #${ISSUE_NUM} via Cursor executor workflow." \
-            --head "issue-${ISSUE_NUM}"
+            --head "issue-${ISSUE_NUM}" \
+            --base main
