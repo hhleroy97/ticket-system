@@ -40,6 +40,25 @@ The dashboard shows a **PR timeline** (linked to issues via `Closes #N` / `issue
 in-progress runs), and **auto-refresh** of tickets/PRs (~15s) when using `serve_dashboard.py`.
 **Cursor chat** and ticket approval run only locally — not on GitHub Pages.
 
+## Contributing (PR workflow)
+
+All maintainer and agent edits use **pull requests** — never direct pushes to `main`:
+
+```bash
+git checkout main && ./hooks/sync-origin-main.sh
+git checkout -b feat/my-change
+# … edit, commit logically …
+python3 run_tests.py
+git push -u origin HEAD
+gh pr create --title "feat: …" --body "## Summary\n…\n\n## Test plan\n- [x] python3 run_tests.py"
+```
+
+Merge after `test.yml` passes. Regenerated `docs/*` from a local scan belong in the same PR
+(or a follow-up `docs:` PR) — not a direct push to `main`.
+
+Scheduled **RADAR** and **scan-and-docs** jobs still push generated docs to `main` via
+`push_to_main.sh` (bot exception). Executor tickets always land as `issue-<N>` PRs.
+
 ## Layout
 
 ```
