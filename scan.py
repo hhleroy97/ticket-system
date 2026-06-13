@@ -49,6 +49,10 @@ JS_IMPORT = re.compile(
 IMPORTLIB_CALL = re.compile(
     r"""importlib\.import_module\s*\(\s*['"]([^'"]+)['"]"""
 )
+PYTHON_CMDS = frozenset({"python", "python3", "python3.10", "python3.11", "python3.12"})
+SUBPROCESS_FUNCS = frozenset(
+    {"run", "call", "Popen", "check_call", "check_output", "getoutput", "getstatusoutput"}
+)
 SETUP_PACKAGE_DIR = re.compile(
     r"""package_dir\s*=\s*\{([^}]+)\}""", re.DOTALL
 )
@@ -251,14 +255,106 @@ def resolve_module(name, modidx):
     return None
 
 
-def py_edges(repo, f, modidx):
+def _dirname(path):
+    parent = os.path.dirname(path.replace("\\", "/"))
+    return parent if parent else "."
+
+
+def _repo_relative_path(repo, path):
+    path = path.replace("\\", "/")
+    repo_prefix = str(repo.resolve()).replace("\\", "/") + "/"
+    if path.startswith(repo_prefix):
+        return path[len(repo_prefix):]
+    return os.path.normpath(path).replace("\\", "/")
+
+
+def eval_path_expr(node, const, repo, rel_file):
+    """Best-effort static evaluation of path-like expressions."""
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return _repo_relative_path(repo, node.value)
+    if isinstance(node, ast.Name):
+        if node.id == "__file__":
+            return rel_file
+        return const.get(node.id)
+    if isinstance(node, ast.Call):
+        if isinstance(node.func, ast.Name) and node.func.id == "str" and node.args:
+            return eval_path_expr(node.args[0], const, repo, rel_file)
+        if isinstance(node.func, ast.Attribute) and node.func.attr == "resolve":
+            return eval_path_expr(node.func.value, const, repo, rel_file)
+        if isinstance(node.func, ast.Name) and node.func.id == "Path" and node.args:
+            return eval_path_expr(node.args[0], const, repo, rel_file)
+    if isinstance(node, ast.Attribute) and node.attr == "parent":
+        base = eval_path_expr(node.value, const, repo, rel_file)
+        return _dirname(base) if base else None
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
+        left = eval_path_expr(node.left, const, repo, rel_file)
+        right = eval_path_expr(node.right, const, repo, rel_file)
+        if left is not None and right is not None:
+            return os.path.normpath(os.path.join(left, right)).replace("\\", "/")
+    return None
+
+
+def module_constants(tree, repo, rel_file):
+    const = {}
+    for node in tree.body:
+        if not isinstance(node, ast.Assign):
+            continue
+        for target in node.targets:
+            if isinstance(target, ast.Name):
+                val = eval_path_expr(node.value, const, repo, rel_file)
+                if val is not None:
+                    const[target.id] = val
+    return const
+
+
+def sys_path_roots(tree, const, repo, rel_file):
+    roots = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        func = node.func
+        if not (
+            isinstance(func, ast.Attribute)
+            and isinstance(func.value, ast.Attribute)
+            and isinstance(func.value.value, ast.Name)
+            and func.value.value.id == "sys"
+            and func.value.attr == "path"
+            and func.attr in ("insert", "append")
+        ):
+            continue
+        if not node.args:
+            continue
+        resolved = eval_path_expr(node.args[-1], const, repo, rel_file)
+        if resolved is not None:
+            roots.append(resolved)
+    return roots
+
+
+def files_on_sys_path(fileset, root):
+    root = (root or ".").strip("/") or "."
+    if root == ".":
+        return [f for f in fileset if f.endswith(".py") and "/" not in f]
+    prefix = f"{root}/"
+    return [f for f in fileset if f.endswith(".py") and f.startswith(prefix)]
+
+
+def augment_modidx(modidx, fileset, extra_roots):
+    idx = dict(modidx)
+    for root in extra_roots:
+        for f in files_on_sys_path(fileset, root):
+            stem = os.path.basename(f)[:-3]
+            idx.setdefault(stem, f)
+            if "/" in f:
+                rel = f[len(root) + 1:] if root != "." and f.startswith(f"{root}/") else f
+                mod = module_path_from_file(rel)
+                idx.setdefault(mod, f)
+    return idx
+
+
+def import_edges_from_tree(tree, rel_file, modidx):
     targets = set()
-    try:
-        tree = ast.parse((repo / f).read_text(encoding="utf-8", errors="replace"))
-    except (SyntaxError, OSError):
-        return targets
-    pkg = module_path_from_file(f)
-    pkg = ".".join(pkg.split(".")[:-1]) if not f.endswith("/__init__.py") else pkg
+    pkg = module_path_from_file(rel_file)
+    pkg = ".".join(pkg.split(".")[:-1]) if not rel_file.endswith("/__init__.py") else pkg
 
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
@@ -278,6 +374,78 @@ def py_edges(repo, f, modidx):
                 t = resolve_module(cand, modidx)
                 if t:
                     targets.add(t)
+    return targets
+
+
+def py_edges(repo, f, modidx):
+    try:
+        tree = ast.parse((repo / f).read_text(encoding="utf-8", errors="replace"))
+    except (SyntaxError, OSError):
+        return set()
+    return import_edges_from_tree(tree, f, modidx)
+
+
+def resolve_script_path(path, repo, rel_file, fileset):
+    if not path or not str(path).endswith(".py"):
+        return None
+    path = _repo_relative_path(repo, str(path))
+    candidates = [
+        path,
+        os.path.normpath(os.path.join(os.path.dirname(rel_file), path)).replace("\\", "/"),
+        os.path.basename(path),
+    ]
+    for cand in candidates:
+        if cand in fileset:
+            return cand
+        for tracked in fileset:
+            if tracked.endswith(f"/{cand}") or os.path.basename(tracked) == cand:
+                if tracked.endswith(".py"):
+                    return tracked
+    return None
+
+
+def _is_subprocess_call(node):
+    func = node.func
+    if isinstance(func, ast.Attribute):
+        if isinstance(func.value, ast.Name) and func.value.id == "subprocess":
+            return func.attr in SUBPROCESS_FUNCS
+    return False
+
+
+def subprocess_py_edges(repo, f, fileset, tree, const):
+    targets = set()
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call) or not _is_subprocess_call(node):
+            continue
+        if not node.args or not isinstance(node.args[0], (ast.List, ast.Tuple)):
+            continue
+        elements = node.args[0].elts
+        if len(elements) < 2:
+            continue
+        cmd = eval_path_expr(elements[0], const, repo, f)
+        if cmd not in PYTHON_CMDS:
+            continue
+        script = eval_path_expr(elements[1], const, repo, f)
+        target = resolve_script_path(script, repo, f, fileset)
+        if target:
+            targets.add(target)
+    return targets
+
+
+def python_dependency_edges(repo, f, modidx, fileset):
+    try:
+        text = (repo / f).read_text(encoding="utf-8", errors="replace")
+        tree = ast.parse(text)
+    except (SyntaxError, OSError):
+        return set()
+    const = module_constants(tree, repo, f)
+    local_idx = augment_modidx(modidx, fileset, sys_path_roots(tree, const, repo, f))
+    targets = import_edges_from_tree(tree, f, local_idx)
+    for name in IMPORTLIB_CALL.findall(text):
+        t = resolve_module(name, local_idx)
+        if t:
+            targets.add(t)
+    targets |= subprocess_py_edges(repo, f, fileset, tree, const)
     return targets
 
 
@@ -457,7 +625,7 @@ def main():
         lang_agg[lang]["loc"] += loc
 
         if lang == "Python":
-            targets = py_edges(repo, f, modidx) | importlib_edges(repo, f, modidx)
+            targets = python_dependency_edges(repo, f, modidx, fileset)
             for t in targets:
                 if t != f:
                     edges.append({"source": f, "target": t})

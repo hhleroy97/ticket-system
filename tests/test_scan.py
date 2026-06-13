@@ -2,6 +2,7 @@ import json
 import subprocess
 import sys
 import unittest
+import ast
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent.parent
@@ -10,7 +11,31 @@ FIXTURE = HERE / "test-repos" / "srcpkg"
 FIXTURE_DOCS = FIXTURE / "docs"
 
 sys.path.insert(0, str(HERE))
-from scan import discover_package_roots, git, parse_pyproject_package_dirs
+from scan import (
+    discover_package_roots,
+    eval_path_expr,
+    git,
+    parse_pyproject_package_dirs,
+    python_dependency_edges,
+    py_module_index,
+)
+
+
+class PathExprTests(unittest.TestCase):
+    def test_eval_path_here_scripts(self):
+        tree = ast.parse(
+            "from pathlib import Path\n"
+            "HERE = Path(__file__).resolve().parent.parent\n"
+            "ROOT = str(HERE / 'scripts')\n"
+        )
+        const = {}
+        for node in tree.body:
+            if isinstance(node, ast.Assign) and isinstance(node.targets[0], ast.Name):
+                val = eval_path_expr(node.value, const, HERE, "scripts/create_radar_issues.py")
+                if val is not None:
+                    const[node.targets[0].id] = val
+        self.assertEqual(const["HERE"], ".")
+        self.assertEqual(const["ROOT"], "scripts")
 
 
 class PackageRootTests(unittest.TestCase):
@@ -61,6 +86,57 @@ class ScanTests(unittest.TestCase):
             index = self.run_scan(HERE)
             paths = {f["path"] for f in index["files"]}
             self.assertFalse(any(p.startswith("test-repos/") for p in paths))
+        finally:
+            for path, content in before.items():
+                if content is None:
+                    path.unlink(missing_ok=True)
+                else:
+                    path.write_bytes(content)
+
+    def test_sys_path_import_edges(self):
+        files = [
+            f for f in git(HERE, "ls-files").splitlines()
+            if f and not f.startswith("test-repos/")
+        ]
+        modidx = py_module_index(files, {})
+        edges = python_dependency_edges(
+            HERE, "scripts/create_radar_issues.py", modidx, set(files)
+        )
+        self.assertIn("draft_issues.py", edges)
+        self.assertIn("scripts/radar_ticket_lib.py", edges)
+
+    def test_subprocess_python_edges(self):
+        files = [
+            f for f in git(HERE, "ls-files").splitlines()
+            if f and not f.startswith("test-repos/")
+        ]
+        modidx = py_module_index(files, {})
+        edges = python_dependency_edges(HERE, "tests/test_docgen.py", modidx, set(files))
+        self.assertIn("scan.py", edges)
+        self.assertIn("docgen.py", edges)
+        self.assertIn("draft_issues.py", edges)
+
+    def test_primary_dependency_graph_not_sparse(self):
+        docs = HERE / "docs"
+        tracked = [docs / "index.json", docs / "index.db", docs / "dashboard.html"]
+        before = {p: (p.read_bytes() if p.is_file() else None) for p in tracked}
+        try:
+            index = self.run_scan(HERE)
+            prod = [
+                f for f in index["files"]
+                if f["lang"] == "Python"
+                and f["path"].endswith(".py")
+                and not f["path"].startswith("tests/")
+                and not f["path"].startswith("test-repos/")
+                and not Path(f["path"]).name.startswith("test_")
+            ]
+            edge_count = index["stats"]["edge_count"]
+            self.assertGreaterEqual(len(prod), 3)
+            self.assertGreaterEqual(
+                edge_count,
+                len(prod) - 1,
+                f"expected at least {len(prod) - 1} edges, got {edge_count}",
+            )
         finally:
             for path, content in before.items():
                 if content is None:
