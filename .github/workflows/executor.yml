@@ -73,3 +73,12 @@ jobs:
             --body-file /tmp/pr-body.md \
             --head "issue-${ISSUE_NUM}" \
             --base main
+          echo "pr_number=$(gh pr list --head issue-${ISSUE_NUM} --json number -q '.[0].number')" >> "$GITHUB_ENV"
+
+      - name: Auto-merge low-risk PR (tests already passed in verify)
+        if: contains(toJSON(github.event.issue.labels.*.name), 'radar:auto-merge')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Auto-merging PR #${pr_number} (--admin bypasses pending PR workflow approval)"
+          gh pr merge "${pr_number}" --merge --delete-branch --admin

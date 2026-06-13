@@ -8,9 +8,10 @@ EXECUTOR_MD = HERE / ".github" / "EXECUTOR.md"
 
 
 class ExecutorTests(unittest.TestCase):
-    def test_verify_script_is_executable(self):
-        self.assertTrue(VERIFY.is_file())
-        subprocess.run(["bash", "-n", str(VERIFY)], check=True)
+    def test_push_to_main_script_syntax(self):
+        script = HERE / "scripts" / "push_to_main.sh"
+        self.assertTrue(script.is_file())
+        subprocess.run(["bash", "-n", str(script)], check=True)
 
     def test_executor_instructions_exist(self):
         self.assertTrue(EXECUTOR_MD.is_file())

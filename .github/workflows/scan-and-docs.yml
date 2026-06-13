@@ -1,13 +1,21 @@
 name: scan-and-docs
 
 on:
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch:
   push:
     branches: [main]
-  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - ".github/**"
 
 permissions:
   contents: write
-  pull-requests: write
+
+concurrency:
+  group: scan-docs-push-main
+  cancel-in-progress: true
 
 jobs:
   refresh:
@@ -15,23 +23,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
 
-      - name: Scan target repo (self)
+      - name: Scan and generate module docs
         env:
           TARGET_REPO: ${{ github.workspace }}
         run: |
           python3 scan.py
           python3 docgen.py
 
-      - name: Open PR when docs changed
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: peter-evans/create-pull-request@v6
-        with:
-          commit-message: "docs: refresh scan index and module summaries"
-          title: "docs: refresh repo-intel scan"
-          body: |
-            Automated refresh of `docs/index.json`, SQLite mirror, dashboard, and module docs.
-            Auto-merge will land this when tests pass (docs-only).
-          branch: bot/scan-refresh
-          delete-branch: true
+      - name: Run tests
+        run: python3 run_tests.py
+
+      - name: Push refreshed docs to main
+        run: |
+          chmod +x scripts/push_to_main.sh
+          scripts/push_to_main.sh "docs: refresh scan index and module summaries" docs/

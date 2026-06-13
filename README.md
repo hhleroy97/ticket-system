@@ -48,15 +48,17 @@ repo-intel/
 | --- | --- | --- |
 | `test.yml` | push/PR | Runs `run_tests.py` |
 | `auto-merge.yml` | after `test` on PRs | Merges safe `bot/*` docs PRs and low-risk `issue-*` PRs |
-| `scan-and-docs.yml` | push to main | Rescan + module docs PR (auto-merge when green) |
-| `radar.yml` | weekly cron | `scan.py` + `radar_report.py` → bot PR |
+| `scan-and-docs.yml` | daily cron + non-docs pushes | Rescan + docgen → **direct push to main** |
+| `radar.yml` | weekly cron | `scan.py` + `radar_report.py` → **direct push to main** |
 | `radar-tickets.yml` | push to `main` (`docs/radar/*.md`) | Deterministic issues (dedup, cap 3, auto-approve low risk) |
 | `executor.yml` | issue labeled `radar:approved` | Composer 2.5, logical commits, PR (`Closes #N`) |
 | `pages.yml` | push to main | Publishes `docs/` to GitHub Pages |
 
-**Autonomy:** Low-risk findings get `radar:approved` + `radar:auto-merge` at creation → executor runs → PR auto-merges when tests pass. Docs-only bot PRs auto-merge too. You only review non-low-risk items.
+**Autonomy:** RADAR and scan/docs **push straight to `main`** (no bot PRs → no “Approve workflow run”). Low-risk executor PRs **auto-merge with `--admin`** after tests pass in the job. Close stale open bot PRs (#13 etc.) manually.
 
 Set repository secret `CURSOR_API_KEY` for executor workflows.
+
+**If executor PRs still ask to approve workflows:** Repo **Settings → Actions → General → Fork pull request workflows** → disable “Require approval for all outside collaborators”.
 
 Optional git hooks (scan refresh + stay synced with origin/main):
 
