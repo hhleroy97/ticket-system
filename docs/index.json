@@ -1,35 +1,35 @@
 {
   "schema_version": 1,
   "repo": {
-    "name": "ticket-system",
-    "path": "/home/runner/work/ticket-system/ticket-system",
+    "name": "ticket-sys",
+    "path": "/home/hartley/projects/personal/ticket-sys",
     "branch": "main",
-    "head": "67feedf",
-    "total_commits": 2,
-    "generated_at": "2026-06-13 21:38 UTC"
+    "head": "91aaf45",
+    "total_commits": 6,
+    "generated_at": "2026-06-13 21:44 UTC"
   },
   "package_roots": {},
   "stats": {
-    "file_count": 31,
-    "total_loc": 1523,
-    "contributor_count": 1,
+    "file_count": 46,
+    "total_loc": 1731,
+    "contributor_count": 2,
     "edge_count": 0
   },
   "languages": [
     {
       "name": "Python",
-      "files": 9,
-      "loc": 761
+      "files": 10,
+      "loc": 788
     },
     {
       "name": "Markdown",
-      "files": 7,
-      "loc": 337
+      "files": 16,
+      "loc": 450
     },
     {
       "name": "Other",
-      "files": 5,
-      "loc": 222
+      "files": 7,
+      "loc": 246
     },
     {
       "name": "HTML",
@@ -37,8 +37,13 @@
       "loc": 203
     },
     {
+      "name": "Shell",
+      "files": 2,
+      "loc": 44
+    },
+    {
       "name": "Config",
-      "files": 9,
+      "files": 10,
       "loc": 0
     }
   ],
@@ -52,11 +57,27 @@
       "last_commit": "2026-06-13"
     },
     {
+      "path": ".cursor/hooks.json",
+      "lang": "Config",
+      "loc": 0,
+      "size": 222,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": ".cursor/hooks/post-pr-sync.sh",
+      "lang": "Shell",
+      "loc": 14,
+      "size": 486,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
       "path": ".env.example",
       "lang": "Other",
-      "loc": 2,
-      "size": 80,
-      "commits": 1,
+      "loc": 5,
+      "size": 184,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -134,9 +155,9 @@
     {
       "path": "README.md",
       "lang": "Markdown",
-      "loc": 62,
-      "size": 2336,
-      "commits": 1,
+      "loc": 76,
+      "size": 2847,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -151,8 +172,8 @@
       "path": "docs/dashboard.html",
       "lang": "HTML",
       "loc": 203,
-      "size": 10844,
-      "commits": 1,
+      "size": 10812,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -160,14 +181,46 @@
       "lang": "Other",
       "loc": 0,
       "size": 28672,
-      "commits": 1,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
       "path": "docs/index.json",
       "lang": "Config",
       "loc": 0,
-      "size": 1416,
+      "size": 1384,
+      "commits": 2,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docs/modules/docgen.md",
+      "lang": "Markdown",
+      "loc": 11,
+      "size": 208,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docs/modules/draft_issues.md",
+      "lang": "Markdown",
+      "loc": 11,
+      "size": 213,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docs/modules/run_tests.md",
+      "lang": "Markdown",
+      "loc": 11,
+      "size": 210,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docs/modules/scan.md",
+      "lang": "Markdown",
+      "loc": 11,
+      "size": 206,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
@@ -175,7 +228,7 @@
       "path": "docs/modules/src-mypkg-core.md",
       "lang": "Markdown",
       "loc": 11,
-      "size": 214,
+      "size": 207,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
@@ -183,7 +236,31 @@
       "path": "docs/modules/src-mypkg.md",
       "lang": "Markdown",
       "loc": 11,
-      "size": 209,
+      "size": 202,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docs/modules/test-repos-srcpkg-src-mypkg-core.md",
+      "lang": "Markdown",
+      "loc": 11,
+      "size": 232,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docs/modules/test-repos-srcpkg-src-mypkg.md",
+      "lang": "Markdown",
+      "loc": 11,
+      "size": 227,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docs/modules/test-repos-srcpkg-tests-test_core.md",
+      "lang": "Markdown",
+      "loc": 11,
+      "size": 233,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
@@ -191,7 +268,23 @@
       "path": "docs/modules/tests-test_core.md",
       "lang": "Markdown",
       "loc": 11,
-      "size": 215,
+      "size": 208,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docs/modules/tests-test_docgen.md",
+      "lang": "Markdown",
+      "loc": 11,
+      "size": 218,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docs/modules/tests-test_scan.md",
+      "lang": "Markdown",
+      "loc": 11,
+      "size": 216,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
@@ -212,10 +305,34 @@
       "last_commit": "2026-06-13"
     },
     {
+      "path": "hooks/post-checkout",
+      "lang": "Other",
+      "loc": 16,
+      "size": 398,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "hooks/post-merge",
+      "lang": "Other",
+      "loc": 5,
+      "size": 176,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
       "path": "hooks/pre-commit",
       "lang": "Other",
       "loc": 13,
       "size": 384,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "hooks/sync-origin-main.sh",
+      "lang": "Shell",
+      "loc": 30,
+      "size": 723,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
@@ -280,6 +397,14 @@
       "lang": "Python",
       "loc": 48,
       "size": 1476,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "tests/test_hooks.py",
+      "lang": "Python",
+      "loc": 27,
+      "size": 798,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
