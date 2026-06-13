@@ -11,6 +11,7 @@ You are implementing an approved GitHub issue on branch `issue-<N>`. The workflo
 4. **Run `python3 run_tests.py`** before your last commit; all tests must pass.
 5. **Commit everything** — uncommitted files cause the workflow to fail (no auto-squash).
 6. Keep each diff minimal and focused on the issue.
+7. Do **not** run `scan.py` unless the issue requires it; `run_tests.py` may refresh `docs/index.*` ephemerally (CI restores them if uncommitted).
 
 ## Example commit series
 

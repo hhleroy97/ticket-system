@@ -54,9 +54,19 @@ class ScanTests(unittest.TestCase):
         self.assertGreaterEqual(count, 1)
 
     def test_primary_scan_excludes_fixture_paths(self):
-        index = self.run_scan(HERE)
-        paths = {f["path"] for f in index["files"]}
-        self.assertFalse(any(p.startswith("test-repos/") for p in paths))
+        docs = HERE / "docs"
+        tracked = [docs / "index.json", docs / "index.db", docs / "dashboard.html"]
+        before = {p: (p.read_bytes() if p.is_file() else None) for p in tracked}
+        try:
+            index = self.run_scan(HERE)
+            paths = {f["path"] for f in index["files"]}
+            self.assertFalse(any(p.startswith("test-repos/") for p in paths))
+        finally:
+            for path, content in before.items():
+                if content is None:
+                    path.unlink(missing_ok=True)
+                else:
+                    path.write_bytes(content)
 
 
 if __name__ == "__main__":

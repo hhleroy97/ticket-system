@@ -5,11 +5,26 @@ set -euo pipefail
 ISSUE_NUM="${1:?usage: verify_executor_branch.sh ISSUE_NUM [BASE]}"
 BASE="${2:-main}"
 
-if ! git diff --quiet || ! git diff --cached --quiet || [ -n "$(git status --porcelain)" ]; then
-  echo "verify_executor_branch: uncommitted changes remain — agent must commit all work" >&2
-  git status --short >&2
-  exit 1
-fi
+# Scan tests rewrite docs/index.* and docs/dashboard.html ephemerally; drop if not part of the issue.
+restore_incidental_scan_artifacts() {
+  local path
+  for path in docs/index.json docs/index.db docs/dashboard.html; do
+    if ! git diff --name-only "${BASE}..HEAD" -- "${path}" | grep -q .; then
+      git restore --staged --worktree "${path}" 2>/dev/null || true
+    fi
+  done
+}
+
+assert_clean_tree() {
+  if ! git diff --quiet || ! git diff --cached --quiet || [ -n "$(git status --porcelain)" ]; then
+    echo "verify_executor_branch: uncommitted changes remain — agent must commit all work" >&2
+    git status --short >&2
+    exit 1
+  fi
+}
+
+restore_incidental_scan_artifacts
+assert_clean_tree
 
 ahead="$(git rev-list --count "${BASE}..HEAD" 2>/dev/null || echo 0)"
 if [ "${ahead}" -lt 1 ]; then
@@ -28,3 +43,6 @@ if git diff --name-only "${BASE}..HEAD" | grep -q '^\.github/workflows/'; then
 fi
 
 python3 run_tests.py
+
+restore_incidental_scan_artifacts
+assert_clean_tree
