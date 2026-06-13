@@ -7,6 +7,7 @@ The scanner is deterministic and stdlib-only (no pip installs, no LLM calls).
 cp .env.example .env        # edit TARGET_REPO
 python3 scan.py             # writes docs/index.json, docs/index.db, docs/dashboard.html
 python3 docgen.py             # writes docs/modules/*.md from the index
+python3 radar_report.py       # writes docs/radar/<date>.md from the index
 open docs/dashboard.html      # xdg-open on Linux
 ```
 
@@ -30,6 +31,7 @@ detected roots.
 repo-intel/
 ├── scan.py                     # deterministic scanner (Phase 0–1)
 ├── docgen.py                   # deterministic module doc generator (Phase 2)
+├── radar_report.py             # deterministic RADAR findings from index.json
 ├── draft_issues.py             # parse RADAR markdown → issue JSON
 ├── run_tests.py                # unittest entrypoint
 ├── templates/dashboard.html.tmpl
