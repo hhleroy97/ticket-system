@@ -17,5 +17,13 @@ Parse findings into issue JSON:
 python3 draft_issues.py docs/radar/YYYY-MM-DD.md
 ```
 
+## Stale high-churn modules
+
+`radar_report.py` compares production Python modules at or above a churn threshold
+against non-test importers in `docs/index.json`. When every indexed importer has
+fewer commits than the hotspot, the report emits **Stale High-Churn Modules With
+Quiet Dependents** so ticket drafting can prompt updates to lagging dependents
+(for example `scripts/create_radar_issues.py` after `draft_issues.py` changes).
+
 The weekly `.github/workflows/radar.yml` job can also produce findings via Auto research;
 `radar_report.py` is the deterministic, stdlib-only path for the same markdown shape.
