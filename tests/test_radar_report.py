@@ -13,7 +13,7 @@ DRAFT = HERE / "draft_issues.py"
 import sys
 
 sys.path.insert(0, str(HERE))
-from radar_report import CHURN_THRESHOLD, check_stale_high_churn
+from radar_report import CHURN_THRESHOLD, check_dependency_graph, check_stale_high_churn
 from draft_issues import ISSUE_KEYS
 
 
@@ -50,6 +50,41 @@ class StaleHighChurnTests(unittest.TestCase):
         report = check_stale_high_churn(index["files"], index["edges"])
         self.assertIn("No Stale High-Churn Modules Detected", report)
         self.assertNotIn("`draft_issues.py`", report)
+
+
+class DependencyGraphTests(unittest.TestCase):
+    def _py_files(self, paths):
+        return [{"path": path, "lang": "Python", "commits": 1, "loc": 10} for path in paths]
+
+    def test_flags_no_edges_when_modules_exist(self):
+        files = self._py_files(["alpha.py", "beta.py"])
+        report = check_dependency_graph(files, [], {"edge_count": 0})
+        self.assertIn("Dependency Graph Has No Edges", report)
+        self.assertIn("`scan.py`", report)
+
+    def test_flags_sparse_when_below_minimum_edges(self):
+        files = self._py_files(["a.py", "b.py", "c.py", "d.py"])
+        report = check_dependency_graph(files, [], {"edge_count": 2})
+        self.assertIn("Dependency Graph Is Sparse", report)
+        self.assertIn("4 production Python modules but only 2 import edge", report)
+
+    def test_reports_adequate_when_threshold_met(self):
+        files = self._py_files(["a.py", "b.py", "c.py", "d.py"])
+        report = check_dependency_graph(files, [], {"edge_count": 3})
+        self.assertIn("Dependency Graph Coverage Looks Adequate", report)
+        self.assertIn("3 import edge(s) across 4 production Python module(s)", report)
+
+    def test_two_modules_with_one_edge_is_adequate(self):
+        files = self._py_files(["a.py", "b.py"])
+        report = check_dependency_graph(files, [], {"edge_count": 1})
+        self.assertIn("Dependency Graph Coverage Looks Adequate", report)
+        self.assertNotIn("Sparse", report)
+
+    def test_primary_index_reports_adequate_coverage(self):
+        index = json.loads((HERE / "docs" / "index.json").read_text())
+        report = check_dependency_graph(index["files"], index["edges"], index["stats"])
+        self.assertIn("Dependency Graph Coverage Looks Adequate", report)
+        self.assertIn("`scan.py`", report)
 
 
 class RadarReportTests(unittest.TestCase):
