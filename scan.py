@@ -592,6 +592,16 @@ def write_sqlite(index, path):
     conn.close()
 
 
+DASHBOARD_TEMPLATE = HERE / "templates" / "dashboard.html.tmpl"
+DATA_PLACEHOLDER = "/*__DATA__*/"
+
+
+def render_dashboard(index):
+    """Render standalone dashboard HTML with scan index inlined as JSON."""
+    tmpl = DASHBOARD_TEMPLATE.read_text()
+    return tmpl.replace(DATA_PLACEHOLDER, json.dumps(index))
+
+
 def main():
     repo = resolve_target()
     if not is_git_repo(repo):
@@ -666,9 +676,7 @@ def main():
     (docs / "index.json").write_text(json.dumps(index, indent=2))
     write_sqlite(index, docs / "index.db")
 
-    tmpl = (HERE / "templates" / "dashboard.html.tmpl").read_text()
-    html = tmpl.replace("/*__DATA__*/", json.dumps(index))
-    (docs / "dashboard.html").write_text(html)
+    (docs / "dashboard.html").write_text(render_dashboard(index))
 
     s = index["stats"]
     print(f"scanned {index['repo']['name']} @ {index['repo']['head']}")
