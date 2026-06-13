@@ -3,28 +3,28 @@
   "repo": {
     "name": "ticket-system",
     "path": "/home/runner/work/ticket-system/ticket-system",
-    "branch": "issue-10",
-    "head": "8d54561",
-    "total_commits": 10,
-    "generated_at": "2026-06-13 21:53 UTC"
+    "branch": "main",
+    "head": "32668ae",
+    "total_commits": 14,
+    "generated_at": "2026-06-13 22:03 UTC"
   },
   "package_roots": {},
   "stats": {
     "file_count": 38,
-    "total_loc": 1734,
-    "contributor_count": 2,
-    "edge_count": 0
+    "total_loc": 1758,
+    "contributor_count": 3,
+    "edge_count": 1
   },
   "languages": [
     {
       "name": "Python",
       "files": 7,
-      "loc": 818
+      "loc": 831
     },
     {
       "name": "Markdown",
       "files": 12,
-      "loc": 422
+      "loc": 433
     },
     {
       "name": "Other",
@@ -133,7 +133,7 @@
       "lang": "Other",
       "loc": 5,
       "size": 58,
-      "commits": 1,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -147,17 +147,17 @@
     {
       "path": "HANDOFF.md",
       "lang": "Markdown",
-      "loc": 206,
-      "size": 9834,
-      "commits": 1,
+      "loc": 215,
+      "size": 10507,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
       "path": "README.md",
       "lang": "Markdown",
-      "loc": 82,
-      "size": 3083,
-      "commits": 3,
+      "loc": 84,
+      "size": 3246,
+      "commits": 4,
       "last_commit": "2026-06-13"
     },
     {
@@ -165,7 +165,7 @@
       "lang": "Python",
       "loc": 121,
       "size": 3210,
-      "commits": 1,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -173,7 +173,7 @@
       "lang": "HTML",
       "loc": 203,
       "size": 14983,
-      "commits": 4,
+      "commits": 5,
       "last_commit": "2026-06-13"
     },
     {
@@ -181,7 +181,7 @@
       "lang": "Other",
       "loc": 0,
       "size": 28672,
-      "commits": 4,
+      "commits": 5,
       "last_commit": "2026-06-13"
     },
     {
@@ -189,7 +189,7 @@
       "lang": "Config",
       "loc": 0,
       "size": 7175,
-      "commits": 4,
+      "commits": 5,
       "last_commit": "2026-06-13"
     },
     {
@@ -197,7 +197,7 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 208,
-      "commits": 1,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -221,7 +221,7 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 206,
-      "commits": 1,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -229,7 +229,7 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 218,
-      "commits": 1,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -245,7 +245,7 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 216,
-      "commits": 1,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -317,7 +317,7 @@
       "lang": "Python",
       "loc": 514,
       "size": 17620,
-      "commits": 1,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -333,7 +333,7 @@
       "lang": "Python",
       "loc": 51,
       "size": 1600,
-      "commits": 1,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -347,11 +347,16 @@
     {
       "path": "tests/test_scan.py",
       "lang": "Python",
-      "loc": 50,
-      "size": 1725,
-      "commits": 1,
+      "loc": 63,
+      "size": 2197,
+      "commits": 3,
       "last_commit": "2026-06-13"
     }
   ],
-  "edges": []
+  "edges": [
+    {
+      "source": "tests/test_scan.py",
+      "target": "scan.py"
+    }
+  ]
 }
