@@ -30,6 +30,17 @@ metered spend routed through a Cursor subscription rather than a separate Anthro
 5. **Human-in-the-loop gate before any code is executed.** No issue is acted on until a
    human approves it (label-based).
 
+## Current status — beyond Phase 0 (implemented)
+
+Phases 1–6 are largely built in this repo:
+
+- **Scanner** with package roots, SQLite, deduped `git ls-files`, optional external `TARGET_REPO`
+- **docgen**, **RADAR** (deterministic `radar_report.py`), **ticket drafting**, **executor** with agent traces
+- **Local dashboard** (`serve_dashboard.py`): pipeline stages, PR/issue intel, workflow steps, approve, chat
+- **GitHub Pages** via `pages.yml`; maintainer changes go through **PRs** (see AGENTS.md)
+
+Start new work from `docs/RUNBOOK.md` and `docs/inspiration.md`. HANDOFF build plan below remains the original spec reference.
+
 ## Current status — Phase 0 (DONE, tested)
 
 Built and validated against a real repo (`pallets/click`, 3,242 commits, 63 Python files):
