@@ -4,7 +4,7 @@
     "afterShellExecution": [
       {
         "command": ".cursor/hooks/post-pr-sync.sh",
-        "matcher": "gh pr (merge|close|delete)|git checkout main|git switch main"
+        "matcher": "gh pr (merge|close|delete)|git checkout main|git switch main|git pull|git fetch origin"
       }
     ]
   }

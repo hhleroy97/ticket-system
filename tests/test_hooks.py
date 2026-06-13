@@ -22,6 +22,11 @@ class HookTests(unittest.TestCase):
         hooks_json = HERE / ".cursor" / "hooks.json"
         self.assertTrue(hooks_json.is_file())
 
+    def test_install_script_exists(self):
+        install = HERE / "hooks" / "install.sh"
+        self.assertTrue(install.is_file())
+        self.assertTrue(install.stat().st_mode & 0o111)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -56,22 +56,19 @@ Set repository secret `CURSOR_API_KEY` for agent workflows.
 Optional git hooks (scan refresh + stay synced with origin/main):
 
 ```bash
-git config core.hooksPath hooks
+./hooks/install.sh              # sets git config core.hooksPath hooks (once per clone)
+./hooks/sync-origin-main.sh     # fetch + fast-forward main (also switches to main if clean)
 ```
 
 | Hook | When | Effect |
 | --- | --- | --- |
 | `pre-commit` | commit | Rescan when scanner inputs change |
-| `post-merge` | `git pull` / merge on main | `git fetch` + fast-forward `main` from `origin/main` |
-| `post-checkout` | switch to `main` | same sync (useful after merging/closing a PR locally) |
+| `post-merge` | `git pull` / merge on main | fetch + fast-forward `main` |
+| `post-checkout` | switch to `main` | same sync |
 
-Manual sync anytime:
+After merging a PR on GitHub (web UI), run `./hooks/sync-origin-main.sh` locally — hooks only fire on local git commands.
 
-```bash
-./hooks/sync-origin-main.sh
-```
-
-Cursor also runs the sync after `gh pr merge|close` or `git checkout main` (see `.cursor/hooks.json`).
+Cursor also runs sync after `gh pr merge`, `git pull`, or `git checkout main` (see `.cursor/hooks.json`).
 
 ## Research notes
 
