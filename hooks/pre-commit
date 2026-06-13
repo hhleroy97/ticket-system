@@ -5,7 +5,8 @@ ROOT="$(git rev-parse --show-toplevel)"
 cd "$ROOT"
 
 if git diff --cached --name-only | grep -qE '^(scan\.py|\.env|templates/|test-repos/)'; then
-  python3 scan.py
+  # Always scan this checkout — never .env TARGET_REPO (may point at another project).
+  TARGET_REPO="$ROOT" python3 scan.py
   python3 docgen.py
   git add docs/index.json docs/index.db docs/dashboard.html docs/modules/
 fi
