@@ -47,13 +47,16 @@ repo-intel/
 | Workflow | Trigger | Purpose |
 | --- | --- | --- |
 | `test.yml` | push/PR | Runs `run_tests.py` |
-| `scan-and-docs.yml` | push to main | Rescan + module docs PR |
-| `radar.yml` | weekly cron | Auto research → `docs/radar/` PR |
-| `radar-tickets.yml` | RADAR PR merged | Opens `radar:proposed` issues |
-| `executor.yml` | issue labeled `radar:approved` | Composer 2.5 implements + logical commits + PR (`Closes #N`) |
+| `auto-merge.yml` | after `test` on PRs | Merges safe `bot/*` docs PRs and low-risk `issue-*` PRs |
+| `scan-and-docs.yml` | push to main | Rescan + module docs PR (auto-merge when green) |
+| `radar.yml` | weekly cron | `scan.py` + `radar_report.py` → bot PR |
+| `radar-tickets.yml` | push to `main` (`docs/radar/*.md`) | Deterministic issues (dedup, cap 3, auto-approve low risk) |
+| `executor.yml` | issue labeled `radar:approved` | Composer 2.5, logical commits, PR (`Closes #N`) |
 | `pages.yml` | push to main | Publishes `docs/` to GitHub Pages |
 
-Set repository secret `CURSOR_API_KEY` for agent workflows.
+**Autonomy:** Low-risk findings get `radar:approved` + `radar:auto-merge` at creation → executor runs → PR auto-merges when tests pass. Docs-only bot PRs auto-merge too. You only review non-low-risk items.
+
+Set repository secret `CURSOR_API_KEY` for executor workflows.
 
 Optional git hooks (scan refresh + stay synced with origin/main):
 

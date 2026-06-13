@@ -32,5 +32,6 @@ jobs:
           title: "docs: refresh repo-intel scan"
           body: |
             Automated refresh of `docs/index.json`, SQLite mirror, dashboard, and module docs.
+            Auto-merge will land this when tests pass (docs-only).
           branch: bot/scan-refresh
           delete-branch: true

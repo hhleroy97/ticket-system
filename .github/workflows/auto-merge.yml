@@ -1,0 +1,32 @@
+name: auto-merge
+
+on:
+  workflow_run:
+    workflows: [test]
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  merge-safe-prs:
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Merge eligible PRs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x scripts/automerge_pr.sh
+          RUN_ID="${{ github.event.workflow_run.id }}"
+          PRS=$(gh api "repos/${{ github.repository }}/actions/runs/${RUN_ID}" --jq '.pull_requests[].number')
+          if [ -z "$PRS" ]; then
+            echo "no PRs linked to test run"
+            exit 0
+          fi
+          for pr in $PRS; do
+            scripts/automerge_pr.sh "$pr" || true
+          done

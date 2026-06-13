@@ -21,7 +21,7 @@ def parse_findings(text):
         files = (m.group("files") or "").strip()
         rationale = (m.group("rationale") or "See RADAR findings.").strip()
         body = f"{rationale}\n\n**Files:** {files or 'n/a'}"
-        issues.append({"title": title, "body": body, "rationale": rationale})
+        issues.append({"title": title, "body": body, "rationale": rationale, "files": files})
     return issues
 
 

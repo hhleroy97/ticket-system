@@ -1,59 +1,42 @@
 name: radar-tickets
 
 on:
-  pull_request:
-    types: [closed]
+  push:
+    branches: [main]
     paths:
       - "docs/radar/*.md"
 
 permissions:
   issues: write
 
+concurrency:
+  group: radar-tickets
+  cancel-in-progress: false
+
 jobs:
   draft-issues:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Find latest RADAR file
-        id: radar
-        run: |
-          FILE=$(ls -1 docs/radar/*.md 2>/dev/null | tail -1)
-          echo "file=$FILE" >> "$GITHUB_OUTPUT"
-
-      - name: Install Cursor CLI
-        if: steps.radar.outputs.file != ''
-        run: |
-          curl https://cursor.com/install -fsSL | bash
-          echo "$HOME/.cursor/bin" >> "$GITHUB_PATH"
-
-      - name: Draft issue JSON
-        if: steps.radar.outputs.file != ''
-        id: draft
-        env:
-          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
-        run: |
-          cursor-agent -p --force --model auto --output-format text \
-            "Read ${{ steps.radar.outputs.file }} and docs/index.json. Output ONLY a JSON array of \
-             objects with keys title, body, rationale for candidate GitHub issues. No markdown fences." \
-            > /tmp/issues.json
-          echo "count=$(python3 -c 'import json; print(len(json.load(open(\"/tmp/issues.json\"))))')" >> "$GITHUB_OUTPUT"
-
-      - name: Create proposed issues
-        if: steps.radar.outputs.file != '' && steps.draft.outputs.count != '0'
+      - name: Ensure labels exist
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python3 - <<'PY'
-          import json, os, subprocess
-          issues = json.load(open("/tmp/issues.json"))
-          for item in issues:
-              title = item["title"]
-              body = item.get("body") or item.get("rationale", "")
-              body += "\n\n---\n_Label `radar:approved` to allow the executor workflow to act._"
-              subprocess.run(
-                  ["gh", "issue", "create", "--title", title, "--body", body, "--label", "radar:proposed"],
-                  check=True,
-              )
-          PY
+          gh label create "radar:proposed" --color "fbca04" --description "RADAR draft — not actionable until approved" 2>/dev/null || true
+          gh label create "radar:approved" --color "0e8a16" --description "Human or auto approved — executor may run" 2>/dev/null || true
+          gh label create "radar:auto-merge" --color "1d76db" --description "Low risk — auto-merge executor PR when tests pass" 2>/dev/null || true
+
+      - name: Find latest dated RADAR file
+        id: radar
+        run: |
+          FILE=$(ls -1 docs/radar/[0-9][0-9][0-9][0-9]-*.md 2>/dev/null | tail -1)
+          echo "file=$FILE" >> "$GITHUB_OUTPUT"
+
+      - name: Create proposed issues (deterministic)
+        if: steps.radar.outputs.file != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x scripts/create_radar_issues.py
+          python3 scripts/create_radar_issues.py "${{ steps.radar.outputs.file }}"
