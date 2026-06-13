@@ -4,27 +4,27 @@
     "name": "ticket-system",
     "path": "/home/runner/work/ticket-system/ticket-system",
     "branch": "main",
-    "head": "32668ae",
-    "total_commits": 14,
-    "generated_at": "2026-06-13 22:03 UTC"
+    "head": "5ceb5ad",
+    "total_commits": 28,
+    "generated_at": "2026-06-13 22:36 UTC"
   },
   "package_roots": {},
   "stats": {
-    "file_count": 38,
-    "total_loc": 1758,
+    "file_count": 51,
+    "total_loc": 2651,
     "contributor_count": 3,
-    "edge_count": 1
+    "edge_count": 2
   },
   "languages": [
     {
       "name": "Python",
-      "files": 7,
-      "loc": 831
+      "files": 13,
+      "loc": 1447
     },
     {
       "name": "Markdown",
-      "files": 12,
-      "loc": 433
+      "files": 14,
+      "loc": 516
     },
     {
       "name": "Other",
@@ -32,18 +32,18 @@
       "loc": 247
     },
     {
+      "name": "Shell",
+      "files": 6,
+      "loc": 238
+    },
+    {
       "name": "HTML",
       "files": 1,
       "loc": 203
     },
     {
-      "name": "Shell",
-      "files": 2,
-      "loc": 44
-    },
-    {
       "name": "Config",
-      "files": 9,
+      "files": 10,
       "loc": 0
     }
   ],
@@ -60,16 +60,16 @@
       "path": ".cursor/hooks.json",
       "lang": "Config",
       "loc": 0,
-      "size": 222,
-      "commits": 1,
+      "size": 248,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
       "path": ".cursor/hooks/post-pr-sync.sh",
       "lang": "Shell",
       "loc": 14,
-      "size": 486,
-      "commits": 1,
+      "size": 509,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -81,11 +81,35 @@
       "last_commit": "2026-06-13"
     },
     {
+      "path": ".github/EXECUTOR.md",
+      "lang": "Markdown",
+      "loc": 32,
+      "size": 1439,
+      "commits": 4,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": ".github/pull_request_template.md",
+      "lang": "Markdown",
+      "loc": 15,
+      "size": 215,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": ".github/workflows/auto-merge.yml",
+      "lang": "Config",
+      "loc": 0,
+      "size": 848,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
       "path": ".github/workflows/executor.yml",
       "lang": "Config",
       "loc": 0,
-      "size": 1714,
-      "commits": 2,
+      "size": 2970,
+      "commits": 6,
       "last_commit": "2026-06-13"
     },
     {
@@ -100,32 +124,32 @@
       "path": ".github/workflows/radar-tickets.yml",
       "lang": "Config",
       "loc": 0,
-      "size": 2000,
-      "commits": 2,
+      "size": 1338,
+      "commits": 3,
       "last_commit": "2026-06-13"
     },
     {
       "path": ".github/workflows/radar.yml",
       "lang": "Config",
       "loc": 0,
-      "size": 1427,
-      "commits": 2,
+      "size": 827,
+      "commits": 4,
       "last_commit": "2026-06-13"
     },
     {
       "path": ".github/workflows/scan-and-docs.yml",
       "lang": "Config",
       "loc": 0,
-      "size": 902,
-      "commits": 1,
+      "size": 841,
+      "commits": 3,
       "last_commit": "2026-06-13"
     },
     {
       "path": ".github/workflows/test.yml",
       "lang": "Config",
       "loc": 0,
-      "size": 161,
-      "commits": 1,
+      "size": 213,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -139,9 +163,9 @@
     {
       "path": "AGENTS.md",
       "lang": "Markdown",
-      "loc": 35,
-      "size": 1480,
-      "commits": 1,
+      "loc": 45,
+      "size": 2037,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -155,9 +179,9 @@
     {
       "path": "README.md",
       "lang": "Markdown",
-      "loc": 84,
-      "size": 3246,
-      "commits": 4,
+      "loc": 90,
+      "size": 4325,
+      "commits": 9,
       "last_commit": "2026-06-13"
     },
     {
@@ -172,8 +196,8 @@
       "path": "docs/dashboard.html",
       "lang": "HTML",
       "loc": 203,
-      "size": 14983,
-      "commits": 5,
+      "size": 15033,
+      "commits": 6,
       "last_commit": "2026-06-13"
     },
     {
@@ -181,15 +205,15 @@
       "lang": "Other",
       "loc": 0,
       "size": 28672,
-      "commits": 5,
+      "commits": 6,
       "last_commit": "2026-06-13"
     },
     {
       "path": "docs/index.json",
       "lang": "Config",
       "loc": 0,
-      "size": 7175,
-      "commits": 5,
+      "size": 7251,
+      "commits": 6,
       "last_commit": "2026-06-13"
     },
     {
@@ -197,7 +221,7 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 208,
-      "commits": 2,
+      "commits": 3,
       "last_commit": "2026-06-13"
     },
     {
@@ -221,7 +245,7 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 206,
-      "commits": 2,
+      "commits": 3,
       "last_commit": "2026-06-13"
     },
     {
@@ -229,7 +253,7 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 218,
-      "commits": 2,
+      "commits": 3,
       "last_commit": "2026-06-13"
     },
     {
@@ -245,7 +269,7 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 216,
-      "commits": 2,
+      "commits": 3,
       "last_commit": "2026-06-13"
     },
     {
@@ -259,16 +283,24 @@
     {
       "path": "docs/radar/README.md",
       "lang": "Markdown",
-      "loc": 1,
-      "size": 92,
-      "commits": 1,
+      "loc": 21,
+      "size": 666,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
       "path": "draft_issues.py",
       "lang": "Python",
       "loc": 40,
-      "size": 1141,
+      "size": 1157,
+      "commits": 2,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "hooks/install.sh",
+      "lang": "Shell",
+      "loc": 9,
+      "size": 371,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
@@ -299,8 +331,16 @@
     {
       "path": "hooks/sync-origin-main.sh",
       "lang": "Shell",
-      "loc": 30,
-      "size": 723,
+      "loc": 64,
+      "size": 1637,
+      "commits": 3,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "radar_report.py",
+      "lang": "Python",
+      "loc": 280,
+      "size": 9348,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
@@ -321,6 +361,46 @@
       "last_commit": "2026-06-13"
     },
     {
+      "path": "scripts/automerge_pr.sh",
+      "lang": "Shell",
+      "loc": 83,
+      "size": 2401,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "scripts/create_radar_issues.py",
+      "lang": "Python",
+      "loc": 79,
+      "size": 2280,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "scripts/push_to_main.sh",
+      "lang": "Shell",
+      "loc": 20,
+      "size": 551,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "scripts/radar_ticket_lib.py",
+      "lang": "Python",
+      "loc": 71,
+      "size": 1990,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "scripts/verify_executor_branch.sh",
+      "lang": "Shell",
+      "loc": 48,
+      "size": 1671,
+      "commits": 3,
+      "last_commit": "2026-06-13"
+    },
+    {
       "path": "templates/dashboard.html.tmpl",
       "lang": "Other",
       "loc": 203,
@@ -337,23 +417,51 @@
       "last_commit": "2026-06-13"
     },
     {
+      "path": "tests/test_executor.py",
+      "lang": "Python",
+      "loc": 28,
+      "size": 901,
+      "commits": 3,
+      "last_commit": "2026-06-13"
+    },
+    {
       "path": "tests/test_hooks.py",
       "lang": "Python",
-      "loc": 27,
-      "size": 798,
+      "loc": 32,
+      "size": 988,
+      "commits": 2,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "tests/test_radar_report.py",
+      "lang": "Python",
+      "loc": 95,
+      "size": 3281,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "tests/test_radar_tickets.py",
+      "lang": "Python",
+      "loc": 48,
+      "size": 1447,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
     {
       "path": "tests/test_scan.py",
       "lang": "Python",
-      "loc": 63,
-      "size": 2197,
-      "commits": 3,
+      "loc": 73,
+      "size": 2635,
+      "commits": 4,
       "last_commit": "2026-06-13"
     }
   ],
   "edges": [
+    {
+      "source": "scripts/create_radar_issues.py",
+      "target": "draft_issues.py"
+    },
     {
       "source": "tests/test_scan.py",
       "target": "scan.py"

@@ -1,10 +1,10 @@
-# `tests/test_scan`
+# `scripts/create_radar_issues`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 73 |
-| Commits | 4 |
+| LOC | 79 |
+| Commits | 1 |
 | Last commit | 2026-06-13 |
 
 ---
