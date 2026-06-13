@@ -1,8 +1,10 @@
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE / "scripts"))
 
 from radar_ticket_lib import (
@@ -11,6 +13,26 @@ from radar_ticket_lib import (
     labels_for_issue,
     select_issues,
 )
+import create_radar_issues
+
+
+class CreateRadarIssuesTests(unittest.TestCase):
+    def test_candidates_from_report_parses_radar_shape(self):
+        sample = """# RADAR 2026-06-13
+
+## Stale High-Churn Modules With Quiet Dependents
+**Files:** `draft_issues.py`, `docs/index.json`
+**Rationale:** Hotspot module outpaces its importers.
+"""
+        with tempfile.NamedTemporaryFile("w", suffix=".md", delete=False) as fh:
+            fh.write(sample)
+            path = Path(fh.name)
+        issues = create_radar_issues.candidates_from_report(path)
+        path.unlink(missing_ok=True)
+        self.assertEqual(len(issues), 1)
+        self.assertEqual(issues[0]["title"], "Stale High-Churn Modules With Quiet Dependents")
+        self.assertIn("draft_issues.py", issues[0]["files"])
+        self.assertFalse(is_low_risk(issues[0]))
 
 
 class RadarTicketLibTests(unittest.TestCase):

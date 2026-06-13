@@ -84,13 +84,17 @@ def render_finding(title, files, rationale):
 
 def check_stale_high_churn(files, edges):
     incoming, _ = build_graph(edges)
+    by_path = files_by_path(files)
     hotspots = [f for f in production_python(files) if f["commits"] >= CHURN_THRESHOLD]
     stale = []
     for meta in hotspots:
         importers = [src for src in incoming.get(meta["path"], []) if not is_test_path(src)]
         if not importers:
             continue
-        if all(files_by_path(files)[src]["commits"] < meta["commits"] for src in importers if src in files_by_path(files)):
+        indexed = [src for src in importers if src in by_path]
+        if not indexed:
+            continue
+        if all(by_path[src]["commits"] < meta["commits"] for src in indexed):
             stale.append(meta["path"])
     if stale:
         return render_finding(
