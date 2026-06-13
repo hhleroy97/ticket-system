@@ -55,5 +55,10 @@ if git merge-base --is-ancestor HEAD origin/main 2>/dev/null; then
   exit 0
 fi
 
-echo "sync-origin-main: local main diverged from origin/main; run 'git pull --rebase origin main' or merge manually" >&2
-exit 1
+# Local and remote both moved (e.g. merged PRs on GitHub + local commits): rebase onto origin.
+if dirty; then
+  git pull --rebase --autostash origin main
+else
+  git pull --rebase origin main
+fi
+echo "sync-origin-main: rebased main onto origin/main ($(git rev-parse --short HEAD))"
