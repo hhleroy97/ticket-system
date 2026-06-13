@@ -1,37 +1,250 @@
 {
   "schema_version": 1,
   "repo": {
-    "name": "srcpkg",
-    "path": "/home/hartley/projects/personal/ticket-sys/test-repos/srcpkg",
+    "name": "ticket-system",
+    "path": "/home/runner/work/ticket-system/ticket-system",
     "branch": "main",
-    "head": "2a0ae0f",
+    "head": "67feedf",
     "total_commits": 2,
-    "generated_at": "2026-06-13 21:25 UTC"
+    "generated_at": "2026-06-13 21:38 UTC"
   },
-  "package_roots": {
-    "": "src"
-  },
+  "package_roots": {},
   "stats": {
-    "file_count": 4,
-    "total_loc": 15,
+    "file_count": 31,
+    "total_loc": 1523,
     "contributor_count": 1,
-    "edge_count": 2
+    "edge_count": 0
   },
   "languages": [
     {
       "name": "Python",
-      "files": 3,
-      "loc": 15
+      "files": 9,
+      "loc": 761
+    },
+    {
+      "name": "Markdown",
+      "files": 7,
+      "loc": 337
+    },
+    {
+      "name": "Other",
+      "files": 5,
+      "loc": 222
+    },
+    {
+      "name": "HTML",
+      "files": 1,
+      "loc": 203
     },
     {
       "name": "Config",
-      "files": 1,
+      "files": 9,
       "loc": 0
     }
   ],
   "files": [
     {
-      "path": "pyproject.toml",
+      "path": ".cursor/cli.json",
+      "lang": "Config",
+      "loc": 0,
+      "size": 274,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": ".env.example",
+      "lang": "Other",
+      "loc": 2,
+      "size": 80,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": ".github/workflows/executor.yml",
+      "lang": "Config",
+      "loc": 0,
+      "size": 1714,
+      "commits": 2,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": ".github/workflows/pages.yml",
+      "lang": "Config",
+      "loc": 0,
+      "size": 771,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": ".github/workflows/radar-tickets.yml",
+      "lang": "Config",
+      "loc": 0,
+      "size": 1992,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": ".github/workflows/radar.yml",
+      "lang": "Config",
+      "loc": 0,
+      "size": 1419,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": ".github/workflows/scan-and-docs.yml",
+      "lang": "Config",
+      "loc": 0,
+      "size": 902,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": ".github/workflows/test.yml",
+      "lang": "Config",
+      "loc": 0,
+      "size": 161,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": ".gitignore",
+      "lang": "Other",
+      "loc": 4,
+      "size": 39,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "AGENTS.md",
+      "lang": "Markdown",
+      "loc": 35,
+      "size": 1480,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "HANDOFF.md",
+      "lang": "Markdown",
+      "loc": 206,
+      "size": 9834,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "README.md",
+      "lang": "Markdown",
+      "loc": 62,
+      "size": 2336,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docgen.py",
+      "lang": "Python",
+      "loc": 101,
+      "size": 2715,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docs/dashboard.html",
+      "lang": "HTML",
+      "loc": 203,
+      "size": 10844,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docs/index.db",
+      "lang": "Other",
+      "loc": 0,
+      "size": 28672,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docs/index.json",
+      "lang": "Config",
+      "loc": 0,
+      "size": 1416,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docs/modules/src-mypkg-core.md",
+      "lang": "Markdown",
+      "loc": 11,
+      "size": 214,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docs/modules/src-mypkg.md",
+      "lang": "Markdown",
+      "loc": 11,
+      "size": 209,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docs/modules/tests-test_core.md",
+      "lang": "Markdown",
+      "loc": 11,
+      "size": 215,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docs/radar/README.md",
+      "lang": "Markdown",
+      "loc": 1,
+      "size": 92,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "draft_issues.py",
+      "lang": "Python",
+      "loc": 40,
+      "size": 1141,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "hooks/pre-commit",
+      "lang": "Other",
+      "loc": 13,
+      "size": 384,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "run_tests.py",
+      "lang": "Python",
+      "loc": 15,
+      "size": 347,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "scan.py",
+      "lang": "Python",
+      "loc": 499,
+      "size": 17131,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "templates/dashboard.html.tmpl",
+      "lang": "Other",
+      "loc": 203,
+      "size": 9808,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "test-repos/srcpkg/pyproject.toml",
       "lang": "Config",
       "loc": 0,
       "size": 138,
@@ -39,7 +252,7 @@
       "last_commit": "2026-06-13"
     },
     {
-      "path": "src/mypkg/__init__.py",
+      "path": "test-repos/srcpkg/src/mypkg/__init__.py",
       "lang": "Python",
       "loc": 5,
       "size": 92,
@@ -47,7 +260,7 @@
       "last_commit": "2026-06-13"
     },
     {
-      "path": "src/mypkg/core.py",
+      "path": "test-repos/srcpkg/src/mypkg/core.py",
       "lang": "Python",
       "loc": 5,
       "size": 78,
@@ -55,22 +268,29 @@
       "last_commit": "2026-06-13"
     },
     {
-      "path": "tests/test_core.py",
+      "path": "test-repos/srcpkg/tests/test_core.py",
       "lang": "Python",
       "loc": 5,
       "size": 92,
       "commits": 1,
       "last_commit": "2026-06-13"
-    }
-  ],
-  "edges": [
-    {
-      "source": "src/mypkg/__init__.py",
-      "target": "src/mypkg/core.py"
     },
     {
-      "source": "tests/test_core.py",
-      "target": "src/mypkg/core.py"
+      "path": "tests/test_docgen.py",
+      "lang": "Python",
+      "loc": 48,
+      "size": 1476,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "tests/test_scan.py",
+      "lang": "Python",
+      "loc": 43,
+      "size": 1396,
+      "commits": 1,
+      "last_commit": "2026-06-13"
     }
-  ]
+  ],
+  "edges": []
 }
