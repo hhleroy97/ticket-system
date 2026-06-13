@@ -20,4 +20,11 @@ fi
 echo "verify_executor_branch: ${ahead} commit(s) ahead of ${BASE}"
 git log --oneline "${BASE}..HEAD"
 
+if git diff --name-only "${BASE}..HEAD" | grep -q '^\.github/workflows/'; then
+  echo "verify_executor_branch: changes under .github/workflows/ are blocked for GITHUB_TOKEN pushes." >&2
+  echo "Implement CI changes in a separate maintainer PR (PAT required). Revert workflow edits on this branch." >&2
+  git diff --name-only "${BASE}..HEAD" | grep '^\.github/workflows/' >&2
+  exit 1
+fi
+
 python3 run_tests.py

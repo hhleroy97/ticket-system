@@ -24,7 +24,7 @@ test: assert fixture paths omitted from docgen (#12)
 
 - Leave changes unstaged or uncommitted.
 - Combine unrelated changes in one commit.
-- Modify `.github/workflows/` unless the issue explicitly requires CI changes (needs maintainer review).
+- **Modify `.github/workflows/`** — `GITHUB_TOKEN` cannot push workflow file changes; verify will fail. Open CI changes in a separate maintainer PR using a PAT with `workflow` scope.
 - Select a named frontier model.
 - Act on issues without `radar:approved`.
 

@@ -18,6 +18,10 @@ class ExecutorTests(unittest.TestCase):
         self.assertIn("One commit per logical change", text)
         self.assertIn("run_tests.py", text)
 
+    def test_executor_instructions_forbid_workflow_edits(self):
+        text = EXECUTOR_MD.read_text()
+        self.assertIn(".github/workflows/", text)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -7,7 +7,6 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  workflows: write
 
 jobs:
   run:
@@ -38,6 +37,7 @@ jobs:
           cursor-agent -p --force --model composer-2.5 \
             "Read .github/EXECUTOR.md and AGENTS.md. Implement GitHub issue #${ISSUE_NUM}: ${ISSUE_TITLE}. \
              Make one git commit per logical change (feat/fix/test/docs/refactor) with (#${ISSUE_NUM}) in each message. \
+             Do NOT modify any file under .github/workflows/ (CI pushes are blocked). \
              Run python3 run_tests.py before your final commit. Commit all changes — the workflow will not squash."
 
       - name: Verify branch and tests
