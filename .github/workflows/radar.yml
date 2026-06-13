@@ -1,0 +1,47 @@
+name: radar
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scan repo
+        env:
+          TARGET_REPO: ${{ github.workspace }}
+        run: python3 scan.py
+
+      - name: Install Cursor CLI
+        run: |
+          curl https://cursor.com/install -fsSL | bash
+          echo "$HOME/.cursor/bin" >> "$GITHUB_PATH"
+
+      - name: RADAR research (Auto)
+        env:
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+        run: |
+          DATE=$(date -u +%Y-%m-%d)
+          OUT="docs/radar/${DATE}.md"
+          mkdir -p docs/radar
+          cursor-agent -p --model auto --output-format text \
+            "Read docs/index.json. Identify stale modules (high churn, no recent commits on dependents), \
+             dependency risks, and modules lacking tests. Write markdown to ${OUT} with sections \
+             '## <title>' each followed by **Files:** and **Rationale:** lines citing paths from index.json."
+
+      - name: Open PR with findings
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "radar: weekly findings"
+          title: "radar: weekly research findings"
+          body: "Automated RADAR research loop output."
+          branch: bot/radar-findings
+          delete-branch: true

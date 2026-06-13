@@ -1,0 +1,59 @@
+name: radar-tickets
+
+on:
+  pull_request:
+    types: [closed]
+    paths:
+      - "docs/radar/*.md"
+
+permissions:
+  issues: write
+
+jobs:
+  draft-issues:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Find latest RADAR file
+        id: radar
+        run: |
+          FILE=$(ls -1 docs/radar/*.md 2>/dev/null | tail -1)
+          echo "file=$FILE" >> "$GITHUB_OUTPUT"
+
+      - name: Install Cursor CLI
+        if: steps.radar.outputs.file != ''
+        run: |
+          curl https://cursor.com/install -fsSL | bash
+          echo "$HOME/.cursor/bin" >> "$GITHUB_PATH"
+
+      - name: Draft issue JSON
+        if: steps.radar.outputs.file != ''
+        id: draft
+        env:
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+        run: |
+          cursor-agent -p --model auto --output-format text \
+            "Read ${{ steps.radar.outputs.file }} and docs/index.json. Output ONLY a JSON array of \
+             objects with keys title, body, rationale for candidate GitHub issues. No markdown fences." \
+            > /tmp/issues.json
+          echo "count=$(python3 -c 'import json; print(len(json.load(open(\"/tmp/issues.json\"))))')" >> "$GITHUB_OUTPUT"
+
+      - name: Create proposed issues
+        if: steps.radar.outputs.file != '' && steps.draft.outputs.count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess
+          issues = json.load(open("/tmp/issues.json"))
+          for item in issues:
+              title = item["title"]
+              body = item.get("body") or item.get("rationale", "")
+              body += "\n\n---\n_Label `radar:approved` to allow the executor workflow to act._"
+              subprocess.run(
+                  ["gh", "issue", "create", "--title", title, "--body", body, "--label", "radar:proposed"],
+                  check=True,
+              )
+          PY

@@ -1,0 +1,50 @@
+name: executor
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  run:
+    if: github.event.label.name == 'radar:approved'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Cursor CLI
+        run: |
+          curl https://cursor.com/install -fsSL | bash
+          echo "$HOME/.cursor/bin" >> "$GITHUB_PATH"
+
+      - name: Configure git
+        run: |
+          git config user.name "Cursor Agent"
+          git config user.email "cursoragent@users.noreply.github.com"
+
+      - name: Implement approved issue
+        env:
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+          ISSUE_NUM: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+        run: |
+          git checkout -b "issue-${ISSUE_NUM}"
+          cursor-agent -p --force --model composer-2.5 \
+            "Implement GitHub issue #${ISSUE_NUM}: ${ISSUE_TITLE}. \
+             Run python3 run_tests.py. Keep the diff minimal and focused."
+
+      - name: Open pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUM: ${{ github.event.issue.number }}
+        run: |
+          git push -u origin "issue-${ISSUE_NUM}"
+          gh pr create \
+            --title "fix: #${ISSUE_NUM}" \
+            --body "Implements #${ISSUE_NUM} via Cursor executor workflow." \
+            --head "issue-${ISSUE_NUM}"

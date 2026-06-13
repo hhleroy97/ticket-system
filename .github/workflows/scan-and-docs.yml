@@ -1,0 +1,36 @@
+name: scan-and-docs
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Scan target repo (self)
+        env:
+          TARGET_REPO: ${{ github.workspace }}
+        run: |
+          python3 scan.py
+          python3 docgen.py
+
+      - name: Open PR when docs changed
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "docs: refresh scan index and module summaries"
+          title: "docs: refresh repo-intel scan"
+          body: |
+            Automated refresh of `docs/index.json`, SQLite mirror, dashboard, and module docs.
+          branch: bot/scan-refresh
+          delete-branch: true
