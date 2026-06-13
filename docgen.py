@@ -6,14 +6,31 @@ No LLM calls. Prose is templated from scan stats (LOC, churn, imports).
 """
 
 import json
+import os
 import re
 from collections import defaultdict
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-DOCS = HERE / "docs"
-INDEX = DOCS / "index.json"
-OUT = DOCS / "modules"
+FIXTURE_ROOT = HERE / "test-repos"
+
+
+def resolve_docs(repo):
+    repo = repo.resolve()
+    if repo == HERE.resolve():
+        return HERE / "docs"
+    try:
+        repo.relative_to(FIXTURE_ROOT)
+        return repo / "docs"
+    except ValueError:
+        return HERE / "docs"
+
+
+def docs_for_docgen():
+    target = os.environ.get("TARGET_REPO")
+    if target:
+        return resolve_docs(Path(target).expanduser().resolve())
+    return HERE / "docs"
 
 
 def slugify(path):
@@ -68,10 +85,13 @@ def render_module(mod, meta, incoming, outgoing):
 
 
 def main():
-    if not INDEX.is_file():
-        raise SystemExit(f"missing {INDEX}; run scan.py first")
+    docs = docs_for_docgen()
+    index_path = docs / "index.json"
+    out = docs / "modules"
+    if not index_path.is_file():
+        raise SystemExit(f"missing {index_path}; run scan.py first")
 
-    index = json.loads(INDEX.read_text())
+    index = json.loads(index_path.read_text())
     incoming, outgoing = build_graph(index.get("edges", []))
     file_meta = {f["path"]: f for f in index.get("files", [])}
 
@@ -81,7 +101,7 @@ def main():
         if f["lang"] == "Python" and f["path"].endswith(".py")
     )
 
-    OUT.mkdir(parents=True, exist_ok=True)
+    out.mkdir(parents=True, exist_ok=True)
     written = 0
     for mod in py_modules:
         meta = file_meta.get(
@@ -90,11 +110,11 @@ def main():
         )
         if not meta:
             continue
-        path = OUT / f"{slugify(mod)}.md"
+        path = out / f"{slugify(mod)}.md"
         path.write_text(render_module(mod, meta, incoming, outgoing))
         written += 1
 
-    print(f"wrote {written} module docs under {OUT}")
+    print(f"wrote {written} module docs under {out}")
 
 
 if __name__ == "__main__":

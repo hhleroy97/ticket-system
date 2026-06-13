@@ -3,33 +3,33 @@
   "repo": {
     "name": "ticket-system",
     "path": "/home/runner/work/ticket-system/ticket-system",
-    "branch": "main",
-    "head": "a35abb0",
-    "total_commits": 1,
-    "generated_at": "2026-06-13 21:48 UTC"
+    "branch": "issue-10",
+    "head": "8d54561",
+    "total_commits": 10,
+    "generated_at": "2026-06-13 21:53 UTC"
   },
   "package_roots": {},
   "stats": {
-    "file_count": 47,
-    "total_loc": 1748,
-    "contributor_count": 1,
+    "file_count": 38,
+    "total_loc": 1734,
+    "contributor_count": 2,
     "edge_count": 0
   },
   "languages": [
     {
       "name": "Python",
-      "files": 10,
-      "loc": 788
+      "files": 7,
+      "loc": 818
     },
     {
       "name": "Markdown",
-      "files": 17,
-      "loc": 467
+      "files": 12,
+      "loc": 422
     },
     {
       "name": "Other",
       "files": 7,
-      "loc": 246
+      "loc": 247
     },
     {
       "name": "HTML",
@@ -43,7 +43,7 @@
     },
     {
       "name": "Config",
-      "files": 10,
+      "files": 9,
       "loc": 0
     }
   ],
@@ -77,7 +77,7 @@
       "lang": "Other",
       "loc": 5,
       "size": 184,
-      "commits": 1,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -85,7 +85,7 @@
       "lang": "Config",
       "loc": 0,
       "size": 1714,
-      "commits": 1,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -93,7 +93,7 @@
       "lang": "Config",
       "loc": 0,
       "size": 812,
-      "commits": 1,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -101,7 +101,7 @@
       "lang": "Config",
       "loc": 0,
       "size": 2000,
-      "commits": 1,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -109,7 +109,7 @@
       "lang": "Config",
       "loc": 0,
       "size": 1427,
-      "commits": 1,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -131,8 +131,8 @@
     {
       "path": ".gitignore",
       "lang": "Other",
-      "loc": 4,
-      "size": 39,
+      "loc": 5,
+      "size": 58,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
@@ -157,14 +157,14 @@
       "lang": "Markdown",
       "loc": 82,
       "size": 3083,
-      "commits": 1,
+      "commits": 3,
       "last_commit": "2026-06-13"
     },
     {
       "path": "docgen.py",
       "lang": "Python",
-      "loc": 101,
-      "size": 2715,
+      "loc": 121,
+      "size": 3210,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
@@ -172,8 +172,8 @@
       "path": "docs/dashboard.html",
       "lang": "HTML",
       "loc": 203,
-      "size": 16078,
-      "commits": 1,
+      "size": 14983,
+      "commits": 4,
       "last_commit": "2026-06-13"
     },
     {
@@ -181,15 +181,15 @@
       "lang": "Other",
       "loc": 0,
       "size": 28672,
-      "commits": 1,
+      "commits": 4,
       "last_commit": "2026-06-13"
     },
     {
       "path": "docs/index.json",
       "lang": "Config",
       "loc": 0,
-      "size": 8638,
-      "commits": 1,
+      "size": 7175,
+      "commits": 4,
       "last_commit": "2026-06-13"
     },
     {
@@ -225,54 +225,6 @@
       "last_commit": "2026-06-13"
     },
     {
-      "path": "docs/modules/src-mypkg-core.md",
-      "lang": "Markdown",
-      "loc": 11,
-      "size": 207,
-      "commits": 1,
-      "last_commit": "2026-06-13"
-    },
-    {
-      "path": "docs/modules/src-mypkg.md",
-      "lang": "Markdown",
-      "loc": 11,
-      "size": 202,
-      "commits": 1,
-      "last_commit": "2026-06-13"
-    },
-    {
-      "path": "docs/modules/test-repos-srcpkg-src-mypkg-core.md",
-      "lang": "Markdown",
-      "loc": 11,
-      "size": 232,
-      "commits": 1,
-      "last_commit": "2026-06-13"
-    },
-    {
-      "path": "docs/modules/test-repos-srcpkg-src-mypkg.md",
-      "lang": "Markdown",
-      "loc": 11,
-      "size": 227,
-      "commits": 1,
-      "last_commit": "2026-06-13"
-    },
-    {
-      "path": "docs/modules/test-repos-srcpkg-tests-test_core.md",
-      "lang": "Markdown",
-      "loc": 11,
-      "size": 233,
-      "commits": 1,
-      "last_commit": "2026-06-13"
-    },
-    {
-      "path": "docs/modules/tests-test_core.md",
-      "lang": "Markdown",
-      "loc": 11,
-      "size": 208,
-      "commits": 1,
-      "last_commit": "2026-06-13"
-    },
-    {
       "path": "docs/modules/tests-test_docgen.md",
       "lang": "Markdown",
       "loc": 11,
@@ -293,6 +245,14 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 216,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docs/radar/2026-06-13.md",
+      "lang": "Markdown",
+      "loc": 21,
+      "size": 1956,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
@@ -355,8 +315,8 @@
     {
       "path": "scan.py",
       "lang": "Python",
-      "loc": 499,
-      "size": 17131,
+      "loc": 514,
+      "size": 17620,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
@@ -369,42 +329,10 @@
       "last_commit": "2026-06-13"
     },
     {
-      "path": "test-repos/srcpkg/pyproject.toml",
-      "lang": "Config",
-      "loc": 0,
-      "size": 138,
-      "commits": 1,
-      "last_commit": "2026-06-13"
-    },
-    {
-      "path": "test-repos/srcpkg/src/mypkg/__init__.py",
-      "lang": "Python",
-      "loc": 5,
-      "size": 92,
-      "commits": 1,
-      "last_commit": "2026-06-13"
-    },
-    {
-      "path": "test-repos/srcpkg/src/mypkg/core.py",
-      "lang": "Python",
-      "loc": 5,
-      "size": 78,
-      "commits": 1,
-      "last_commit": "2026-06-13"
-    },
-    {
-      "path": "test-repos/srcpkg/tests/test_core.py",
-      "lang": "Python",
-      "loc": 5,
-      "size": 92,
-      "commits": 1,
-      "last_commit": "2026-06-13"
-    },
-    {
       "path": "tests/test_docgen.py",
       "lang": "Python",
-      "loc": 48,
-      "size": 1476,
+      "loc": 51,
+      "size": 1600,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
@@ -419,8 +347,8 @@
     {
       "path": "tests/test_scan.py",
       "lang": "Python",
-      "loc": 43,
-      "size": 1396,
+      "loc": 50,
+      "size": 1725,
       "commits": 1,
       "last_commit": "2026-06-13"
     }

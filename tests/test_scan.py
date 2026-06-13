@@ -6,6 +6,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent.parent
 SCAN = HERE / "scan.py"
 FIXTURE = HERE / "test-repos" / "srcpkg"
+FIXTURE_DOCS = FIXTURE / "docs"
 
 
 class ScanTests(unittest.TestCase):
@@ -16,7 +17,8 @@ class ScanTests(unittest.TestCase):
             capture_output=True, text=True, cwd=HERE, env={**dict(**__import__("os").environ), **env},
         )
         self.assertEqual(proc.returncode, 0, proc.stderr or proc.stdout)
-        return json.loads((HERE / "docs" / "index.json").read_text())
+        docs = FIXTURE_DOCS if target.resolve() == FIXTURE.resolve() else HERE / "docs"
+        return json.loads((docs / "index.json").read_text())
 
     def test_src_layout_import_edges(self):
         index = self.run_scan(FIXTURE)
@@ -30,13 +32,18 @@ class ScanTests(unittest.TestCase):
 
     def test_sqlite_output(self):
         self.run_scan(FIXTURE)
-        db = HERE / "docs" / "index.db"
+        db = FIXTURE_DOCS / "index.db"
         self.assertTrue(db.is_file())
         import sqlite3
         conn = sqlite3.connect(db)
         count = conn.execute("SELECT COUNT(*) FROM edges").fetchone()[0]
         conn.close()
         self.assertGreaterEqual(count, 1)
+
+    def test_primary_scan_excludes_fixture_paths(self):
+        index = self.run_scan(HERE)
+        paths = {f["path"] for f in index["files"]}
+        self.assertFalse(any(p.startswith("test-repos/") for p in paths))
 
 
 if __name__ == "__main__":

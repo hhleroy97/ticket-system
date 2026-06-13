@@ -5,6 +5,8 @@ import unittest
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent.parent
+FIXTURE = HERE / "test-repos" / "srcpkg"
+FIXTURE_DOCS = FIXTURE / "docs"
 
 
 class DocgenTests(unittest.TestCase):
@@ -13,14 +15,15 @@ class DocgenTests(unittest.TestCase):
             ["python3", str(HERE / "scan.py")],
             check=True,
             cwd=HERE,
-            env={**__import__("os").environ, "TARGET_REPO": str(HERE / "test-repos" / "srcpkg")},
+            env={**__import__("os").environ, "TARGET_REPO": str(FIXTURE)},
         )
         proc = subprocess.run(
             ["python3", str(HERE / "docgen.py")],
             capture_output=True, text=True, cwd=HERE,
+            env={**__import__("os").environ, "TARGET_REPO": str(FIXTURE)},
         )
         self.assertEqual(proc.returncode, 0, proc.stderr)
-        modules = list((HERE / "docs" / "modules").glob("*.md"))
+        modules = list((FIXTURE_DOCS / "modules").glob("*.md"))
         self.assertGreaterEqual(len(modules), 1)
 
 
