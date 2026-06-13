@@ -4,14 +4,14 @@
     "name": "ticket-system",
     "path": "/home/runner/work/ticket-system/ticket-system",
     "branch": "main",
-    "head": "6f94901",
-    "total_commits": 31,
-    "generated_at": "2026-06-13 22:43 UTC"
+    "head": "7ec9ac0",
+    "total_commits": 33,
+    "generated_at": "2026-06-13 22:44 UTC"
   },
   "package_roots": {},
   "stats": {
     "file_count": 57,
-    "total_loc": 2719,
+    "total_loc": 2715,
     "contributor_count": 4,
     "edge_count": 2
   },
@@ -24,7 +24,7 @@
     {
       "name": "Markdown",
       "files": 20,
-      "loc": 582
+      "loc": 578
     },
     {
       "name": "Other",
@@ -132,8 +132,8 @@
       "path": ".github/workflows/radar.yml",
       "lang": "Config",
       "loc": 0,
-      "size": 827,
-      "commits": 4,
+      "size": 1675,
+      "commits": 5,
       "last_commit": "2026-06-13"
     },
     {
@@ -196,8 +196,8 @@
       "path": "docs/dashboard.html",
       "lang": "HTML",
       "loc": 203,
-      "size": 17564,
-      "commits": 8,
+      "size": 17565,
+      "commits": 9,
       "last_commit": "2026-06-13"
     },
     {
@@ -205,15 +205,15 @@
       "lang": "Other",
       "loc": 0,
       "size": 28672,
-      "commits": 8,
+      "commits": 9,
       "last_commit": "2026-06-13"
     },
     {
       "path": "docs/index.json",
       "lang": "Config",
       "loc": 0,
-      "size": 10678,
-      "commits": 8,
+      "size": 10679,
+      "commits": 9,
       "last_commit": "2026-06-13"
     },
     {
@@ -323,9 +323,9 @@
     {
       "path": "docs/radar/2026-06-13.md",
       "lang": "Markdown",
-      "loc": 21,
-      "size": 1956,
-      "commits": 1,
+      "loc": 17,
+      "size": 1422,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
