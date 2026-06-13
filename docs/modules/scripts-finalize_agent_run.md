@@ -1,10 +1,10 @@
-# `tests/test_dashboard`
+# `scripts/finalize_agent_run`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 86 |
-| Commits | 2 |
+| LOC | 92 |
+| Commits | 1 |
 | Last commit | 2026-06-13 |
 
 ---

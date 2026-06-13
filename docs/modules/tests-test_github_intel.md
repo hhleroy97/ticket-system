@@ -1,10 +1,10 @@
-# `tests/test_dashboard`
+# `tests/test_github_intel`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 86 |
-| Commits | 2 |
+| LOC | 98 |
+| Commits | 1 |
 | Last commit | 2026-06-13 |
 
 ---

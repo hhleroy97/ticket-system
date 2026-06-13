@@ -1,10 +1,10 @@
-# `tests/test_dashboard`
+# `scripts/dashboard_api`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 86 |
-| Commits | 2 |
+| LOC | 186 |
+| Commits | 1 |
 | Last commit | 2026-06-13 |
 
 ---

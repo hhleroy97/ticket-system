@@ -1,10 +1,10 @@
-# `tests/test_dashboard`
+# `scripts/repo_sync`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 86 |
-| Commits | 2 |
+| LOC | 106 |
+| Commits | 1 |
 | Last commit | 2026-06-13 |
 
 ---

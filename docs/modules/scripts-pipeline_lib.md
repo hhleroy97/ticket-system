@@ -1,10 +1,10 @@
-# `tests/test_dashboard`
+# `scripts/pipeline_lib`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 86 |
-| Commits | 2 |
+| LOC | 407 |
+| Commits | 1 |
 | Last commit | 2026-06-13 |
 
 ---
