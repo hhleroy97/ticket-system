@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# After switching branches, sync when landing on main (e.g. post-PR checkout).
+set -euo pipefail
+
+# $3 == 1 when checking out a branch (not a file restore)
+if [ "${3:-0}" != "1" ]; then
+  exit 0
+fi
+
+ROOT="$(git rev-parse --show-toplevel)"
+branch="$(git -C "$ROOT" rev-parse --abbrev-ref HEAD)"
+if [ "$branch" = "main" ]; then
+  exec "$ROOT/hooks/sync-origin-main.sh"
+fi
+
+exit 0

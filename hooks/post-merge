@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# After pull/merge on main, fast-forward from origin/main.
+set -euo pipefail
+ROOT="$(git rev-parse --show-toplevel)"
+exec "$ROOT/hooks/sync-origin-main.sh"

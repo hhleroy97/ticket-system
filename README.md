@@ -45,11 +45,25 @@ repo-intel/
 
 Set repository secret `CURSOR_API_KEY` for agent workflows.
 
-Optional pre-commit hook:
+Optional git hooks (scan refresh + stay synced with origin/main):
 
 ```bash
 git config core.hooksPath hooks
 ```
+
+| Hook | When | Effect |
+| --- | --- | --- |
+| `pre-commit` | commit | Rescan when scanner inputs change |
+| `post-merge` | `git pull` / merge on main | `git fetch` + fast-forward `main` from `origin/main` |
+| `post-checkout` | switch to `main` | same sync (useful after merging/closing a PR locally) |
+
+Manual sync anytime:
+
+```bash
+./hooks/sync-origin-main.sh
+```
+
+Cursor also runs the sync after `gh pr merge|close` or `git checkout main` (see `.cursor/hooks.json`).
 
 ## Research notes
 

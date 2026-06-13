@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "hooks": {
+    "afterShellExecution": [
+      {
+        "command": ".cursor/hooks/post-pr-sync.sh",
+        "matcher": "gh pr (merge|close|delete)|git checkout main|git switch main"
+      }
+    ]
+  }
+}
