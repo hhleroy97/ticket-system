@@ -1,10 +1,10 @@
-# `scan`
+# `tests/test_dashboard`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 690 |
-| Commits | 4 |
+| LOC | 85 |
+| Commits | 1 |
 | Last commit | 2026-06-13 |
 
 ---
