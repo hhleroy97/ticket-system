@@ -45,6 +45,8 @@ class DraftIssuesTests(unittest.TestCase):
         issues = json.loads(proc.stdout)
         self.assertEqual(len(issues), 1)
         self.assertIn("core", issues[0]["title"])
+        self.assertIn("core.py", issues[0]["files"])
+        self.assertIn("commits", issues[0]["rationale"])
 
 
 if __name__ == "__main__":

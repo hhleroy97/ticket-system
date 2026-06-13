@@ -7,10 +7,10 @@ import sys
 from pathlib import Path
 
 FINDING = re.compile(
-    r"^##\s+(?P<title>.+?)\s*$.*?"
-    r"(?:\*\*Files?\*\*:\s*(?P<files>[^\n]+))?"
-    r"(?:\*\*Rationale\*\*:\s*(?P<rationale>[^\n]+))?",
-    re.MULTILINE | re.DOTALL,
+    r"^##\s+(?P<title>.+?)\s*\n"
+    r"\*\*Files:\*\*\s*(?P<files>[^\n]+)\n"
+    r"\*\*Rationale:\*\*\s*(?P<rationale>[^\n]+)",
+    re.MULTILINE,
 )
 
 
