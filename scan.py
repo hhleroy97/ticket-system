@@ -27,8 +27,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-DOCS = HERE / "docs"
 SCHEMA_VERSION = 1
+FIXTURE_ROOT = HERE / "test-repos"
 
 LANG_BY_EXT = {
     ".py": "Python", ".pyi": "Python",
@@ -75,8 +75,20 @@ def resolve_target():
                     target = line.split("=", 1)[1].strip().strip('"').strip("'")
                     break
     if not target:
-        target = str(HERE / "test-repos" / "click")
+        target = str(FIXTURE_ROOT / "click")
     return Path(target).expanduser().resolve()
+
+
+def resolve_docs(repo):
+    """Primary project docs live under docs/; fixture repos under <fixture>/docs/."""
+    repo = repo.resolve()
+    if repo == HERE.resolve():
+        return HERE / "docs"
+    try:
+        repo.relative_to(FIXTURE_ROOT)
+        return repo / "docs"
+    except ValueError:
+        return HERE / "docs"
 
 
 def git(repo, *args):
@@ -418,6 +430,8 @@ def main():
         sys.exit(f"error: {repo} is not a git repository (set TARGET_REPO)")
 
     files = [f for f in git(repo, "ls-files").splitlines() if f]
+    if repo.resolve() == HERE.resolve():
+        files = [f for f in files if not f.startswith("test-repos/")]
     fileset = set(files)
     churn, last = git_history(repo)
     package_roots = discover_package_roots(repo, files)
@@ -479,20 +493,21 @@ def main():
         "edges": edges,
     }
 
-    DOCS.mkdir(exist_ok=True)
-    (DOCS / "index.json").write_text(json.dumps(index, indent=2))
-    write_sqlite(index, DOCS / "index.db")
+    docs = resolve_docs(repo)
+    docs.mkdir(parents=True, exist_ok=True)
+    (docs / "index.json").write_text(json.dumps(index, indent=2))
+    write_sqlite(index, docs / "index.db")
 
     tmpl = (HERE / "templates" / "dashboard.html.tmpl").read_text()
     html = tmpl.replace("/*__DATA__*/", json.dumps(index))
-    (DOCS / "dashboard.html").write_text(html)
+    (docs / "dashboard.html").write_text(html)
 
     s = index["stats"]
     print(f"scanned {index['repo']['name']} @ {index['repo']['head']}")
     print(f"  package roots: {package_roots or '(none)'}")
     print(f"  {s['file_count']} files, {s['total_loc']:,} LOC, "
           f"{s['edge_count']} import edges, {s['contributor_count']} contributors")
-    print(f"  wrote {DOCS/'index.json'}, {DOCS/'index.db'}, and {DOCS/'dashboard.html'}")
+    print(f"  wrote {docs/'index.json'}, {docs/'index.db'}, and {docs/'dashboard.html'}")
 
 
 if __name__ == "__main__":
