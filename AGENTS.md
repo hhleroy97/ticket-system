@@ -27,6 +27,16 @@ tickets through a human-gated pipeline. See HANDOFF.md for the full spec and bui
 - Prefer opening a PR over committing to main directly.
 - Don't act on a GitHub issue unless it carries the `radar:approved` label.
 
+## Executor (approved issues, headless CI)
+
+When implementing an approved issue on branch `issue-<N>`:
+
+- Read `.github/EXECUTOR.md` for the full checklist.
+- **One commit per logical change** — do not rely on CI to squash; uncommitted work fails the workflow.
+- Use conventional prefixes (`feat:`, `fix:`, `test:`, `docs:`, `refactor:`) and reference `(#N)` in messages.
+- Run `python3 run_tests.py` before the final commit; all tests must pass.
+- Prefer **Rebase and merge** or **Merge commit** on GitHub — avoid squash if preserving commit history.
+
 ## Run
 
 ```bash

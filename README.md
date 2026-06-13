@@ -48,7 +48,7 @@ repo-intel/
 | `scan-and-docs.yml` | push to main | Rescan + module docs PR |
 | `radar.yml` | weekly cron | Auto research → `docs/radar/` PR |
 | `radar-tickets.yml` | RADAR PR merged | Opens `radar:proposed` issues |
-| `executor.yml` | issue labeled `radar:approved` | Composer 2.5 implements + opens PR |
+| `executor.yml` | issue labeled `radar:approved` | Composer 2.5 implements + logical commits + PR (`Closes #N`) |
 | `pages.yml` | push to main | Publishes `docs/` to GitHub Pages |
 
 Set repository secret `CURSOR_API_KEY` for agent workflows.
@@ -69,6 +69,8 @@ Optional git hooks (scan refresh + stay synced with origin/main):
 After merging a PR on GitHub (web UI), run `./hooks/sync-origin-main.sh` locally — hooks only fire on local git commands.
 
 Cursor also runs sync after `gh pr merge`, `git pull`, or `git checkout main` (see `.cursor/hooks.json`).
+
+**Executor PRs:** merge with **Rebase and merge** or **Merge commit** (not squash) to keep logical commits on `main`.
 
 ## Research notes
 
