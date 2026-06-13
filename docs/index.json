@@ -1,18 +1,18 @@
 {
   "schema_version": 1,
   "repo": {
-    "name": "ticket-sys",
-    "path": "/home/hartley/projects/personal/ticket-sys",
+    "name": "ticket-system",
+    "path": "/home/runner/work/ticket-system/ticket-system",
     "branch": "main",
-    "head": "91aaf45",
-    "total_commits": 6,
-    "generated_at": "2026-06-13 21:44 UTC"
+    "head": "a35abb0",
+    "total_commits": 1,
+    "generated_at": "2026-06-13 21:48 UTC"
   },
   "package_roots": {},
   "stats": {
-    "file_count": 46,
-    "total_loc": 1731,
-    "contributor_count": 2,
+    "file_count": 47,
+    "total_loc": 1748,
+    "contributor_count": 1,
     "edge_count": 0
   },
   "languages": [
@@ -23,8 +23,8 @@
     },
     {
       "name": "Markdown",
-      "files": 16,
-      "loc": 450
+      "files": 17,
+      "loc": 467
     },
     {
       "name": "Other",
@@ -77,7 +77,7 @@
       "lang": "Other",
       "loc": 5,
       "size": 184,
-      "commits": 2,
+      "commits": 1,
       "last_commit": "2026-06-13"
     },
     {
@@ -85,14 +85,14 @@
       "lang": "Config",
       "loc": 0,
       "size": 1714,
-      "commits": 2,
+      "commits": 1,
       "last_commit": "2026-06-13"
     },
     {
       "path": ".github/workflows/pages.yml",
       "lang": "Config",
       "loc": 0,
-      "size": 771,
+      "size": 812,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
@@ -100,7 +100,7 @@
       "path": ".github/workflows/radar-tickets.yml",
       "lang": "Config",
       "loc": 0,
-      "size": 1992,
+      "size": 2000,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
@@ -108,7 +108,7 @@
       "path": ".github/workflows/radar.yml",
       "lang": "Config",
       "loc": 0,
-      "size": 1419,
+      "size": 1427,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
@@ -155,9 +155,9 @@
     {
       "path": "README.md",
       "lang": "Markdown",
-      "loc": 76,
-      "size": 2847,
-      "commits": 2,
+      "loc": 82,
+      "size": 3083,
+      "commits": 1,
       "last_commit": "2026-06-13"
     },
     {
@@ -172,8 +172,8 @@
       "path": "docs/dashboard.html",
       "lang": "HTML",
       "loc": 203,
-      "size": 10812,
-      "commits": 2,
+      "size": 16078,
+      "commits": 1,
       "last_commit": "2026-06-13"
     },
     {
@@ -181,15 +181,15 @@
       "lang": "Other",
       "loc": 0,
       "size": 28672,
-      "commits": 2,
+      "commits": 1,
       "last_commit": "2026-06-13"
     },
     {
       "path": "docs/index.json",
       "lang": "Config",
       "loc": 0,
-      "size": 1384,
-      "commits": 2,
+      "size": 8638,
+      "commits": 1,
       "last_commit": "2026-06-13"
     },
     {
@@ -277,6 +277,14 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 218,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docs/modules/tests-test_hooks.md",
+      "lang": "Markdown",
+      "loc": 11,
+      "size": 217,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
