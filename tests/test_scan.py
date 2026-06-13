@@ -1,5 +1,6 @@
 import json
 import subprocess
+import sys
 import unittest
 from pathlib import Path
 
@@ -7,6 +8,18 @@ HERE = Path(__file__).resolve().parent.parent
 SCAN = HERE / "scan.py"
 FIXTURE = HERE / "test-repos" / "srcpkg"
 FIXTURE_DOCS = FIXTURE / "docs"
+
+sys.path.insert(0, str(HERE))
+from scan import discover_package_roots, git, parse_pyproject_package_dirs
+
+
+class PackageRootTests(unittest.TestCase):
+    def test_pyproject_package_dir(self):
+        self.assertEqual(parse_pyproject_package_dirs(FIXTURE), {"": "src"})
+
+    def test_discover_src_layout(self):
+        files = [f for f in git(FIXTURE, "ls-files").splitlines() if f]
+        self.assertEqual(discover_package_roots(FIXTURE, files), {"": "src"})
 
 
 class ScanTests(unittest.TestCase):
