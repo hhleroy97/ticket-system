@@ -2,11 +2,11 @@
   "schema_version": 1,
   "repo": {
     "name": "srcpkg",
-    "path": "/home/hartley/projects/personal/ticket-sys/test-repos/srcpkg",
-    "branch": "main",
-    "head": "2a0ae0f",
+    "path": "/home/runner/work/ticket-system/ticket-system/test-repos/srcpkg",
+    "branch": "issue-1",
+    "head": "67feedf",
     "total_commits": 2,
-    "generated_at": "2026-06-13 21:25 UTC"
+    "generated_at": "2026-06-13 21:38 UTC"
   },
   "package_roots": {
     "": "src"
@@ -35,32 +35,32 @@
       "lang": "Config",
       "loc": 0,
       "size": 138,
-      "commits": 1,
-      "last_commit": "2026-06-13"
+      "commits": 0,
+      "last_commit": null
     },
     {
       "path": "src/mypkg/__init__.py",
       "lang": "Python",
       "loc": 5,
       "size": 92,
-      "commits": 1,
-      "last_commit": "2026-06-13"
+      "commits": 0,
+      "last_commit": null
     },
     {
       "path": "src/mypkg/core.py",
       "lang": "Python",
       "loc": 5,
       "size": 78,
-      "commits": 1,
-      "last_commit": "2026-06-13"
+      "commits": 0,
+      "last_commit": null
     },
     {
       "path": "tests/test_core.py",
       "lang": "Python",
       "loc": 5,
       "size": 92,
-      "commits": 1,
-      "last_commit": "2026-06-13"
+      "commits": 0,
+      "last_commit": null
     }
   ],
   "edges": [
