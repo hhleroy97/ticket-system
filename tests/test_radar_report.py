@@ -10,6 +10,46 @@ FIXTURE_DOCS = FIXTURE / "docs"
 REPORT = HERE / "radar_report.py"
 DRAFT = HERE / "draft_issues.py"
 
+import sys
+
+sys.path.insert(0, str(HERE))
+from radar_report import CHURN_THRESHOLD, check_stale_high_churn
+
+
+class StaleHighChurnTests(unittest.TestCase):
+    def test_flags_hotspot_when_indexed_importers_are_quieter(self):
+        files = [
+            {"path": "hotspot.py", "lang": "Python", "commits": 5, "loc": 10},
+            {"path": "consumer.py", "lang": "Python", "commits": 1, "loc": 5},
+        ]
+        edges = [{"source": "consumer.py", "target": "hotspot.py"}]
+        report = check_stale_high_churn(files, edges)
+        self.assertIn("Stale High-Churn Modules With Quiet Dependents", report)
+        self.assertIn("`hotspot.py`", report)
+
+    def test_skips_when_importer_matches_churn(self):
+        churn = max(CHURN_THRESHOLD, 3)
+        files = [
+            {"path": "hotspot.py", "lang": "Python", "commits": churn, "loc": 10},
+            {"path": "consumer.py", "lang": "Python", "commits": churn, "loc": 5},
+        ]
+        edges = [{"source": "consumer.py", "target": "hotspot.py"}]
+        report = check_stale_high_churn(files, edges)
+        self.assertIn("No Stale High-Churn Modules Detected", report)
+        self.assertNotIn("`hotspot.py`", report)
+
+    def test_ignores_importers_missing_from_index(self):
+        files = [{"path": "hotspot.py", "lang": "Python", "commits": 5, "loc": 10}]
+        edges = [{"source": "missing.py", "target": "hotspot.py"}]
+        report = check_stale_high_churn(files, edges)
+        self.assertIn("No Stale High-Churn Modules Detected", report)
+
+    def test_primary_index_flags_draft_issues(self):
+        index = json.loads((HERE / "docs" / "index.json").read_text())
+        report = check_stale_high_churn(index["files"], index["edges"])
+        self.assertIn("Stale High-Churn Modules With Quiet Dependents", report)
+        self.assertIn("`draft_issues.py`", report)
+
 
 class RadarReportTests(unittest.TestCase):
     def run_scan(self, target):
