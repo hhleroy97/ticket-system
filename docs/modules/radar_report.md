@@ -1,10 +1,10 @@
-# `tests/test_scan`
+# `radar_report`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 73 |
-| Commits | 4 |
+| LOC | 280 |
+| Commits | 1 |
 | Last commit | 2026-06-13 |
 
 ---

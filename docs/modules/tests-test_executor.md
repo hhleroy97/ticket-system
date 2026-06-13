@@ -1,10 +1,10 @@
-# `tests/test_scan`
+# `tests/test_executor`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 73 |
-| Commits | 4 |
+| LOC | 27 |
+| Commits | 2 |
 | Last commit | 2026-06-13 |
 
 ---

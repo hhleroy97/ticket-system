@@ -1,10 +1,10 @@
-# `tests/test_scan`
+# `scripts/radar_ticket_lib`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 73 |
-| Commits | 4 |
+| LOC | 71 |
+| Commits | 1 |
 | Last commit | 2026-06-13 |
 
 ---
