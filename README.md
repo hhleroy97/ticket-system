@@ -20,7 +20,9 @@ TARGET_REPO=/path/to/repo python3 scan.py
 
 `docs/index.json` is the single source of truth for the dashboard and downstream tooling.
 Prefer additive schema changes; bump `schema_version` when you must break compatibility
-(see HANDOFF.md for the full schema).
+(see HANDOFF.md for the full schema). The `package_roots` field maps Python package prefixes
+to directories (e.g. `{"": "src"}` for src-layout); it is `{}` when the scanned repo has no
+detected roots.
 
 ## Layout
 

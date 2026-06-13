@@ -77,13 +77,22 @@ line in `.env` → demo fallback (`./test-repos/click`). Copy `.env.example` to 
 
 ```jsonc
 {
+  "schema_version": 1,
   "repo":   { "name", "path", "branch", "head", "total_commits", "generated_at" },
+  "package_roots": { "<prefix>": "<dir>" },  // e.g. {"": "src"} for src-layout; {} when none
   "stats":  { "file_count", "total_loc", "contributor_count", "edge_count" },
   "languages": [ { "name", "files", "loc" } ],
   "files":  [ { "path", "lang", "loc", "size", "commits", "last_commit" } ],
   "edges":  [ { "source": "<path>", "target": "<path>" } ]   // internal imports only
 }
 ```
+
+`package_roots` maps a logical Python package prefix to a filesystem directory under the
+repo root. An empty-string prefix (`""`) means top-level imports resolve under that
+directory (setuptools `package-dir`, `packages.find.where`, `setup.py` `package_dir`, or
+a `src/` tree with tracked `__init__.py` packages). Non-empty prefixes map namespaced
+packages (e.g. `"mypkg": "lib/mypkg"`). Flat layouts with no detected roots emit `{}`.
+Import edges use these aliases so `from mypkg.core import …` resolves in src-layout repos.
 
 Keep this schema stable. Anything downstream (dashboard, RADAR prompts, ticket drafts)
 depends on it. Additive changes only; bump a `schema_version` field if you must break it.
@@ -199,7 +208,7 @@ jobs:
 
 ## Known limitations / open questions
 
-- Import resolution is path-based (see Phase 1). No package-root awareness yet.
+- Flat-layout repos emit empty `package_roots`; src/setuptools layouts are detected for import resolution.
 - Churn uses full history; very large repos may want a `--since` window for speed.
 - Graph caps at 200 nodes (by LOC) to stay readable; large monorepos need clustering/filtering.
 - Decide: regenerate docs in-place vs always via PR (PR is safer, more noise).
