@@ -4,12 +4,17 @@
 import json
 import os
 import subprocess
+import sys
 import threading
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(HERE / "scripts"))
+
+from repo_config import resolve_target_repo  # noqa: E402
+
 INDEX = HERE / "docs" / "index.json"
 
 _lock = threading.Lock()
@@ -43,8 +48,9 @@ def refresh_github_intel():
 
 
 def refresh_scan():
-    """Rescan repo and refresh GitHub intel."""
-    env = {**os.environ, "TARGET_REPO": str(HERE)}
+    """Rescan monitored repo (TARGET_REPO) and refresh GitHub intel."""
+    target = resolve_target_repo()
+    env = {**os.environ, "TARGET_REPO": str(target)}
     proc = _run([os.environ.get("PYTHON", "python3"), str(HERE / "scan.py")], env=env, timeout=240)
     if proc.returncode != 0:
         err = (proc.stderr or proc.stdout or "scan failed").strip()
@@ -60,9 +66,12 @@ def read_index_payload():
     index = json.loads(INDEX.read_text())
     return {
         "repo": index.get("repo") or {},
+        "meta": index.get("meta") or {},
         "stats": index.get("stats") or {},
         "pull_requests": index.get("pull_requests") or [],
+        "open_pull_requests": index.get("open_pull_requests") or [],
         "issues": index.get("issues") or [],
+        "pipeline": index.get("pipeline") or {},
         "github": index.get("github") or {},
         "generated_at": (index.get("repo") or {}).get("generated_at"),
     }

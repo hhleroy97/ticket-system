@@ -12,7 +12,9 @@ You are implementing an approved GitHub issue on branch `issue-<N>`. The workflo
 5. **Commit everything** — uncommitted files cause the workflow to fail (no auto-squash).
 6. Keep each diff minimal and focused on the issue.
 7. Do **not** run `scan.py` unless the issue requires it; `run_tests.py` may refresh `docs/index.*` ephemerally (CI restores them if uncommitted).
-8. The CI wrapper logs progress to `docs/agent-runs/issue-<N>/run.json` (snapshots every 30s during the run).
+8. The CI wrapper logs progress to `docs/agent-runs/issue-<N>/run.json` (snapshots every 30s).
+9. A **plan step** writes `docs/agent-runs/issue-<N>/plan.json` before implementation (Auto model).
+10. Progress may be posted as **GitHub issue comments** (throttled) during the run.
 
 ## Example commit series
 

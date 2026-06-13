@@ -14,7 +14,7 @@ class DashboardRefreshTests(unittest.TestCase):
         if not (HERE / "docs" / "index.json").is_file():
             self.skipTest("index.json missing")
         payload = read_index_payload()
-        for key in ("repo", "stats", "pull_requests", "issues"):
+        for key in ("repo", "meta", "stats", "pull_requests", "issues", "pipeline"):
             self.assertIn(key, payload)
 
     @patch("dashboard_refresh.refresh_github_intel")

@@ -651,6 +651,11 @@ def main():
     )
     index = {
         "schema_version": SCHEMA_VERSION,
+        "meta": {
+            "intel_root": str(HERE.resolve()),
+            "scan_target": str(repo.resolve()),
+            "scan_target_is_self": repo.resolve() == HERE.resolve(),
+        },
         "repo": {
             "name": repo.name,
             "path": str(repo),

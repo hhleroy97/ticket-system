@@ -1,9 +1,9 @@
-# `scripts/dashboard_refresh`
+# `scripts/repo_config`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 134 |
+| LOC | 58 |
 | Commits | 1 |
 | Last commit | 2026-06-13 |
 
