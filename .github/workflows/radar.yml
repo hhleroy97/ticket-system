@@ -32,7 +32,7 @@ jobs:
           DATE=$(date -u +%Y-%m-%d)
           OUT="docs/radar/${DATE}.md"
           mkdir -p docs/radar
-          cursor-agent -p --model auto --output-format text \
+          cursor-agent -p --force --model auto --output-format text \
             "Read docs/index.json. Identify stale modules (high churn, no recent commits on dependents), \
              dependency risks, and modules lacking tests. Write markdown to ${OUT} with sections \
              '## <title>' each followed by **Files:** and **Rationale:** lines citing paths from index.json."

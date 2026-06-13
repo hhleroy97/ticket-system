@@ -16,6 +16,12 @@ Or point it at a repo inline:
 TARGET_REPO=/path/to/repo python3 scan.py
 ```
 
+## Index contract
+
+`docs/index.json` is the single source of truth for the dashboard and downstream tooling.
+Prefer additive schema changes; bump `schema_version` when you must break compatibility
+(see HANDOFF.md for the full schema).
+
 ## Layout
 
 ```

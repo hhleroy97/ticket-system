@@ -34,7 +34,7 @@ jobs:
         env:
           CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
         run: |
-          cursor-agent -p --model auto --output-format text \
+          cursor-agent -p --force --model auto --output-format text \
             "Read ${{ steps.radar.outputs.file }} and docs/index.json. Output ONLY a JSON array of \
              objects with keys title, body, rationale for candidate GitHub issues. No markdown fences." \
             > /tmp/issues.json
