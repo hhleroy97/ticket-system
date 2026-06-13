@@ -9,14 +9,14 @@
     "name": "ticket-sys",
     "path": "/home/hartley/projects/personal/ticket-sys",
     "branch": "docs/knowledge-graph-plan",
-    "head": "a7173a5",
-    "total_commits": 71,
+    "head": "94f1901",
+    "total_commits": 72,
     "generated_at": "2026-06-13 23:59 UTC"
   },
   "package_roots": {},
   "stats": {
-    "file_count": 95,
-    "total_loc": 7489,
+    "file_count": 98,
+    "total_loc": 7522,
     "contributor_count": 4,
     "edge_count": 29
   },
@@ -28,8 +28,8 @@
     },
     {
       "name": "Markdown",
-      "files": 38,
-      "loc": 1229
+      "files": 41,
+      "loc": 1262
     },
     {
       "name": "Other",
@@ -82,7 +82,7 @@
       "lang": "Other",
       "loc": 19,
       "size": 834,
-      "commits": 4,
+      "commits": 5,
       "last_commit": "2026-06-13"
     },
     {
@@ -186,7 +186,7 @@
       "lang": "Markdown",
       "loc": 134,
       "size": 6882,
-      "commits": 12,
+      "commits": 13,
       "last_commit": "2026-06-13"
     },
     {
@@ -202,23 +202,23 @@
       "lang": "Markdown",
       "loc": 246,
       "size": 9958,
-      "commits": 0,
-      "last_commit": null
+      "commits": 1,
+      "last_commit": "2026-06-13"
     },
     {
       "path": "docs/RUNBOOK.md",
       "lang": "Markdown",
       "loc": 83,
       "size": 2521,
-      "commits": 1,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
       "path": "docs/dashboard.html",
       "lang": "HTML",
       "loc": 862,
-      "size": 53924,
-      "commits": 22,
+      "size": 80447,
+      "commits": 23,
       "last_commit": "2026-06-13"
     },
     {
@@ -226,15 +226,15 @@
       "lang": "Other",
       "loc": 0,
       "size": 36864,
-      "commits": 22,
+      "commits": 23,
       "last_commit": "2026-06-13"
     },
     {
       "path": "docs/index.json",
       "lang": "Config",
       "loc": 0,
-      "size": 20044,
-      "commits": 22,
+      "size": 56159,
+      "commits": 23,
       "last_commit": "2026-06-13"
     },
     {
@@ -242,7 +242,7 @@
       "lang": "Markdown",
       "loc": 64,
       "size": 3610,
-      "commits": 1,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -286,6 +286,14 @@
       "last_commit": "2026-06-13"
     },
     {
+      "path": "docs/modules/scripts-agent_plan.md",
+      "lang": "Markdown",
+      "loc": 11,
+      "size": 219,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
       "path": "docs/modules/scripts-create_radar_issues.md",
       "lang": "Markdown",
       "loc": 11,
@@ -306,7 +314,7 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 227,
-      "commits": 2,
+      "commits": 3,
       "last_commit": "2026-06-13"
     },
     {
@@ -330,6 +338,14 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 222,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docs/modules/scripts-post_agent_progress.md",
+      "lang": "Markdown",
+      "loc": 11,
+      "size": 229,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
@@ -366,6 +382,14 @@
       "last_commit": "2026-06-13"
     },
     {
+      "path": "docs/modules/tests-test_agent_progress.md",
+      "lang": "Markdown",
+      "loc": 11,
+      "size": 226,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
       "path": "docs/modules/tests-test_dashboard.md",
       "lang": "Markdown",
       "loc": 11,
@@ -386,7 +410,7 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 229,
-      "commits": 1,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -434,7 +458,7 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 225,
-      "commits": 4,
+      "commits": 5,
       "last_commit": "2026-06-13"
     },
     {
@@ -778,7 +802,7 @@
       "lang": "Python",
       "loc": 172,
       "size": 7007,
-      "commits": 4,
+      "commits": 5,
       "last_commit": "2026-06-13"
     },
     {
@@ -817,11 +841,11 @@
   "edges": [
     {
       "source": "scripts/create_radar_issues.py",
-      "target": "scripts/radar_ticket_lib.py"
+      "target": "draft_issues.py"
     },
     {
       "source": "scripts/create_radar_issues.py",
-      "target": "draft_issues.py"
+      "target": "scripts/radar_ticket_lib.py"
     },
     {
       "source": "scripts/dashboard_api.py",
@@ -841,15 +865,15 @@
     },
     {
       "source": "serve_dashboard.py",
+      "target": "scripts/repo_sync.py"
+    },
+    {
+      "source": "serve_dashboard.py",
       "target": "scripts/dashboard_refresh.py"
     },
     {
       "source": "serve_dashboard.py",
       "target": "scripts/dashboard_api.py"
-    },
-    {
-      "source": "serve_dashboard.py",
-      "target": "scripts/repo_sync.py"
     },
     {
       "source": "tests/test_agent_progress.py",
@@ -869,6 +893,10 @@
     },
     {
       "source": "tests/test_docgen.py",
+      "target": "draft_issues.py"
+    },
+    {
+      "source": "tests/test_docgen.py",
       "target": "docgen.py"
     },
     {
@@ -876,24 +904,20 @@
       "target": "scan.py"
     },
     {
-      "source": "tests/test_docgen.py",
-      "target": "draft_issues.py"
+      "source": "tests/test_github_intel.py",
+      "target": "serve_dashboard.py"
     },
     {
       "source": "tests/test_github_intel.py",
       "target": "scripts/github_intel.py"
     },
     {
-      "source": "tests/test_github_intel.py",
-      "target": "serve_dashboard.py"
+      "source": "tests/test_pipeline_lib.py",
+      "target": "scripts/pipeline_lib.py"
     },
     {
       "source": "tests/test_pipeline_lib.py",
       "target": "scripts/finalize_agent_run.py"
-    },
-    {
-      "source": "tests/test_pipeline_lib.py",
-      "target": "scripts/pipeline_lib.py"
     },
     {
       "source": "tests/test_radar_report.py",
@@ -913,11 +937,11 @@
     },
     {
       "source": "tests/test_radar_tickets.py",
-      "target": "scripts/radar_ticket_lib.py"
+      "target": "scripts/create_radar_issues.py"
     },
     {
       "source": "tests/test_radar_tickets.py",
-      "target": "scripts/create_radar_issues.py"
+      "target": "scripts/radar_ticket_lib.py"
     },
     {
       "source": "tests/test_repo_config.py",
@@ -931,5 +955,1276 @@
       "source": "tests/test_scan.py",
       "target": "scan.py"
     }
-  ]
+  ],
+  "pull_requests": [
+    {
+      "number": 34,
+      "title": "feat: monitored repo dashboard, agent tracing, and operator docs",
+      "state": "MERGED",
+      "merged_at": "2026-06-13T23:56:07Z",
+      "head_ref": "feat/pipeline-agent-ops",
+      "issue_numbers": [],
+      "labels": [],
+      "commits": [
+        {
+          "sha": "589bdac",
+          "full_sha": "589bdac174f7f263c1577946c565f8c9c4c3f4af",
+          "message": "fix: pre-commit always scans intel repo, not TARGET_REPO",
+          "date": "2026-06-13",
+          "files": [
+            "docs/dashboard.html",
+            "docs/index.db",
+            "docs/index.json",
+            "docs/modules/scan.md",
+            "docs/modules/scripts-dashboard_refresh.md",
+            "docs/modules/scripts-repo_config.md",
+            "docs/modules/tests-test_repo_config.md",
+            "hooks/pre-commit",
+            "scan.py",
+            "scripts/repo_config.py",
+            "tests/test_repo_config.py"
+          ]
+        },
+        {
+          "sha": "77cf20e",
+          "full_sha": "77cf20ef100dc0fb43e1f587516a9377a346e246",
+          "message": "feat: dashboard shows monitored repo and refreshes TARGET_REPO scan",
+          "date": "2026-06-13",
+          "files": [
+            ".env.example",
+            "docs/dashboard.html",
+            "docs/index.db",
+            "docs/index.json",
+            "docs/modules/scan.md",
+            "docs/modules/scripts-repo_config.md",
+            "docs/modules/tests-test_repo_config.md",
+            "scripts/dashboard_refresh.py",
+            "templates/dashboard.html.tmpl",
+            "tests/test_dashboard_refresh.py"
+          ]
+        },
+        {
+          "sha": "5f8ae4b",
+          "full_sha": "5f8ae4b3023e31c9f4ddb665ec8dc9e3550a98dc",
+          "message": "feat: agent plan step and throttled executor progress comments",
+          "date": "2026-06-13",
+          "files": [
+            ".github/EXECUTOR.md",
+            ".github/workflows/executor.yml",
+            "scripts/agent_plan.py",
+            "scripts/post_agent_progress.py",
+            "scripts/run_executor_agent.sh",
+            "tests/test_agent_progress.py"
+          ]
+        },
+        {
+          "sha": "1318dfe",
+          "full_sha": "1318dfedd8e6e3ab32a5b8e3671715f64a71bb5f",
+          "message": "docs: inspiration sources, operator runbook, and HANDOFF status",
+          "date": "2026-06-13",
+          "files": [
+            "HANDOFF.md",
+            "docs/RUNBOOK.md",
+            "docs/inspiration.md"
+          ]
+        }
+      ],
+      "files": [
+        ".env.example",
+        ".github/EXECUTOR.md",
+        ".github/workflows/executor.yml",
+        "HANDOFF.md",
+        "docs/RUNBOOK.md",
+        "docs/dashboard.html",
+        "docs/index.db",
+        "docs/index.json",
+        "docs/inspiration.md",
+        "docs/modules/scan.md",
+        "docs/modules/scripts-dashboard_refresh.md",
+        "docs/modules/scripts-repo_config.md",
+        "docs/modules/tests-test_repo_config.md",
+        "hooks/pre-commit",
+        "scan.py",
+        "scripts/agent_plan.py",
+        "scripts/dashboard_refresh.py",
+        "scripts/post_agent_progress.py",
+        "scripts/repo_config.py",
+        "scripts/run_executor_agent.sh",
+        "templates/dashboard.html.tmpl",
+        "tests/test_agent_progress.py",
+        "tests/test_dashboard_refresh.py",
+        "tests/test_repo_config.py"
+      ],
+      "additions": 736,
+      "deletions": 99
+    },
+    {
+      "number": 33,
+      "title": "docs: require PR workflow for maintainer and agent changes",
+      "state": "MERGED",
+      "merged_at": "2026-06-13T23:30:51Z",
+      "head_ref": "chore/pr-based-workflow",
+      "issue_numbers": [],
+      "labels": [],
+      "commits": [
+        {
+          "sha": "a0b1e8c",
+          "full_sha": "a0b1e8c9f45a64cb5893c57a22a15355713cdcc6",
+          "message": "docs: require PR workflow for maintainer and agent changes",
+          "date": "2026-06-13",
+          "files": [
+            "AGENTS.md",
+            "README.md"
+          ]
+        }
+      ],
+      "files": [
+        "AGENTS.md",
+        "README.md"
+      ],
+      "additions": 35,
+      "deletions": 1
+    },
+    {
+      "number": 31,
+      "title": "fix: #30 Dependency Graph Coverage Looks Adequate",
+      "state": "MERGED",
+      "merged_at": "2026-06-13T23:26:22Z",
+      "head_ref": "issue-30",
+      "issue_numbers": [
+        30
+      ],
+      "labels": [
+        "radar:approved"
+      ],
+      "commits": [
+        {
+          "sha": "3b94631",
+          "full_sha": "3b94631ad5f68425dff2764ccef21d7195a5e163",
+          "message": "test: cover dependency graph adequacy RADAR heuristic (#30)",
+          "date": "2026-06-13",
+          "files": [
+            "tests/test_radar_report.py"
+          ]
+        },
+        {
+          "sha": "d1f038c",
+          "full_sha": "d1f038c0dcfc9bb04bbe94b61fa00d7f4d3a3002",
+          "message": "docs: document dependency graph coverage RADAR heuristic (#30)",
+          "date": "2026-06-13",
+          "files": [
+            "docs/radar/README.md"
+          ]
+        }
+      ],
+      "files": [
+        "docs/radar/README.md",
+        "tests/test_radar_report.py"
+      ],
+      "additions": 52,
+      "deletions": 1
+    },
+    {
+      "number": 28,
+      "title": "fix: #25 Stale High-Churn Modules With Quiet Dependents",
+      "state": "MERGED",
+      "merged_at": "2026-06-13T23:18:16Z",
+      "head_ref": "issue-25",
+      "issue_numbers": [
+        25
+      ],
+      "labels": [
+        "radar:approved"
+      ],
+      "commits": [
+        {
+          "sha": "8f8be0e",
+          "full_sha": "8f8be0e9b819794a2b9908040667575be7f1a6d6",
+          "message": "feat: export issue shape contract from draft_issues (#25)",
+          "date": "2026-06-13",
+          "files": [
+            "draft_issues.py"
+          ]
+        },
+        {
+          "sha": "25fb909",
+          "full_sha": "25fb909d0ec27b562792a9156f082ce2e4a3612a",
+          "message": "refactor: validate RADAR candidates with draft_issues helper (#25)",
+          "date": "2026-06-13",
+          "files": [
+            "scripts/create_radar_issues.py"
+          ]
+        },
+        {
+          "sha": "e6778ec",
+          "full_sha": "e6778ec95602794a9c5013024380d7a545091dab",
+          "message": "fix: cite ISSUE_KEYS in create_radar_issues validation errors (#25)",
+          "date": "2026-06-13",
+          "files": [
+            "scripts/create_radar_issues.py"
+          ]
+        },
+        {
+          "sha": "91c6b97",
+          "full_sha": "91c6b97ba1e3c3bfd45328e455e61ba874407c1c",
+          "message": "test: assert draft_issues contract in dependent modules (#25)",
+          "date": "2026-06-13",
+          "files": [
+            "tests/test_docgen.py",
+            "tests/test_radar_report.py",
+            "tests/test_radar_tickets.py"
+          ]
+        },
+        {
+          "sha": "56fbe98",
+          "full_sha": "56fbe9823e9d868cff2d98f5217d52a8667225d3",
+          "message": "docs: refresh index and radar report after dependent sync (#25)",
+          "date": "2026-06-13",
+          "files": [
+            "docs/dashboard.html",
+            "docs/index.db",
+            "docs/index.json",
+            "docs/modules/draft_issues.md",
+            "docs/modules/scan.md",
+            "docs/modules/scripts-create_radar_issues.md",
+            "docs/modules/tests-test_dashboard.md",
+            "docs/modules/tests-test_docgen.md",
+            "docs/modules/tests-test_radar_report.md",
+            "docs/modules/tests-test_radar_tickets.md",
+            "docs/radar/2026-06-13.md"
+          ]
+        }
+      ],
+      "files": [
+        "docs/dashboard.html",
+        "docs/index.db",
+        "docs/index.json",
+        "docs/modules/draft_issues.md",
+        "docs/modules/scan.md",
+        "docs/modules/scripts-create_radar_issues.md",
+        "docs/modules/tests-test_dashboard.md",
+        "docs/modules/tests-test_docgen.md",
+        "docs/modules/tests-test_radar_report.md",
+        "docs/modules/tests-test_radar_tickets.md",
+        "docs/radar/2026-06-13.md",
+        "draft_issues.py",
+        "scripts/create_radar_issues.py",
+        "tests/test_docgen.py",
+        "tests/test_radar_report.py",
+        "tests/test_radar_tickets.py"
+      ],
+      "additions": 148,
+      "deletions": 89
+    },
+    {
+      "number": 27,
+      "title": "fix: #26 Dashboard Generation Lacks Focused Tests",
+      "state": "MERGED",
+      "merged_at": "2026-06-13T23:09:54Z",
+      "head_ref": "issue-26",
+      "issue_numbers": [
+        26
+      ],
+      "labels": [
+        "radar:approved",
+        "radar:auto-merge"
+      ],
+      "commits": [
+        {
+          "sha": "b80899a",
+          "full_sha": "b80899adc019bebb05219ff918218d560a561e29",
+          "message": "refactor: extract render_dashboard from scan.py (#26)",
+          "date": "2026-06-13",
+          "files": [
+            "scan.py"
+          ]
+        },
+        {
+          "sha": "5d4d47d",
+          "full_sha": "5d4d47d97920edf66499f091050da20b7a1534e2",
+          "message": "test: add focused dashboard generation tests (#26)",
+          "date": "2026-06-13",
+          "files": [
+            "tests/test_dashboard.py"
+          ]
+        }
+      ],
+      "files": [
+        "scan.py",
+        "tests/test_dashboard.py"
+      ],
+      "additions": 96,
+      "deletions": 3
+    },
+    {
+      "number": 24,
+      "title": "fix: #21 Dependency Graph Is Sparse",
+      "state": "MERGED",
+      "merged_at": "2026-06-13T22:59:23Z",
+      "head_ref": "issue-21",
+      "issue_numbers": [
+        21
+      ],
+      "labels": [
+        "radar:approved",
+        "radar:auto-merge"
+      ],
+      "commits": [
+        {
+          "sha": "da3935e",
+          "full_sha": "da3935e66579c1e5061bd3419a19e0c6152ea723",
+          "message": "feat: improve Python dependency edge detection in scan (#21)",
+          "date": "2026-06-13",
+          "files": [
+            "scan.py"
+          ]
+        },
+        {
+          "sha": "6793e9d",
+          "full_sha": "6793e9db45a6eb574264026c15a5b7d9727a333c",
+          "message": "test: cover sys.path and subprocess import edges (#21)",
+          "date": "2026-06-13",
+          "files": [
+            "tests/test_scan.py"
+          ]
+        },
+        {
+          "sha": "0c9a3c0",
+          "full_sha": "0c9a3c083fe0255295ccc4e101eb60ab4c33b6d0",
+          "message": "docs: refresh scan index after denser dependency graph (#21)",
+          "date": "2026-06-13",
+          "files": [
+            "docs/dashboard.html",
+            "docs/index.db",
+            "docs/index.json",
+            "docs/modules/scan.md",
+            "docs/modules/tests-test_scan.md"
+          ]
+        }
+      ],
+      "files": [
+        "docs/dashboard.html",
+        "docs/index.db",
+        "docs/index.json",
+        "docs/modules/scan.md",
+        "docs/modules/tests-test_scan.md",
+        "scan.py",
+        "tests/test_scan.py"
+      ],
+      "additions": 304,
+      "deletions": 28
+    },
+    {
+      "number": 23,
+      "title": "fix: #20 Stale High-Churn Modules With Quiet Dependents",
+      "state": "MERGED",
+      "merged_at": "2026-06-13T22:59:56Z",
+      "head_ref": "issue-20",
+      "issue_numbers": [
+        20
+      ],
+      "labels": [
+        "radar:proposed",
+        "radar:approved"
+      ],
+      "commits": [
+        {
+          "sha": "27322a1",
+          "full_sha": "27322a15aaa37f66b651e11eeb0e982139a6d598",
+          "message": "fix: require indexed importers in stale churn check (#20)",
+          "date": "2026-06-13",
+          "files": [
+            "radar_report.py"
+          ]
+        },
+        {
+          "sha": "3f7fccf",
+          "full_sha": "3f7fccf3f0d3c651131c66a5177c3bb498b43578",
+          "message": "fix: validate draft_issues fields when creating RADAR tickets (#20)",
+          "date": "2026-06-13",
+          "files": [
+            "scripts/create_radar_issues.py"
+          ]
+        },
+        {
+          "sha": "3d5eee6",
+          "full_sha": "3d5eee656fa92122d8c752973e38699495361fff",
+          "message": "test: cover stale high-churn detection and ticket parsing (#20)",
+          "date": "2026-06-13",
+          "files": [
+            "tests/test_radar_report.py",
+            "tests/test_radar_tickets.py"
+          ]
+        },
+        {
+          "sha": "f78d20a",
+          "full_sha": "f78d20a394afa1d9e15b535b447fbd4bfee39f12",
+          "message": "docs: document stale high-churn RADAR heuristic (#20)",
+          "date": "2026-06-13",
+          "files": [
+            "docs/radar/README.md"
+          ]
+        }
+      ],
+      "files": [
+        "docs/radar/README.md",
+        "radar_report.py",
+        "scripts/create_radar_issues.py",
+        "tests/test_radar_report.py",
+        "tests/test_radar_tickets.py"
+      ],
+      "additions": 92,
+      "deletions": 2
+    },
+    {
+      "number": 14,
+      "title": "fix: #7 Generate actionable RADAR finding reports",
+      "state": "MERGED",
+      "merged_at": "2026-06-13T22:29:29Z",
+      "head_ref": "issue-7",
+      "issue_numbers": [
+        7
+      ],
+      "labels": [
+        "radar:approved"
+      ],
+      "commits": [
+        {
+          "sha": "0ab3527",
+          "full_sha": "0ab3527306619eae696a94b7b4e572509c5f0f93",
+          "message": "feat: add deterministic RADAR report generator from index.json (#7)",
+          "date": "2026-06-13",
+          "files": [
+            "radar_report.py"
+          ]
+        },
+        {
+          "sha": "e73494f",
+          "full_sha": "e73494fbec9e82d0e14d46f7007536b6998421a1",
+          "message": "test: cover RADAR report generation and draft_issues parsing (#7)",
+          "date": "2026-06-13",
+          "files": [
+            "tests/test_radar_report.py"
+          ]
+        },
+        {
+          "sha": "07d7abf",
+          "full_sha": "07d7abff06c31187bfe3e2ac02351cd71b22bb35",
+          "message": "docs: document local RADAR report generation workflow (#7)",
+          "date": "2026-06-13",
+          "files": [
+            "README.md",
+            "docs/radar/README.md"
+          ]
+        }
+      ],
+      "files": [
+        "README.md",
+        "docs/radar/README.md",
+        "radar_report.py",
+        "tests/test_radar_report.py"
+      ],
+      "additions": 398,
+      "deletions": 1
+    },
+    {
+      "number": 12,
+      "title": "fix: #9",
+      "state": "MERGED",
+      "merged_at": "2026-06-13T22:03:35Z",
+      "head_ref": "issue-9",
+      "issue_numbers": [
+        9
+      ],
+      "labels": [
+        "radar:approved"
+      ],
+      "commits": [
+        {
+          "sha": "8d99cd3",
+          "full_sha": "8d99cd33092ef7f84df823a1f860cb4d0de65d34",
+          "message": "fix: #9 Detect Python package roots in docs/index.json",
+          "date": "2026-06-13",
+          "files": [
+            "HANDOFF.md",
+            "README.md",
+            "tests/test_scan.py"
+          ]
+        }
+      ],
+      "files": [
+        "HANDOFF.md",
+        "README.md",
+        "tests/test_scan.py"
+      ],
+      "additions": 26,
+      "deletions": 2
+    },
+    {
+      "number": 11,
+      "title": "fix: #10",
+      "state": "MERGED",
+      "merged_at": "2026-06-13T21:58:25Z",
+      "head_ref": "issue-10",
+      "issue_numbers": [
+        10
+      ],
+      "labels": [
+        "radar:approved"
+      ],
+      "commits": [
+        {
+          "sha": "ae608ba",
+          "full_sha": "ae608ba99c08c1b909dbd1871670a867d0dd3f06",
+          "message": "fix: #10 Separate fixture repository docs from primary project docs",
+          "date": "2026-06-13",
+          "files": [
+            ".gitignore",
+            "docgen.py",
+            "docs/dashboard.html",
+            "docs/index.db",
+            "docs/index.json",
+            "docs/modules/docgen.md",
+            "docs/modules/scan.md",
+            "docs/modules/src-mypkg-core.md",
+            "docs/modules/src-mypkg.md",
+            "docs/modules/test-repos-srcpkg-src-mypkg-core.md",
+            "docs/modules/test-repos-srcpkg-src-mypkg.md",
+            "docs/modules/test-repos-srcpkg-tests-test_core.md",
+            "docs/modules/tests-test_core.md",
+            "docs/modules/tests-test_docgen.md",
+            "docs/modules/tests-test_scan.md",
+            "scan.py",
+            "tests/test_docgen.py",
+            "tests/test_scan.py"
+          ]
+        }
+      ],
+      "files": [
+        ".gitignore",
+        "docgen.py",
+        "docs/dashboard.html",
+        "docs/index.db",
+        "docs/index.json",
+        "docs/modules/docgen.md",
+        "docs/modules/scan.md",
+        "docs/modules/src-mypkg-core.md",
+        "docs/modules/src-mypkg.md",
+        "docs/modules/test-repos-srcpkg-src-mypkg-core.md",
+        "docs/modules/test-repos-srcpkg-src-mypkg.md",
+        "docs/modules/test-repos-srcpkg-tests-test_core.md",
+        "docs/modules/tests-test_core.md",
+        "docs/modules/tests-test_docgen.md",
+        "docs/modules/tests-test_scan.md",
+        "scan.py",
+        "tests/test_docgen.py",
+        "tests/test_scan.py"
+      ],
+      "additions": 113,
+      "deletions": 205
+    },
+    {
+      "number": 6,
+      "title": "docs: refresh repo-intel scan",
+      "state": "MERGED",
+      "merged_at": "2026-06-13T22:10:27Z",
+      "head_ref": "bot/scan-refresh",
+      "issue_numbers": [],
+      "labels": [],
+      "commits": [
+        {
+          "sha": "89985dc",
+          "full_sha": "89985dc4bfa5096f9ac589486bac9b0cafa28f71",
+          "message": "docs: refresh scan index and module summaries",
+          "date": "2026-06-13",
+          "files": [
+            "docs/dashboard.html",
+            "docs/index.db",
+            "docs/index.json",
+            "docs/modules/docgen.md",
+            "docs/modules/scan.md",
+            "docs/modules/tests-test_docgen.md",
+            "docs/modules/tests-test_scan.md"
+          ]
+        }
+      ],
+      "files": [
+        "docs/dashboard.html",
+        "docs/index.db",
+        "docs/index.json",
+        "docs/modules/docgen.md",
+        "docs/modules/scan.md",
+        "docs/modules/tests-test_docgen.md",
+        "docs/modules/tests-test_scan.md"
+      ],
+      "additions": 41,
+      "deletions": 36
+    },
+    {
+      "number": 5,
+      "title": "radar: weekly research findings",
+      "state": "MERGED",
+      "merged_at": "2026-06-13T21:50:14Z",
+      "head_ref": "bot/radar-findings",
+      "issue_numbers": [],
+      "labels": [],
+      "commits": [
+        {
+          "sha": "50c7b42",
+          "full_sha": "50c7b42085fe27ac109ac1f6e64bd70b16b5edaa",
+          "message": "radar: weekly findings",
+          "date": "2026-06-13",
+          "files": [
+            "docs/dashboard.html",
+            "docs/index.db",
+            "docs/index.json",
+            "docs/radar/2026-06-13.md"
+          ]
+        }
+      ],
+      "files": [
+        "docs/dashboard.html",
+        "docs/index.db",
+        "docs/index.json",
+        "docs/radar/2026-06-13.md"
+      ],
+      "additions": 53,
+      "deletions": 24
+    },
+    {
+      "number": 2,
+      "title": "docs: refresh repo-intel scan",
+      "state": "MERGED",
+      "merged_at": "2026-06-13T21:40:57Z",
+      "head_ref": "bot/scan-refresh",
+      "issue_numbers": [],
+      "labels": [],
+      "commits": [
+        {
+          "sha": "2daa6f6",
+          "full_sha": "2daa6f66ffffd1fc4cefb78d78c4e34a7a4e95c9",
+          "message": "docs: refresh scan index and module summaries",
+          "date": "2026-06-13",
+          "files": [
+            "docs/dashboard.html",
+            "docs/index.db",
+            "docs/index.json",
+            "docs/modules/docgen.md",
+            "docs/modules/draft_issues.md",
+            "docs/modules/run_tests.md",
+            "docs/modules/scan.md",
+            "docs/modules/test-repos-srcpkg-src-mypkg-core.md",
+            "docs/modules/test-repos-srcpkg-src-mypkg.md",
+            "docs/modules/test-repos-srcpkg-tests-test_core.md",
+            "docs/modules/tests-test_docgen.md",
+            "docs/modules/tests-test_scan.md"
+          ]
+        }
+      ],
+      "files": [
+        "docs/dashboard.html",
+        "docs/index.db",
+        "docs/index.json",
+        "docs/modules/docgen.md",
+        "docs/modules/draft_issues.md",
+        "docs/modules/run_tests.md",
+        "docs/modules/scan.md",
+        "docs/modules/test-repos-srcpkg-src-mypkg-core.md",
+        "docs/modules/test-repos-srcpkg-src-mypkg.md",
+        "docs/modules/test-repos-srcpkg-tests-test_core.md",
+        "docs/modules/tests-test_docgen.md",
+        "docs/modules/tests-test_scan.md"
+      ],
+      "additions": 345,
+      "deletions": 26
+    }
+  ],
+  "open_pull_requests": [
+    {
+      "number": 35,
+      "title": "docs: knowledge graph roadmap and default self-scan target",
+      "state": "OPEN",
+      "head_ref": "docs/knowledge-graph-plan",
+      "issue_numbers": [],
+      "additions": 412,
+      "deletions": 58,
+      "url": "https://github.com/hhleroy97/ticket-system/pull/35"
+    }
+  ],
+  "issues": [
+    {
+      "number": 32,
+      "title": "Dependency Graph Coverage Looks Adequate",
+      "state": "OPEN",
+      "labels": [
+        "radar:proposed"
+      ],
+      "linked_prs": [],
+      "stage": "proposed",
+      "stage_label": "Proposed",
+      "agent_run": null,
+      "executor_run": null,
+      "open_pr": null
+    },
+    {
+      "number": 29,
+      "title": "No Stale High-Churn Modules Detected",
+      "state": "OPEN",
+      "labels": [
+        "radar:approved",
+        "radar:auto-merge"
+      ],
+      "linked_prs": [],
+      "stage": "approved",
+      "stage_label": "Approved",
+      "agent_run": null,
+      "executor_run": null,
+      "open_pr": null
+    },
+    {
+      "number": 26,
+      "title": "Dashboard Generation Lacks Focused Tests",
+      "state": "OPEN",
+      "labels": [
+        "radar:approved",
+        "radar:auto-merge"
+      ],
+      "linked_prs": [
+        27
+      ],
+      "stage": "approved",
+      "stage_label": "Approved",
+      "agent_run": null,
+      "executor_run": null,
+      "open_pr": null
+    },
+    {
+      "number": 22,
+      "title": "Production Python Modules Lack Test Import Edges",
+      "state": "OPEN",
+      "labels": [
+        "radar:approved",
+        "radar:auto-merge"
+      ],
+      "linked_prs": [],
+      "stage": "approved",
+      "stage_label": "Approved",
+      "agent_run": null,
+      "executor_run": null,
+      "open_pr": null
+    },
+    {
+      "number": 21,
+      "title": "Dependency Graph Is Sparse",
+      "state": "OPEN",
+      "labels": [
+        "radar:approved",
+        "radar:auto-merge"
+      ],
+      "linked_prs": [
+        24
+      ],
+      "stage": "approved",
+      "stage_label": "Approved",
+      "agent_run": null,
+      "executor_run": null,
+      "open_pr": null
+    }
+  ],
+  "workflow_runs": [
+    {
+      "id": 27482899968,
+      "name": "test",
+      "status": "in_progress",
+      "conclusion": "",
+      "branch": "docs/knowledge-graph-plan",
+      "event": "pull_request",
+      "created_at": "2026-06-13T23:59:31Z",
+      "updated_at": "2026-06-13T23:59:35Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482899968",
+      "jobs": []
+    },
+    {
+      "id": 27482838549,
+      "name": "auto-merge",
+      "status": "completed",
+      "conclusion": "skipped",
+      "branch": "main",
+      "event": "workflow_run",
+      "created_at": "2026-06-13T23:56:21Z",
+      "updated_at": "2026-06-13T23:56:22Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482838549"
+    },
+    {
+      "id": 27482834484,
+      "name": "scan-and-docs",
+      "status": "completed",
+      "conclusion": "failure",
+      "branch": "main",
+      "event": "push",
+      "created_at": "2026-06-13T23:56:09Z",
+      "updated_at": "2026-06-13T23:56:22Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482834484"
+    },
+    {
+      "id": 27482834483,
+      "name": "pages",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "main",
+      "event": "push",
+      "created_at": "2026-06-13T23:56:09Z",
+      "updated_at": "2026-06-13T23:56:32Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482834483"
+    },
+    {
+      "id": 27482834474,
+      "name": "test",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "main",
+      "event": "push",
+      "created_at": "2026-06-13T23:56:09Z",
+      "updated_at": "2026-06-13T23:56:20Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482834474"
+    },
+    {
+      "id": 27482412768,
+      "name": "auto-merge",
+      "status": "completed",
+      "conclusion": "failure",
+      "branch": "main",
+      "event": "workflow_run",
+      "created_at": "2026-06-13T23:35:02Z",
+      "updated_at": "2026-06-13T23:35:07Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482412768"
+    },
+    {
+      "id": 27482408815,
+      "name": "test",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "feat/pipeline-agent-ops",
+      "event": "pull_request",
+      "created_at": "2026-06-13T23:34:51Z",
+      "updated_at": "2026-06-13T23:35:00Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482408815"
+    },
+    {
+      "id": 27482331210,
+      "name": "auto-merge",
+      "status": "completed",
+      "conclusion": "skipped",
+      "branch": "main",
+      "event": "workflow_run",
+      "created_at": "2026-06-13T23:31:07Z",
+      "updated_at": "2026-06-13T23:31:07Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482331210"
+    },
+    {
+      "id": 27482326835,
+      "name": "pages",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "main",
+      "event": "push",
+      "created_at": "2026-06-13T23:30:53Z",
+      "updated_at": "2026-06-13T23:31:10Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482326835"
+    },
+    {
+      "id": 27482326832,
+      "name": "scan-and-docs",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "main",
+      "event": "push",
+      "created_at": "2026-06-13T23:30:53Z",
+      "updated_at": "2026-06-13T23:31:09Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482326832"
+    },
+    {
+      "id": 27482326831,
+      "name": "test",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "main",
+      "event": "push",
+      "created_at": "2026-06-13T23:30:53Z",
+      "updated_at": "2026-06-13T23:31:05Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482326831"
+    },
+    {
+      "id": 27482273452,
+      "name": "auto-merge",
+      "status": "completed",
+      "conclusion": "failure",
+      "branch": "main",
+      "event": "workflow_run",
+      "created_at": "2026-06-13T23:28:24Z",
+      "updated_at": "2026-06-13T23:28:30Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482273452"
+    },
+    {
+      "id": 27482269917,
+      "name": "test",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "chore/pr-based-workflow",
+      "event": "pull_request",
+      "created_at": "2026-06-13T23:28:14Z",
+      "updated_at": "2026-06-13T23:28:22Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482269917"
+    },
+    {
+      "id": 27482235921,
+      "name": "auto-merge",
+      "status": "completed",
+      "conclusion": "skipped",
+      "branch": "main",
+      "event": "workflow_run",
+      "created_at": "2026-06-13T23:26:37Z",
+      "updated_at": "2026-06-13T23:26:38Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482235921"
+    },
+    {
+      "id": 27482232016,
+      "name": "radar-tickets",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "main",
+      "event": "push",
+      "created_at": "2026-06-13T23:26:24Z",
+      "updated_at": "2026-06-13T23:26:35Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482232016"
+    },
+    {
+      "id": 27482232010,
+      "name": "scan-and-docs",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "main",
+      "event": "push",
+      "created_at": "2026-06-13T23:26:24Z",
+      "updated_at": "2026-06-13T23:26:39Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482232010"
+    },
+    {
+      "id": 27482232000,
+      "name": "pages",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "main",
+      "event": "push",
+      "created_at": "2026-06-13T23:26:24Z",
+      "updated_at": "2026-06-13T23:26:41Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482232000"
+    },
+    {
+      "id": 27482231997,
+      "name": "test",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "main",
+      "event": "push",
+      "created_at": "2026-06-13T23:26:24Z",
+      "updated_at": "2026-06-13T23:26:35Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482231997"
+    },
+    {
+      "id": 27482228517,
+      "name": "auto-merge",
+      "status": "completed",
+      "conclusion": "skipped",
+      "branch": "main",
+      "event": "workflow_run",
+      "created_at": "2026-06-13T23:26:14Z",
+      "updated_at": "2026-06-13T23:26:15Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482228517"
+    },
+    {
+      "id": 27482225069,
+      "name": "pages",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "main",
+      "event": "push",
+      "created_at": "2026-06-13T23:26:03Z",
+      "updated_at": "2026-06-13T23:26:20Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482225069"
+    },
+    {
+      "id": 27482225064,
+      "name": "scan-and-docs",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "main",
+      "event": "push",
+      "created_at": "2026-06-13T23:26:03Z",
+      "updated_at": "2026-06-13T23:26:14Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482225064"
+    },
+    {
+      "id": 27482225063,
+      "name": "test",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "main",
+      "event": "push",
+      "created_at": "2026-06-13T23:26:03Z",
+      "updated_at": "2026-06-13T23:26:12Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482225063"
+    },
+    {
+      "id": 27482192856,
+      "name": "test",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "issue-30",
+      "event": "pull_request",
+      "created_at": "2026-06-13T23:24:26Z",
+      "updated_at": "2026-06-13T23:26:29Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482192856"
+    },
+    {
+      "id": 27482157911,
+      "name": "executor",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "main",
+      "event": "issues",
+      "created_at": "2026-06-13T23:22:43Z",
+      "updated_at": "2026-06-13T23:24:27Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482157911"
+    },
+    {
+      "id": 27482071814,
+      "name": "auto-merge",
+      "status": "completed",
+      "conclusion": "skipped",
+      "branch": "main",
+      "event": "workflow_run",
+      "created_at": "2026-06-13T23:18:31Z",
+      "updated_at": "2026-06-13T23:18:31Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482071814"
+    },
+    {
+      "id": 27482068113,
+      "name": "pages",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "main",
+      "event": "push",
+      "created_at": "2026-06-13T23:18:19Z",
+      "updated_at": "2026-06-13T23:18:41Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482068113"
+    },
+    {
+      "id": 27482068111,
+      "name": "scan-and-docs",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "main",
+      "event": "push",
+      "created_at": "2026-06-13T23:18:19Z",
+      "updated_at": "2026-06-13T23:18:29Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482068111"
+    },
+    {
+      "id": 27482068104,
+      "name": "radar-tickets",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "main",
+      "event": "push",
+      "created_at": "2026-06-13T23:18:19Z",
+      "updated_at": "2026-06-13T23:18:32Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482068104"
+    },
+    {
+      "id": 27482068102,
+      "name": "test",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "main",
+      "event": "push",
+      "created_at": "2026-06-13T23:18:19Z",
+      "updated_at": "2026-06-13T23:18:29Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482068102"
+    },
+    {
+      "id": 27482037070,
+      "name": "test",
+      "status": "completed",
+      "conclusion": "success",
+      "branch": "issue-25",
+      "event": "pull_request",
+      "created_at": "2026-06-13T23:16:42Z",
+      "updated_at": "2026-06-13T23:18:22Z",
+      "url": "https://github.com/hhleroy97/ticket-system/actions/runs/27482037070"
+    }
+  ],
+  "pipeline": {
+    "stages": [
+      {
+        "id": "proposed",
+        "label": "Proposed",
+        "order": 0
+      },
+      {
+        "id": "approved",
+        "label": "Approved",
+        "order": 1
+      },
+      {
+        "id": "implementing",
+        "label": "Agent working",
+        "order": 2
+      },
+      {
+        "id": "verified",
+        "label": "Verified",
+        "order": 3
+      },
+      {
+        "id": "pr_open",
+        "label": "PR open",
+        "order": 4
+      },
+      {
+        "id": "ci",
+        "label": "CI running",
+        "order": 5
+      },
+      {
+        "id": "merged",
+        "label": "Merged",
+        "order": 6
+      }
+    ],
+    "edges": [
+      {
+        "from": "proposed",
+        "to": "approved"
+      },
+      {
+        "from": "approved",
+        "to": "implementing"
+      },
+      {
+        "from": "implementing",
+        "to": "verified"
+      },
+      {
+        "from": "verified",
+        "to": "pr_open"
+      },
+      {
+        "from": "pr_open",
+        "to": "ci"
+      },
+      {
+        "from": "ci",
+        "to": "merged"
+      }
+    ],
+    "tickets": [
+      {
+        "issue_number": 32,
+        "title": "Dependency Graph Coverage Looks Adequate",
+        "labels": [
+          "radar:proposed"
+        ],
+        "stage": "proposed",
+        "stage_label": "Proposed",
+        "stage_order": 0,
+        "linked_prs": [],
+        "open_pr": null,
+        "executor_run": null,
+        "agent_run": null
+      },
+      {
+        "issue_number": 21,
+        "title": "Dependency Graph Is Sparse",
+        "labels": [
+          "radar:approved",
+          "radar:auto-merge"
+        ],
+        "stage": "approved",
+        "stage_label": "Approved",
+        "stage_order": 1,
+        "linked_prs": [
+          24
+        ],
+        "open_pr": null,
+        "executor_run": null,
+        "agent_run": null
+      },
+      {
+        "issue_number": 22,
+        "title": "Production Python Modules Lack Test Import Edges",
+        "labels": [
+          "radar:approved",
+          "radar:auto-merge"
+        ],
+        "stage": "approved",
+        "stage_label": "Approved",
+        "stage_order": 1,
+        "linked_prs": [],
+        "open_pr": null,
+        "executor_run": null,
+        "agent_run": null
+      },
+      {
+        "issue_number": 26,
+        "title": "Dashboard Generation Lacks Focused Tests",
+        "labels": [
+          "radar:approved",
+          "radar:auto-merge"
+        ],
+        "stage": "approved",
+        "stage_label": "Approved",
+        "stage_order": 1,
+        "linked_prs": [
+          27
+        ],
+        "open_pr": null,
+        "executor_run": null,
+        "agent_run": null
+      },
+      {
+        "issue_number": 29,
+        "title": "No Stale High-Churn Modules Detected",
+        "labels": [
+          "radar:approved",
+          "radar:auto-merge"
+        ],
+        "stage": "approved",
+        "stage_label": "Approved",
+        "stage_order": 1,
+        "linked_prs": [],
+        "open_pr": null,
+        "executor_run": null,
+        "agent_run": null
+      }
+    ],
+    "open_pull_requests": [
+      {
+        "number": 35,
+        "title": "docs: knowledge graph roadmap and default self-scan target",
+        "state": "OPEN",
+        "head_ref": "docs/knowledge-graph-plan",
+        "issue_numbers": [],
+        "additions": 412,
+        "deletions": 58,
+        "url": "https://github.com/hhleroy97/ticket-system/pull/35"
+      }
+    ],
+    "updated_at": "2026-06-13 23:59:40 UTC"
+  },
+  "github": {
+    "repo": "hhleroy97/ticket-system",
+    "pr_limit": 30,
+    "fetched": true
+  }
 }
