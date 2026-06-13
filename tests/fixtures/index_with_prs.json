@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "repo": {
+    "name": "ticket-sys",
+    "branch": "main",
+    "head": "abc1234",
+    "total_commits": 10,
+    "generated_at": "2026-06-13 00:00 UTC"
+  },
+  "stats": {
+    "file_count": 2,
+    "total_loc": 100,
+    "contributor_count": 1,
+    "edge_count": 1
+  },
+  "languages": [],
+  "files": [],
+  "edges": [],
+  "pull_requests": [
+    {
+      "number": 14,
+      "title": "fix: #7 Generate actionable RADAR finding reports",
+      "state": "MERGED",
+      "merged_at": "2026-06-13T12:00:00Z",
+      "head_ref": "issue-7",
+      "issue_numbers": [7],
+      "labels": ["radar:approved"],
+      "commits": [
+        {
+          "sha": "deadbeef",
+          "full_sha": "deadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
+          "message": "feat: add radar report (#7)",
+          "date": "2026-06-13",
+          "files": ["radar_report.py"]
+        }
+      ],
+      "files": ["radar_report.py", "tests/test_radar_report.py"],
+      "additions": 120,
+      "deletions": 8
+    }
+  ],
+  "issues": [
+    {
+      "number": 21,
+      "title": "Dependency Graph Is Sparse",
+      "state": "OPEN",
+      "labels": ["radar:proposed"],
+      "linked_prs": []
+    }
+  ]
+}

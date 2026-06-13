@@ -26,7 +26,9 @@ jobs:
       - name: Build dashboard
         env:
           TARGET_REPO: ${{ github.workspace }}
-        run: python3 scan.py
+        run: |
+          python3 scan.py
+          python3 scripts/github_intel.py
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

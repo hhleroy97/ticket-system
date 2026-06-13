@@ -27,6 +27,7 @@ jobs:
           TARGET_REPO: ${{ github.workspace }}
         run: |
           python3 scan.py
+          python3 scripts/github_intel.py
           python3 radar_report.py
 
       - name: Run tests

@@ -50,7 +50,11 @@ if [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" ]; then
 fi
 
 if git merge-base --is-ancestor HEAD origin/main 2>/dev/null; then
-  git merge --ff-only origin/main
+  if dirty; then
+    git pull --ff-only --autostash origin main
+  else
+    git merge --ff-only origin/main
+  fi
   echo "sync-origin-main: fast-forwarded main to origin/main ($(git rev-parse --short HEAD))"
   exit 0
 fi

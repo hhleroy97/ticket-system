@@ -34,11 +34,20 @@ jobs:
           ISSUE_TITLE: ${{ github.event.issue.title }}
         run: |
           git checkout -b "issue-${ISSUE_NUM}"
-          cursor-agent -p --force --model composer-2.5 \
-            "Read .github/EXECUTOR.md and AGENTS.md. Implement GitHub issue #${ISSUE_NUM}: ${ISSUE_TITLE}. \
-             Make one git commit per logical change (feat/fix/test/docs/refactor) with (#${ISSUE_NUM}) in each message. \
-             Do NOT modify any file under .github/workflows/ (CI pushes are blocked). \
-             Run python3 run_tests.py before your final commit. Commit all changes — the workflow will not squash."
+          chmod +x scripts/run_executor_agent.sh scripts/finalize_agent_run.py
+          PROMPT="Read .github/EXECUTOR.md and AGENTS.md. Implement GitHub issue #${ISSUE_NUM}: ${ISSUE_TITLE}. \
+           Make one git commit per logical change (feat/fix/test/docs/refactor) with (#${ISSUE_NUM}) in each message. \
+           Do NOT modify any file under .github/workflows/ (CI pushes are blocked). \
+           Run python3 run_tests.py before your final commit. Commit all changes — the workflow will not squash."
+          scripts/run_executor_agent.sh "${ISSUE_NUM}" main "${PROMPT}"
+
+      - name: Capture agent run summary
+        env:
+          ISSUE_NUM: ${{ github.event.issue.number }}
+        run: |
+          python3 scripts/finalize_agent_run.py "${ISSUE_NUM}" main
+          git add "docs/agent-runs/issue-${ISSUE_NUM}/"
+          git diff --cached --quiet || git commit -m "docs: agent run trace for #${ISSUE_NUM}"
 
       - name: Verify branch and tests
         env:

@@ -51,6 +51,7 @@ class RenderDashboardTests(unittest.TestCase):
         shell = TEMPLATE.read_text()
         self.assertIn('id="repoName"', html)
         self.assertIn('id="graph"', html)
+        self.assertIn('id="pipelineBoard"', html)
         self.assertIn('id="langs"', html)
         self.assertIn('id="hot"', html)
         self.assertIn("const DATA = ", html)

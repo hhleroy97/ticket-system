@@ -60,7 +60,9 @@ class RadarTicketLibTests(unittest.TestCase):
             "files": "`docs/radar/README.md`",
         }
         self.assertTrue(is_low_risk(issue))
-        self.assertIn("radar:auto-merge", labels_for_issue(issue))
+        labels = labels_for_issue(issue)
+        self.assertIn("radar:auto-merge", labels)
+        self.assertNotIn("radar:proposed", labels)
 
     def test_not_low_risk_workflow(self):
         issue = {

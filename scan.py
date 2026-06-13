@@ -27,7 +27,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 FIXTURE_ROOT = HERE / "test-repos"
 
 LANG_BY_EXT = {
@@ -607,7 +607,7 @@ def main():
     if not is_git_repo(repo):
         sys.exit(f"error: {repo} is not a git repository (set TARGET_REPO)")
 
-    files = [f for f in git(repo, "ls-files").splitlines() if f]
+    files = list(dict.fromkeys(f for f in git(repo, "ls-files").splitlines() if f))
     if repo.resolve() == HERE.resolve():
         files = [f for f in files if not f.startswith("test-repos/")]
     fileset = set(files)

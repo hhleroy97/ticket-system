@@ -65,7 +65,6 @@ def select_issues(candidates, existing_titles, limit=MAX_ISSUES_PER_RUN):
 
 
 def labels_for_issue(issue):
-    labels = ["radar:proposed"]
     if is_low_risk(issue):
-        labels.extend(["radar:approved", "radar:auto-merge"])
-    return labels
+        return ["radar:approved", "radar:auto-merge"]
+    return ["radar:proposed"]
