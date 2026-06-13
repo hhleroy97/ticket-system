@@ -13,6 +13,13 @@ FINDING = re.compile(
     re.MULTILINE,
 )
 
+ISSUE_KEYS = ("title", "body", "rationale", "files")
+
+
+def validate_issue(issue):
+    """Return missing keys for a parse_findings issue dict (empty when valid)."""
+    return [key for key in ISSUE_KEYS if not issue.get(key)]
+
 
 def parse_findings(text):
     issues = []
