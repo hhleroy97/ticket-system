@@ -59,6 +59,11 @@ Merge after `test.yml` passes. Regenerated `docs/*` from a local scan belong in 
 Scheduled **RADAR** and **scan-and-docs** jobs still push generated docs to `main` via
 `push_to_main.sh` (bot exception). Executor tickets always land as `issue-<N>` PRs.
 
+## Roadmap
+
+See **`docs/KNOWLEDGE_GRAPH_PLAN.md`** for the git-provenance knowledge graph vision
+(commits, PRs, CI runs on a navigable force graph; multi-repo analysis via `TARGET_REPO`).
+
 ## Layout
 
 ```

@@ -6,7 +6,7 @@ Day-to-day commands for the ticket-sys checkout.
 
 ```bash
 cp .env.example .env
-# TARGET_REPO = project you monitor (e.g. hhl_site)
+# TARGET_REPO defaults to this repo; override to monitor another project (e.g. hhl_site)
 # CURSOR_API_KEY = for local chat + CI executor
 gh auth login
 ./hooks/install.sh   # optional pre-commit
@@ -80,4 +80,4 @@ git worktree remove ../ticket-sys-wt/feature
 | Executor doesn’t start | Issue needs `radar:approved` label event; re-add label to retrigger |
 | Pages missing live features | Use `serve_dashboard.py`, not static `file://` |
 
-See also `docs/inspiration.md` and `AGENTS.md`.
+See also `docs/inspiration.md`, `docs/KNOWLEDGE_GRAPH_PLAN.md`, and `AGENTS.md`.

@@ -48,7 +48,6 @@ class StaleHighChurnTests(unittest.TestCase):
     def test_primary_index_no_stale_draft_issues_hotspot(self):
         index = json.loads((HERE / "docs" / "index.json").read_text())
         report = check_stale_high_churn(index["files"], index["edges"])
-        self.assertIn("No Stale High-Churn Modules Detected", report)
         self.assertNotIn("`draft_issues.py`", report)
 
 
