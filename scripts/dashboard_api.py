@@ -12,7 +12,7 @@ sys.path.insert(0, str(HERE / "scripts"))
 
 from pipeline_lib import enrich_runs_with_jobs, fetch_run_jobs  # noqa: E402
 from graph_lib import reach_query  # noqa: E402
-from operator_feedback import append_feedback  # noqa: E402
+from operator_feedback import append_feedback, feedback_summary  # noqa: E402
 from request_issue import create_request_issue  # noqa: E402
 
 INDEX = HERE / "docs" / "index.json"
@@ -223,6 +223,10 @@ def fetch_workflow_run_detail(repo_slug, run_id):
     return {"id": run_id, "jobs": jobs}, None
 
 
+def query_feedback():
+    return feedback_summary()
+
+
 def query_reach(path, depth=2):
     index = load_index()
     return reach_query(path, depth=depth, index=index)
@@ -232,6 +236,8 @@ def parse_api_path(path, method):
     """Return (resource, issue_number) for /api/issues/123/approve etc."""
     if path == "/api/workflows" and method == "GET":
         return ("workflows", None)
+    if path == "/api/feedback" and method == "GET":
+        return ("feedback", None)
     if path.startswith("/api/reach") and method == "GET":
         return ("reach", None)
     if path == "/api/request" and method == "POST":

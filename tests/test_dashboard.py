@@ -73,6 +73,8 @@ class RenderDashboardTests(unittest.TestCase):
             'id="ciSpine"',
             'renderCiSpine',
             'runsForIssue',
+            'id="learningList"',
+            'pollFeedback',
         ):
             self.assertIn(marker, shell)
 

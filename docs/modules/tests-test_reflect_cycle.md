@@ -1,11 +1,11 @@
-# `scripts/operator_feedback`
+# `tests/test_reflect_cycle`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 141 |
-| Commits | 1 |
-| Last commit | 2026-06-13 |
+| LOC | 95 |
+| Commits | 0 |
+| Last commit | — |
 
 ## Provenance
 

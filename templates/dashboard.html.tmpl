@@ -854,6 +854,45 @@ function startWorkflowPolling() {
   if (localActions && !wfTimer) wfTimer = setInterval(pollWorkflows, POLL.workflows || 4000);
 }
 
+function renderLearning(data) {
+  const el = document.getElementById('learningList');
+  const hint = document.getElementById('learningHint');
+  if (!el) return;
+  const counts = data.counts || {};
+  const parts = Object.entries(counts).map(([k, v]) => `${k}: ${v}`);
+  hint.textContent = data.total ? `${data.total} entries` : 'no feedback yet';
+  const countHtml = parts.length
+    ? `<div class="learning-counts">${parts.join(' · ')}</div>` : '';
+  const recent = data.recent || [];
+  const listHtml = recent.length
+    ? recent.map(e => {
+        const reason = e.reason
+          ? `<div style="color:var(--faint);font-size:10px;margin-top:2px">${e.reason}</div>` : '';
+        return `<div class="learning-item"><span class="act">${e.action}</span>${e.title || ''}${reason}</div>`;
+      }).join('')
+    : '<div class="empty">No operator feedback logged yet.</div>';
+  el.innerHTML = countHtml + listHtml;
+}
+
+async function pollFeedback() {
+  if (!localActions) {
+    renderLearning({total: 0, counts: {}, recent: []});
+    return;
+  }
+  try {
+    const res = await fetch('/api/feedback');
+    const data = await res.json();
+    if (res.ok) renderLearning(data);
+  } catch (_) {
+    renderLearning({total: 0, counts: {}, recent: []});
+  }
+}
+
+function startFeedbackPolling() {
+  pollFeedback();
+  if (localActions) setInterval(pollFeedback, POLL.feedback || 30000);
+}
+
 async function pollSyncStatus() {
   if (!localActions) {
     document.getElementById('syncMeta').textContent = '';
@@ -1272,6 +1311,7 @@ renderProvenancePanel();
 renderCiSpine();
 renderReachPanel();
 startWorkflowPolling();
+startFeedbackPolling();
 startSyncPolling();
 startLivePolling();
 

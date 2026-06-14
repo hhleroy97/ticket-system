@@ -24,6 +24,7 @@ from pipeline_lib import (  # noqa: E402
     fetch_workflow_runs,
 )
 from provenance_graph import merge_provenance_into_index  # noqa: E402
+from reflect_cycle import reflect_outcomes  # noqa: E402
 FIXTURE_ROOT = HERE / "test-repos"
 PR_LIMIT = 30
 RADAR_LABEL_PREFIX = "radar:"
@@ -315,6 +316,7 @@ def merge_github_intel(index, repo, repo_slug):
         "fetched": True,
     }
     merge_provenance_into_index(index, repo)
+    reflect_outcomes(index)
     return index
 
 

@@ -33,6 +33,7 @@ from dashboard_api import (  # noqa: E402
     fetch_workflow_runs,
     gh_available,
     parse_api_path,
+    query_feedback,
     query_reach,
     repo_slug,
 )
@@ -233,6 +234,10 @@ class DashboardHandler(BaseHTTPRequestHandler):
             except ValueError:
                 depth = 2
             self._send_json(200, query_reach(file_path, depth=depth))
+            return
+
+        if resource == "feedback":
+            self._send_json(200, query_feedback())
             return
 
         if path == "/api/sync":

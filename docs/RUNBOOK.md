@@ -158,8 +158,11 @@ Your approve/dismiss actions and explicit requests steer the next RADAR cycle.
 | `request_created` | Dashboard **Ticket** or `scripts/request_issue.py` |
 | `approved` | Dashboard **Approve** or `gh issue edit … radar:approved` |
 | `dismissed` | Dashboard **Dismiss** (closes issue + logs) |
+| `ci_failed` | `reflect_cycle` after `github_intel` sees failed test/executor run |
+| `ci_passed` | Successful test workflow on an issue branch |
+| `blast_radius_miss` | Agent touched files outside executor plan reach set |
 
-After **two dismissals** of similar finding titles, RADAR stops proposing that theme. Approved themes rank higher in `create_radar_issues.py`.
+After **two dismissals** of similar finding titles, RADAR stops proposing that theme. Approved themes rank higher in `create_radar_issues.py`. **CI failures** and **blast-radius misses** lower a theme's score; **ci_passed** nudges it up.
 
 ```bash
 # Create issue from your request (radar:proposed + radar:request)
@@ -167,6 +170,11 @@ python3 scripts/request_issue.py "Add KG-14 author edges" --acceptance "Author n
 
 # Dashboard: type request → click Ticket (or Send for chat only)
 # Dismiss noisy RADAR tickets to teach deprioritization
+
+# Manual reflection pass (also runs at end of github_intel.py)
+python3 scripts/reflect_cycle.py
 ```
+
+**Dashboard:** select a pipeline ticket to open the **CI spine** (issue → runs → steps → files). Toggle **Operations** on the graph to highlight step coverage. The **Learning** panel shows recent feedback entries.
 
 See also `docs/inspiration.md`, `docs/KNOWLEDGE_GRAPH_PLAN.md`, and `AGENTS.md`.
