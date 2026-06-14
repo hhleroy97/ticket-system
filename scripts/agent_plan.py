@@ -10,10 +10,55 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent.parent
+INDEX = HERE / "docs" / "index.json"
 
 
 def utc_now():
     return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+
+
+def reach_summary_for_files(paths, depth=2):
+    """Return blast-radius neighbors for planned file paths from index graph."""
+    if not INDEX.is_file() or not paths:
+        return []
+    index = json.loads(INDEX.read_text())
+    graph = index.get("graph") or {}
+    nodes = graph.get("nodes") or []
+    edges = graph.get("edges") or []
+    node_by_id = {n["id"]: n for n in nodes}
+    adj = {}
+    for edge in edges:
+        if edge.get("type") not in ("imports", "co_changed", "modifies"):
+            continue
+        src, tgt = edge["source"], edge["target"]
+        adj.setdefault(src, set()).add(tgt)
+        adj.setdefault(tgt, set()).add(src)
+
+    summaries = []
+    for path in paths:
+        start = f"file:{path}"
+        if start not in node_by_id:
+            continue
+        seen = {start}
+        frontier = {start}
+        for _ in range(depth):
+            nxt = set()
+            for node in frontier:
+                for neighbor in adj.get(node, ()):
+                    if neighbor in seen:
+                        continue
+                    seen.add(neighbor)
+                    nxt.add(neighbor)
+            frontier = nxt
+        neighbors = []
+        for nid in sorted(seen):
+            if nid == start:
+                continue
+            node = node_by_id.get(nid, {})
+            label = node.get("path") or node.get("message") or node.get("title") or nid
+            neighbors.append({"id": nid, "kind": node.get("kind"), "label": label})
+        summaries.append({"file": path, "depth": depth, "neighbors": neighbors[:20]})
+    return summaries
 
 
 def run_plan_agent(issue_num, title, base="main"):
@@ -59,6 +104,7 @@ def run_plan_agent(issue_num, title, base="main"):
         "base": base,
         "created_at": utc_now(),
         "plan": plan_body,
+        "reach": reach_summary_for_files(plan_body.get("files_likely_touched") or []),
     }
     plan_path.write_text(json.dumps(payload, indent=2))
     return payload, None
