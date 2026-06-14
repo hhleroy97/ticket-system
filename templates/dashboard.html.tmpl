@@ -84,6 +84,24 @@
   .prov-item .sha{font-family:var(--mono);font-size:10.5px;color:var(--teal)}
   .prov-item .msg{color:var(--muted);margin-top:4px;font-size:11px;line-height:1.35}
 
+  .reach-controls{display:flex;align-items:center;justify-content:space-between;gap:10px;
+       padding:10px 14px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .reach-controls label{display:flex;align-items:center;gap:8px}
+  .reach-controls input[type=range]{width:88px;accent-color:var(--teal)}
+  .reach-clear{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:6px;
+       border:1px solid var(--line);background:var(--panel2);color:var(--muted);cursor:pointer}
+  .reach-clear:hover{color:var(--text);border-color:var(--faint)}
+  .reach-origin-item{padding:10px 14px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px}
+  .reach-tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:9px;text-transform:uppercase;
+       letter-spacing:0.06em;color:var(--teal);border:1px solid rgba(79,209,197,.35);margin-right:6px}
+  .reach-depth{padding:8px 14px 4px;font-family:var(--mono);font-size:10px;color:var(--faint);text-transform:uppercase;
+       letter-spacing:0.06em;border-bottom:1px solid var(--line)}
+  .reach-item{padding:8px 14px;border-bottom:1px solid var(--line);font-size:12px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+  .reach-via{font-family:var(--mono);font-size:10px;color:var(--violet);min-width:72px}
+  .reach-label{font-family:var(--mono);font-size:11px;color:var(--text);word-break:break-all;flex:1}
+  .reach-kind{font-family:var(--mono);font-size:9px;color:var(--faint);text-transform:uppercase}
+  .node.reach-origin{stroke:var(--teal);stroke-width:3px}
+
   .tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .12s;z-index:10;
        background:#0A0E12;border:1px solid var(--line);border-radius:8px;padding:10px 12px;
        font-family:var(--mono);font-size:11.5px;max-width:340px}
@@ -223,7 +241,18 @@
         <span><span class="swatch"></span>color = commit activity (cool → hot)</span>
         <span>node size = lines of code</span>
         <span>teal edges = imports · violet = co-change</span>
-        <span>amber ring = selected PR / commit files</span>
+        <span>amber ring = selected PR / commit files · teal ring = reach origin</span>
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <div class="ph">
+          <h2>Reach</h2>
+          <div class="hint" id="reachHint">click a node</div>
+        </div>
+        <div class="reach-controls">
+          <label for="reachDepth">Depth <input type="range" id="reachDepth" min="1" max="3" value="2"></label>
+          <button type="button" id="reachClear" class="reach-clear">Clear</button>
+        </div>
+        <div class="side-scroll" id="reachList" style="max-height:200px"></div>
       </div>
       <div class="panel" style="margin-top:18px">
         <div class="ph">
@@ -294,6 +323,9 @@ const POLL = (DATA.meta && DATA.meta.poll_ms) || {index: 10000, issues: 10000, w
 let selectedPr = null;
 let selectedCommit = null;
 let selectedIssue = null;
+let selectedReachFile = null;
+let reachDepth = 2;
+let reachResult = null;
 
 const SCAN_META = DATA.meta || {};
 const scanTargetPath = SCAN_META.scan_target || DATA.repo.path || '';
@@ -674,17 +706,27 @@ function startSyncPolling() {
 }
 
 function activeFileSet() {
+  let base = null;
   if (selectedIssue) {
     const ticket = (PIPELINE.tickets || []).find(t => t.issue_number === selectedIssue);
     const agent = ticket && ticket.agent_run;
     if (agent) {
-      if (selectedCommit) return new Set(selectedCommit.files || []);
-      return new Set(agent.files || []);
+      if (selectedCommit) base = new Set(selectedCommit.files || []);
+      else base = new Set(agent.files || []);
     }
+  } else if (selectedPr) {
+    if (selectedCommit) base = new Set(selectedCommit.files || []);
+    else base = new Set(selectedPr.files || []);
   }
-  if (!selectedPr) return null;
-  if (selectedCommit) return new Set(selectedCommit.files || []);
-  return new Set(selectedPr.files || []);
+  if (selectedReachFile && reachResult && !reachResult.missing) {
+    const reachFiles = new Set([selectedReachFile]);
+    reachResult.reachable.forEach(r => {
+      if (r.kind === 'file' && r.label) reachFiles.add(r.label);
+    });
+    if (!base) return reachFiles;
+    return new Set([...base, ...reachFiles]);
+  }
+  return base;
 }
 
 function renderAgentCommitStrip(ticket) {
@@ -823,6 +865,116 @@ function renderProvenancePanel() {
   el.innerHTML = commitHtml + runHtml;
 }
 
+const REACH_EDGE_TYPES = new Set(['imports', 'co_changed', 'modifies', 'contains']);
+
+function fileNodeId(path) {
+  return `file:${path}`;
+}
+
+function buildReachAdj(edges, undirected) {
+  const adj = {};
+  for (const edge of edges) {
+    if (!REACH_EDGE_TYPES.has(edge.type)) continue;
+    const src = edge.source;
+    const tgt = edge.target;
+    (adj[src] = adj[src] || []).push({node: tgt, edge});
+    if (undirected) {
+      (adj[tgt] = adj[tgt] || []).push({node: src, edge});
+    }
+  }
+  return adj;
+}
+
+function reachQueryClient(path, depth) {
+  const graphNodes = GRAPH.nodes || [];
+  const graphEdges = GRAPH.edges || [];
+  const nodeById = {};
+  graphNodes.forEach(n => { nodeById[n.id] = n; });
+
+  const start = nodeById[fileNodeId(path)] ? fileNodeId(path) : null;
+  if (!start) {
+    return {start: fileNodeId(path), depth, reachable: [], missing: true};
+  }
+
+  const adj = buildReachAdj(graphEdges, true);
+  const visited = new Map([[start, {depth: 0, edge: null}]]);
+  const queue = [[start, 0]];
+
+  while (queue.length) {
+    const [node, d] = queue.shift();
+    if (d >= depth) continue;
+    for (const step of (adj[node] || [])) {
+      if (visited.has(step.node)) continue;
+      visited.set(step.node, {depth: d + 1, edge: step.edge});
+      queue.push([step.node, d + 1]);
+    }
+  }
+
+  const reachable = [];
+  for (const [nid, info] of visited) {
+    if (nid === start) continue;
+    const node = nodeById[nid] || {id: nid};
+    const via = info.edge ? info.edge.type : '';
+    const label = node.path || node.message || node.title || nid.replace(/^file:/, '');
+    reachable.push({id: nid, kind: node.kind, depth: info.depth, via, label});
+  }
+  reachable.sort((a, b) => a.depth - b.depth || String(a.label).localeCompare(String(b.label)));
+  return {start, depth, reachable, missing: false};
+}
+
+function clearReachSelection() {
+  selectedReachFile = null;
+  reachResult = null;
+  renderReachPanel();
+  updateGraphHighlight();
+}
+
+function renderReachPanel() {
+  const el = document.getElementById('reachList');
+  const hint = document.getElementById('reachHint');
+  if (!selectedReachFile) {
+    el.innerHTML = '<div class="empty">Click a module node to see blast radius (imports, co-change, provenance).</div>';
+    hint.textContent = 'click a node';
+    reachResult = null;
+    return;
+  }
+
+  reachResult = reachQueryClient(selectedReachFile, reachDepth);
+  if (reachResult.missing) {
+    el.innerHTML = '<div class="empty">No graph node for this file — run github_intel.py after scan.</div>';
+    hint.textContent = selectedReachFile;
+    return;
+  }
+
+  const fileCount = reachResult.reachable.filter(r => r.kind === 'file').length;
+  hint.textContent = `${selectedReachFile} · depth ${reachDepth} · ${fileCount} file(s)`;
+
+  let html = `<div class="reach-origin-item"><span class="reach-tag">origin</span><span class="reach-label">${selectedReachFile}</span></div>`;
+  const byDepth = {};
+  reachResult.reachable.forEach(r => {
+    (byDepth[r.depth] = byDepth[r.depth] || []).push(r);
+  });
+  Object.keys(byDepth).sort((a, b) => Number(a) - Number(b)).forEach(d => {
+    html += `<div class="reach-depth">Depth ${d}</div>`;
+    byDepth[d].forEach(r => {
+      html += `<div class="reach-item"><span class="reach-via">${r.via || '—'}</span>`
+        + `<span class="reach-label">${r.label}</span>`
+        + `<span class="reach-kind">${r.kind || 'node'}</span></div>`;
+    });
+  });
+  if (!reachResult.reachable.length) {
+    html += '<div class="empty">No neighbors within this depth.</div>';
+  }
+  el.innerHTML = html;
+  updateGraphHighlight();
+}
+
+document.getElementById('reachDepth').addEventListener('input', e => {
+  reachDepth = Number(e.target.value);
+  if (selectedReachFile) renderReachPanel();
+});
+document.getElementById('reachClear').addEventListener('click', clearReachSelection);
+
 function rebuildGraphLinks() {
   links = [];
   if (graphLayers.structure) links.push(...importLinks);
@@ -886,14 +1038,22 @@ node.on('mousemove',(e,d)=>{
       ? `<div class="r">recent commits <span>${recent.map(c => c.sha).join(', ')}</span></div>` : '';
     tip.innerHTML = `<div class="p">${d.path}</div>
       <div class="r">lang <span>${d.lang}</span> · loc <span>${fmt(d.loc)}</span></div>
-      <div class="r">commits <span>${d.commits}</span> · last <span>${d.last_commit||'—'}</span></div>${prLine}${commitLine}`;
-  }).on('mouseleave',()=>tip.style.opacity=0);
+      <div class="r">commits <span>${d.commits}</span> · last <span>${d.last_commit||'—'}</span></div>${prLine}${commitLine}
+      <div class="r">click for reach</div>`;
+  }).on('mouseleave',()=>tip.style.opacity=0)
+  .on('click',(e,d)=>{
+    e.stopPropagation();
+    selectedReachFile = d.path;
+    renderReachPanel();
+  });
 
 function updateGraphHighlight() {
   const files = activeFileSet();
   const highlight = files && files.size;
+  const origin = selectedReachFile;
   node.classed('dim', d => highlight && !files.has(d.path))
-      .classed('hl', d => highlight && files.has(d.path));
+      .classed('hl', d => highlight && files.has(d.path) && d.path !== origin)
+      .classed('reach-origin', d => origin && d.path === origin);
   link.classed('hl', d => {
     if (!highlight) return false;
     const s = d.source.id || d.source;
@@ -913,6 +1073,7 @@ renderIssueList();
 renderPipelineBoard();
 renderCommitStrip();
 renderProvenancePanel();
+renderReachPanel();
 startWorkflowPolling();
 startSyncPolling();
 startLivePolling();

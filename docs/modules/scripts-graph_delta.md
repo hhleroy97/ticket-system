@@ -1,10 +1,10 @@
-# `scripts/github_intel`
+# `scripts/graph_delta`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 385 |
-| Commits | 2 |
+| LOC | 111 |
+| Commits | 1 |
 | Last commit | 2026-06-13 |
 
 ## Provenance

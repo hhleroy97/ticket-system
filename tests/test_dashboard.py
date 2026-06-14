@@ -52,11 +52,19 @@ class RenderDashboardTests(unittest.TestCase):
         self.assertIn('id="repoName"', html)
         self.assertIn('id="graph"', html)
         self.assertIn('id="pipelineBoard"', html)
+        self.assertIn('id="reachList"', html)
+        self.assertIn('id="reachDepth"', html)
+        self.assertIn('reachQueryClient', html)
         self.assertIn('id="langs"', html)
         self.assertIn('id="hot"', html)
         self.assertIn("const DATA = ", html)
         self.assertIn(shell.split("const DATA = ")[0], html)
         self.assertIn(shell.split(";\nconst fmt")[1], html)
+
+    def test_reach_panel_in_template(self):
+        shell = TEMPLATE.read_text()
+        for marker in ('id="reachList"', 'id="reachDepth"', 'id="reachClear"', 'reachQueryClient'):
+            self.assertIn(marker, shell)
 
 
 class ScanDashboardTests(unittest.TestCase):

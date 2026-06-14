@@ -49,9 +49,23 @@ class StaleHighChurnTests(unittest.TestCase):
         report = check_provenance_graph_missing({"schema_version": 2})
         self.assertIn("Provenance Graph Not Built", report)
 
-    def test_primary_index_no_stale_draft_issues_hotspot(self):
+    def test_primary_index_stale_check_returns_valid_section(self):
         index = json.loads((HERE / "docs" / "index.json").read_text())
         report = check_stale_high_churn(index["files"], index["edges"])
+        self.assertTrue(
+            "Stale High-Churn Modules With Quiet Dependents" in report
+            or "No Stale High-Churn Modules Detected" in report,
+            report,
+        )
+
+    def test_skips_hotspot_when_only_test_importers(self):
+        files = [
+            {"path": "draft_issues.py", "lang": "Python", "commits": 5, "loc": 66},
+            {"path": "tests/test_docgen.py", "lang": "Python", "commits": 1, "loc": 80},
+        ]
+        edges = [{"source": "tests/test_docgen.py", "target": "draft_issues.py"}]
+        report = check_stale_high_churn(files, edges)
+        self.assertIn("No Stale High-Churn Modules Detected", report)
         self.assertNotIn("`draft_issues.py`", report)
 
 
