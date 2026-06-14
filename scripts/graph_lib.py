@@ -7,7 +7,7 @@ import json
 from collections import deque
 from pathlib import Path
 
-DEFAULT_EDGE_TYPES = ("imports", "co_changed", "modifies", "contains")
+DEFAULT_EDGE_TYPES = ("imports", "co_changed", "modifies", "contains", "authored")
 
 
 def load_index(index_path: Path | str | None = None) -> dict:
@@ -80,6 +80,21 @@ def co_change_neighbors(path: str, edges, min_weight: int = 1) -> list[tuple[str
     return sorted(neighbors.items(), key=lambda x: (-x[1], x[0]))
 
 
+def authors_for_file(path: str, edges, node_by_id: dict, limit: int = 10) -> list[tuple[str, int]]:
+    fid = file_node_id(path)
+    authors = {}
+    for edge in edges:
+        if edge.get("type") != "authored" or edge.get("target") != fid:
+            continue
+        node = node_by_id.get(edge["source"])
+        if not node or node.get("kind") != "author":
+            continue
+        label = node.get("name") or node.get("email") or edge["source"]
+        weight = edge.get("weight") or 1
+        authors[label] = max(authors.get(label, 0), weight)
+    return sorted(authors.items(), key=lambda x: (-x[1], x[0]))[:limit]
+
+
 def commits_for_file(path: str, edges, node_by_id: dict, limit: int = 5) -> list[dict]:
     fid = file_node_id(path)
     commits = []
@@ -115,6 +130,7 @@ def provenance_for_file(path: str, index: dict, reach_depth: int = 2) -> dict:
     _, edges, node_by_id = load_provenance(index)
     return {
         "commits": commits_for_file(path, edges, node_by_id),
+        "authors": authors_for_file(path, edges, node_by_id),
         "co_changed": co_change_neighbors(path, edges),
         "reach": reach_query(path, depth=reach_depth, index=index),
     }
