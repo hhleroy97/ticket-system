@@ -63,6 +63,24 @@ gh pr create --title "feat: …" --body "…"
 # merge after test.yml green
 ```
 
+## Merge conflict bot
+
+Workflow **resolve-conflicts** runs when `main` moves, every 6 hours, or manually:
+
+```bash
+gh workflow run resolve-conflicts.yml
+gh workflow run resolve-conflicts.yml -f pr=36 -f dry_run=true   # assess only
+```
+
+For each open same-repo PR it:
+
+1. **Assesses** merge status (`MERGEABLE`, `CONFLICTING`, `BEHIND`, fork/draft skips).
+2. **Fixes** by merging `origin/main` into the PR branch.
+3. **Auto-resolves** doc-only conflicts (`docs/index.json`, `docs/dashboard.html`, `docs/modules/*`) by regenerating via `scan.py` + `github_intel.py`.
+4. **Comments** on the PR with results; code conflicts require manual resolution.
+
+Fork PRs and non-doc conflicts are never auto-edited.
+
 ## Parallel development (worktrees)
 
 ```bash
