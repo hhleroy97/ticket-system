@@ -1,26 +1,26 @@
 {
   "schema_version": 2,
   "meta": {
-    "intel_root": "/home/runner/work/ticket-system/ticket-system",
-    "scan_target": "/home/runner/work/ticket-system/ticket-system",
+    "intel_root": "/home/hartley/projects/personal/ticket-sys",
+    "scan_target": "/home/hartley/projects/personal/ticket-sys",
     "scan_target_is_self": true,
     "federation": {
-      "primary_slug": "ticket-system",
-      "docs_path": "/home/runner/work/ticket-system/ticket-system/docs"
+      "primary_slug": "ticket-sys",
+      "docs_path": "/home/hartley/projects/personal/ticket-sys/docs"
     }
   },
   "repo": {
-    "name": "ticket-system",
-    "path": "/home/runner/work/ticket-system/ticket-system",
-    "branch": "main",
-    "head": "10108c1",
-    "total_commits": 86,
-    "generated_at": "2026-06-14 00:17 UTC"
+    "name": "ticket-sys",
+    "path": "/home/hartley/projects/personal/ticket-sys",
+    "branch": "test/conflict-bot-doc",
+    "head": "3165451",
+    "total_commits": 82,
+    "generated_at": "2026-06-14 00:21 UTC"
   },
   "package_roots": {},
   "stats": {
     "file_count": 118,
-    "total_loc": 9157,
+    "total_loc": 9159,
     "contributor_count": 4,
     "edge_count": 34
   },
@@ -28,7 +28,7 @@
     {
       "name": "Python",
       "files": 38,
-      "loc": 5369
+      "loc": 5371
     },
     {
       "name": "Markdown",
@@ -222,15 +222,15 @@
       "lang": "Markdown",
       "loc": 36,
       "size": 1745,
-      "commits": 1,
-      "last_commit": "2026-06-13"
+      "commits": 0,
+      "last_commit": null
     },
     {
       "path": "docs/KNOWLEDGE_GRAPH_PLAN.md",
       "lang": "Markdown",
       "loc": 258,
       "size": 10455,
-      "commits": 2,
+      "commits": 1,
       "last_commit": "2026-06-13"
     },
     {
@@ -246,32 +246,32 @@
       "lang": "Config",
       "loc": 0,
       "size": 254,
-      "commits": 1,
-      "last_commit": "2026-06-13"
+      "commits": 0,
+      "last_commit": null
     },
     {
       "path": "docs/dashboard.html",
       "lang": "HTML",
       "loc": 964,
-      "size": 62492,
+      "size": 184944,
       "commits": 28,
-      "last_commit": "2026-06-14"
+      "last_commit": "2026-06-13"
     },
     {
       "path": "docs/index.db",
       "lang": "Other",
       "loc": 0,
-      "size": 49152,
+      "size": 151552,
       "commits": 28,
-      "last_commit": "2026-06-14"
+      "last_commit": "2026-06-13"
     },
     {
       "path": "docs/index.json",
       "lang": "Config",
       "loc": 0,
-      "size": 24798,
+      "size": 194180,
       "commits": 28,
-      "last_commit": "2026-06-14"
+      "last_commit": "2026-06-13"
     },
     {
       "path": "docs/inspiration.md",
@@ -326,7 +326,7 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 220,
-      "commits": 2,
+      "commits": 1,
       "last_commit": "2026-06-13"
     },
     {
@@ -350,7 +350,7 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 227,
-      "commits": 4,
+      "commits": 3,
       "last_commit": "2026-06-13"
     },
     {
@@ -366,7 +366,7 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 222,
-      "commits": 2,
+      "commits": 1,
       "last_commit": "2026-06-13"
     },
     {
@@ -382,7 +382,7 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 229,
-      "commits": 2,
+      "commits": 1,
       "last_commit": "2026-06-13"
     },
     {
@@ -390,8 +390,8 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 226,
-      "commits": 1,
-      "last_commit": "2026-06-13"
+      "commits": 0,
+      "last_commit": null
     },
     {
       "path": "docs/modules/scripts-radar_ticket_lib.md",
@@ -406,8 +406,8 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 221,
-      "commits": 1,
-      "last_commit": "2026-06-13"
+      "commits": 0,
+      "last_commit": null
     },
     {
       "path": "docs/modules/scripts-repo_config.md",
@@ -429,7 +429,7 @@
       "path": "docs/modules/scripts-resolve_pr_conflicts.md",
       "lang": "Markdown",
       "loc": 11,
-      "size": 223,
+      "size": 230,
       "commits": 2,
       "last_commit": "2026-06-14"
     },
@@ -446,15 +446,15 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 222,
-      "commits": 1,
-      "last_commit": "2026-06-13"
+      "commits": 0,
+      "last_commit": null
     },
     {
       "path": "docs/modules/tests-test_agent_progress.md",
       "lang": "Markdown",
       "loc": 11,
       "size": 226,
-      "commits": 2,
+      "commits": 1,
       "last_commit": "2026-06-13"
     },
     {
@@ -478,7 +478,7 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 229,
-      "commits": 3,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -526,15 +526,15 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 228,
-      "commits": 1,
-      "last_commit": "2026-06-13"
+      "commits": 0,
+      "last_commit": null
     },
     {
       "path": "docs/modules/tests-test_radar_report.md",
       "lang": "Markdown",
       "loc": 11,
       "size": 225,
-      "commits": 7,
+      "commits": 6,
       "last_commit": "2026-06-14"
     },
     {
@@ -550,8 +550,8 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 223,
-      "commits": 1,
-      "last_commit": "2026-06-13"
+      "commits": 0,
+      "last_commit": null
     },
     {
       "path": "docs/modules/tests-test_repo_config.md",
@@ -573,7 +573,7 @@
       "path": "docs/modules/tests-test_resolve_pr_conflicts.md",
       "lang": "Markdown",
       "loc": 11,
-      "size": 226,
+      "size": 233,
       "commits": 2,
       "last_commit": "2026-06-14"
     },
@@ -668,8 +668,8 @@
     {
       "path": "scan.py",
       "lang": "Python",
-      "loc": 726,
-      "size": 25275,
+      "loc": 728,
+      "size": 25313,
       "commits": 7,
       "last_commit": "2026-06-13"
     },
@@ -678,7 +678,7 @@
       "lang": "Python",
       "loc": 128,
       "size": 4344,
-      "commits": 3,
+      "commits": 1,
       "last_commit": "2026-06-13"
     },
     {
@@ -726,7 +726,7 @@
       "lang": "Python",
       "loc": 385,
       "size": 12270,
-      "commits": 2,
+      "commits": 1,
       "last_commit": "2026-06-13"
     },
     {
@@ -750,8 +750,8 @@
       "lang": "Python",
       "loc": 228,
       "size": 7101,
-      "commits": 1,
-      "last_commit": "2026-06-13"
+      "commits": 0,
+      "last_commit": null
     },
     {
       "path": "scripts/push_to_main.sh",
@@ -774,8 +774,8 @@
       "lang": "Python",
       "loc": 101,
       "size": 3417,
-      "commits": 2,
-      "last_commit": "2026-06-13"
+      "commits": 0,
+      "last_commit": null
     },
     {
       "path": "scripts/repo_config.py",
@@ -838,7 +838,7 @@
       "lang": "Other",
       "loc": 964,
       "size": 44120,
-      "commits": 4,
+      "commits": 3,
       "last_commit": "2026-06-13"
     },
     {
@@ -846,8 +846,8 @@
       "lang": "Config",
       "loc": 0,
       "size": 1267,
-      "commits": 1,
-      "last_commit": "2026-06-13"
+      "commits": 0,
+      "last_commit": null
     },
     {
       "path": "tests/fixtures/index_with_prs.json",
@@ -862,8 +862,8 @@
       "lang": "Python",
       "loc": 29,
       "size": 862,
-      "commits": 2,
-      "last_commit": "2026-06-13"
+      "commits": 0,
+      "last_commit": null
     },
     {
       "path": "tests/test_agent_progress.py",
@@ -942,15 +942,15 @@
       "lang": "Python",
       "loc": 63,
       "size": 2069,
-      "commits": 1,
-      "last_commit": "2026-06-13"
+      "commits": 0,
+      "last_commit": null
     },
     {
       "path": "tests/test_radar_report.py",
       "lang": "Python",
       "loc": 172,
       "size": 7007,
-      "commits": 6,
+      "commits": 5,
       "last_commit": "2026-06-13"
     },
     {
@@ -966,8 +966,8 @@
       "lang": "Python",
       "loc": 53,
       "size": 1665,
-      "commits": 2,
-      "last_commit": "2026-06-13"
+      "commits": 0,
+      "last_commit": null
     },
     {
       "path": "tests/test_repo_config.py",
@@ -1025,10 +1025,6 @@
     },
     {
       "source": "scripts/github_intel.py",
-      "target": "scan.py"
-    },
-    {
-      "source": "scripts/github_intel.py",
       "target": "scripts/provenance_graph.py"
     },
     {
@@ -1036,16 +1032,20 @@
       "target": "scripts/pipeline_lib.py"
     },
     {
+      "source": "scripts/github_intel.py",
+      "target": "scan.py"
+    },
+    {
       "source": "serve_dashboard.py",
       "target": "scripts/repo_sync.py"
     },
     {
       "source": "serve_dashboard.py",
-      "target": "scripts/dashboard_api.py"
+      "target": "scripts/dashboard_refresh.py"
     },
     {
       "source": "serve_dashboard.py",
-      "target": "scripts/dashboard_refresh.py"
+      "target": "scripts/dashboard_api.py"
     },
     {
       "source": "tests/test_agent_plan.py",
@@ -1073,11 +1073,11 @@
     },
     {
       "source": "tests/test_docgen.py",
-      "target": "docgen.py"
+      "target": "scan.py"
     },
     {
       "source": "tests/test_docgen.py",
-      "target": "scan.py"
+      "target": "docgen.py"
     },
     {
       "source": "tests/test_github_intel.py",
@@ -1101,10 +1101,6 @@
     },
     {
       "source": "tests/test_radar_report.py",
-      "target": "radar_report.py"
-    },
-    {
-      "source": "tests/test_radar_report.py",
       "target": "draft_issues.py"
     },
     {
@@ -1112,8 +1108,12 @@
       "target": "scan.py"
     },
     {
+      "source": "tests/test_radar_report.py",
+      "target": "radar_report.py"
+    },
+    {
       "source": "tests/test_radar_tickets.py",
-      "target": "scripts/create_radar_issues.py"
+      "target": "scripts/radar_ticket_lib.py"
     },
     {
       "source": "tests/test_radar_tickets.py",
@@ -1121,7 +1121,7 @@
     },
     {
       "source": "tests/test_radar_tickets.py",
-      "target": "scripts/radar_ticket_lib.py"
+      "target": "scripts/create_radar_issues.py"
     },
     {
       "source": "tests/test_repo_config.py",
@@ -1139,11 +1139,5 @@
       "source": "tests/test_scan.py",
       "target": "scan.py"
     }
-  ],
-  "pull_requests": [],
-  "issues": [],
-  "github": {
-    "fetched": false,
-    "reason": "gh unavailable"
-  }
+  ]
 }
