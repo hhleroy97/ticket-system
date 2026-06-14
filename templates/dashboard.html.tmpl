@@ -61,6 +61,7 @@
   #graph{width:100%;height:460px;display:block;cursor:grab}
   #graph:active{cursor:grabbing}
   .link{stroke:var(--teal);stroke-opacity:0.16;transition:stroke-opacity .15s}
+  .link.co{stroke:var(--violet);stroke-opacity:0.22}
   .link.hl{stroke-opacity:0.55;stroke-width:1.5px}
   .node{cursor:pointer;stroke:var(--ink);stroke-width:1.5px;transition:opacity .15s}
   .node.dim{opacity:0.18}
@@ -74,6 +75,14 @@
        overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
   .commit-chip.active{border-color:var(--amber);color:var(--text)}
   .commit-strip .placeholder{color:var(--faint);font-size:12px;padding:6px 0}
+
+  .layer-toggles{display:flex;gap:6px;flex-wrap:wrap}
+  .layer-btn{font-family:var(--mono);font-size:10px;padding:4px 8px;border-radius:6px;
+       border:1px solid var(--line);background:var(--panel2);color:var(--muted);cursor:pointer}
+  .layer-btn.on{color:var(--text);border-color:var(--teal)}
+  .prov-item{padding:10px 14px;border-bottom:1px solid var(--line);font-size:12px}
+  .prov-item .sha{font-family:var(--mono);font-size:10.5px;color:var(--teal)}
+  .prov-item .msg{color:var(--muted);margin-top:4px;font-size:11px;line-height:1.35}
 
   .tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .12s;z-index:10;
        background:#0A0E12;border:1px solid var(--line);border-radius:8px;padding:10px 12px;
@@ -197,8 +206,15 @@
     <div>
       <div class="panel">
         <div class="ph">
-          <h2>Module dependency graph</h2>
-          <div class="hint" id="graphHint"></div>
+          <h2>Knowledge graph</h2>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <div class="layer-toggles" id="graphLayers">
+              <button type="button" class="layer-btn on" data-layer="structure">Structure</button>
+              <button type="button" class="layer-btn" data-layer="cochange">Co-change</button>
+              <button type="button" class="layer-btn on" data-layer="provenance">Provenance</button>
+            </div>
+            <div class="hint" id="graphHint"></div>
+          </div>
         </div>
         <svg id="graph"></svg>
         <div class="commit-strip" id="commitStrip"></div>
@@ -206,8 +222,15 @@
       <div class="legend">
         <span><span class="swatch"></span>color = commit activity (cool → hot)</span>
         <span>node size = lines of code</span>
-        <span>edges = imports</span>
+        <span>teal edges = imports · violet = co-change</span>
         <span>amber ring = selected PR / commit files</span>
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <div class="ph">
+          <h2>Provenance</h2>
+          <div class="hint" id="provHint">recent commits · CI runs</div>
+        </div>
+        <div class="side-scroll" id="provList" style="max-height:200px"></div>
       </div>
     </div>
 
@@ -740,17 +763,92 @@ function prsTouchingPath(path) {
 }
 
 // ---- knowledge graph ----
+const GRAPH = DATA.graph || {nodes:[], edges:[], stats:{}};
 const GRAPH_LANGS = new Set(['Python','JavaScript','TypeScript']);
 const present = new Set();
 DATA.edges.forEach(e=>{present.add(e.source);present.add(e.target);});
 let nodes = DATA.files.filter(f => GRAPH_LANGS.has(f.lang) && (present.has(f.path) || f.loc>0));
 nodes = nodes.sort((a,b)=>b.loc-a.loc).slice(0,200);
 const keep = new Set(nodes.map(n=>n.path));
-const links = DATA.edges.filter(e=>keep.has(e.source)&&keep.has(e.target))
-                        .map(e=>({source:e.source,target:e.target}));
+const importLinks = DATA.edges.filter(e=>keep.has(e.source)&&keep.has(e.target))
+                        .map(e=>({source:e.source,target:e.target,type:'imports'}));
+const coChangeLinks = (GRAPH.edges || []).filter(e =>
+  e.type === 'co_changed' &&
+  e.source.startsWith('file:') && e.target.startsWith('file:') &&
+  keep.has(e.source.slice(5)) && keep.has(e.target.slice(5))
+).map(e=>({source:e.source.slice(5),target:e.target.slice(5),type:'co_changed',weight:e.weight||1}));
+const commitsByFile = {};
+(GRAPH.edges || []).filter(e => e.type === 'modifies').forEach(e => {
+  if (!e.target.startsWith('file:')) return;
+  const path = e.target.slice(5);
+  if (!keep.has(path)) return;
+  const commitNode = (GRAPH.nodes || []).find(n => n.id === e.source);
+  if (!commitNode) return;
+  commitsByFile[path] = commitsByFile[path] || [];
+  commitsByFile[path].push(commitNode);
+});
 nodes = nodes.map(n=>({...n,id:n.path}));
 
-document.getElementById('graphHint').textContent = `${nodes.length} modules · ${links.length} edges`;
+const graphLayers = {structure:true, cochange:false, provenance:true};
+let links = importLinks.slice();
+
+function graphHintText() {
+  const parts = [`${nodes.length} modules`, `${links.length} edges`];
+  if (GRAPH.stats && GRAPH.stats.node_count) {
+    parts.push(`${GRAPH.stats.commit_nodes || 0} commits in graph`);
+  }
+  return parts.join(' · ');
+}
+
+document.getElementById('graphHint').textContent = graphHintText();
+
+function renderProvenancePanel() {
+  const el = document.getElementById('provList');
+  const hint = document.getElementById('provHint');
+  const commits = (GRAPH.nodes || []).filter(n => n.kind === 'commit')
+    .sort((a,b) => (b.date||'').localeCompare(a.date||'')).slice(0,12);
+  const runs = (GRAPH.nodes || []).filter(n => n.kind === 'workflow_run').slice(0,6);
+  if (!commits.length && !runs.length) {
+    el.innerHTML = '<div class="empty">Run github_intel.py after scan to build provenance graph.</div>';
+    hint.textContent = 'no graph data';
+    return;
+  }
+  hint.textContent = `${commits.length} recent commit(s) · ${runs.length} CI run(s)`;
+  const commitHtml = commits.map(c =>
+    `<div class="prov-item"><div class="sha">${c.sha} · ${c.date||'—'}</div><div class="msg">${c.message||''}</div></div>`
+  ).join('');
+  const runHtml = runs.map(r =>
+    `<div class="prov-item"><div class="sha">run ${r.run_id} · ${r.conclusion||r.status||'—'}</div><div class="msg">${r.name||''} on ${r.branch||'—'}</div></div>`
+  ).join('');
+  el.innerHTML = commitHtml + runHtml;
+}
+
+function rebuildGraphLinks() {
+  links = [];
+  if (graphLayers.structure) links.push(...importLinks);
+  if (graphLayers.cochange) links.push(...coChangeLinks);
+  link.data(links, d => `${d.source}|${d.target}|${d.type}`)
+    .join(
+      enter => enter.append('line').attr('class', d => d.type === 'co_changed' ? 'link co' : 'link'),
+      update => update.attr('class', d => d.type === 'co_changed' ? 'link co' : 'link'),
+      exit => exit.remove()
+    );
+  sim.force('link').links(links);
+  sim.alpha(0.35).restart();
+  document.getElementById('graphHint').textContent = graphHintText();
+}
+
+document.querySelectorAll('#graphLayers .layer-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const layer = btn.dataset.layer;
+    if (layer === 'structure') graphLayers.structure = !graphLayers.structure;
+    if (layer === 'cochange') graphLayers.cochange = !graphLayers.cochange;
+    if (layer === 'provenance') graphLayers.provenance = !graphLayers.provenance;
+    btn.classList.toggle('on', graphLayers[layer === 'cochange' ? 'cochange' : layer]);
+    if (layer === 'provenance') renderProvenancePanel();
+    else rebuildGraphLinks();
+  });
+});
 
 const svg = d3.select('#graph');
 const W = svg.node().clientWidth, H = svg.node().clientHeight;
@@ -783,9 +881,12 @@ node.on('mousemove',(e,d)=>{
     tip.style.opacity=1; tip.style.left=(e.clientX+14)+'px'; tip.style.top=(e.clientY+14)+'px';
     const touched = prsTouchingPath(d.path);
     const prLine = touched.length ? `<div class="r">PRs <span>${touched.join(', ')}</span></div>` : '';
+    const recent = graphLayers.provenance ? (commitsByFile[d.path] || []).slice(0,3) : [];
+    const commitLine = recent.length
+      ? `<div class="r">recent commits <span>${recent.map(c => c.sha).join(', ')}</span></div>` : '';
     tip.innerHTML = `<div class="p">${d.path}</div>
       <div class="r">lang <span>${d.lang}</span> · loc <span>${fmt(d.loc)}</span></div>
-      <div class="r">commits <span>${d.commits}</span> · last <span>${d.last_commit||'—'}</span></div>${prLine}`;
+      <div class="r">commits <span>${d.commits}</span> · last <span>${d.last_commit||'—'}</span></div>${prLine}${commitLine}`;
   }).on('mouseleave',()=>tip.style.opacity=0);
 
 function updateGraphHighlight() {
@@ -811,6 +912,7 @@ renderPrList();
 renderIssueList();
 renderPipelineBoard();
 renderCommitStrip();
+renderProvenancePanel();
 startWorkflowPolling();
 startSyncPolling();
 startLivePolling();

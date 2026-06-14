@@ -558,6 +558,10 @@ def write_sqlite(index, path):
             commits INTEGER, last_commit TEXT
         );
         CREATE TABLE edges (source TEXT, target TEXT);
+        CREATE TABLE graph_nodes (id TEXT PRIMARY KEY, kind TEXT, label TEXT, data TEXT);
+        CREATE TABLE graph_edges (
+            source TEXT, target TEXT, type TEXT, weight INTEGER
+        );
         """
     )
     r = index["repo"]
@@ -588,6 +592,29 @@ def write_sqlite(index, path):
         "INSERT INTO edges VALUES (?,?)",
         [(e["source"], e["target"]) for e in index["edges"]],
     )
+    graph = index.get("graph") or {}
+    for node in graph.get("nodes") or []:
+        label = (
+            node.get("path")
+            or node.get("message")
+            or node.get("title")
+            or node.get("name")
+            or node.get("id", "")
+        )
+        cur.execute(
+            "INSERT INTO graph_nodes VALUES (?,?,?,?)",
+            (node["id"], node.get("kind", ""), label, json.dumps(node)),
+        )
+    for edge in graph.get("edges") or []:
+        cur.execute(
+            "INSERT INTO graph_edges VALUES (?,?,?,?)",
+            (
+                edge["source"],
+                edge["target"],
+                edge.get("type", ""),
+                edge.get("weight"),
+            ),
+        )
     conn.commit()
     conn.close()
 
@@ -655,6 +682,10 @@ def main():
             "intel_root": str(HERE.resolve()),
             "scan_target": str(repo.resolve()),
             "scan_target_is_self": repo.resolve() == HERE.resolve(),
+            "federation": {
+                "primary_slug": repo.name,
+                "docs_path": str((resolve_docs(repo)).resolve()),
+            },
         },
         "repo": {
             "name": repo.name,
