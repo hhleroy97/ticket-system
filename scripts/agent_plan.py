@@ -17,11 +17,12 @@ def utc_now():
     return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
 
 
-def reach_summary_for_files(paths, depth=2):
+def reach_summary_for_files(paths, depth=2, index_path=None):
     """Return blast-radius neighbors for planned file paths from index graph."""
-    if not INDEX.is_file() or not paths:
+    path = Path(index_path) if index_path else INDEX
+    if not path.is_file() or not paths:
         return []
-    index = json.loads(INDEX.read_text())
+    index = json.loads(path.read_text())
     graph = index.get("graph") or {}
     nodes = graph.get("nodes") or []
     edges = graph.get("edges") or []

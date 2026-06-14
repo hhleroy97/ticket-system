@@ -8,15 +8,16 @@ from collections import deque
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent.parent
-INDEX = HERE / "docs" / "index.json"
+DEFAULT_INDEX = HERE / "docs" / "index.json"
 
 DEFAULT_EDGE_TYPES = ("imports", "co_changed", "modifies", "contains")
 
 
-def load_graph():
-    if not INDEX.is_file():
-        sys.exit(f"error: missing {INDEX}")
-    index = json.loads(INDEX.read_text())
+def load_graph(index_path=None):
+    index_file = Path(index_path) if index_path else DEFAULT_INDEX
+    if not index_file.is_file():
+        sys.exit(f"error: missing {index_file}")
+    index = json.loads(index_file.read_text())
     graph = index.get("graph") or {}
     return graph.get("nodes") or [], graph.get("edges") or []
 
@@ -68,9 +69,14 @@ def main():
         help="comma-separated edge types",
     )
     parser.add_argument("--undirected", action="store_true", help="traverse both directions")
+    parser.add_argument(
+        "--index",
+        default=None,
+        help="path to index.json (default: docs/index.json)",
+    )
     args = parser.parse_args()
 
-    nodes, edges = load_graph()
+    nodes, edges = load_graph(args.index)
     node_by_id = {n["id"]: n for n in nodes}
     edge_types = tuple(t.strip() for t in args.edges.split(",") if t.strip())
     start = resolve_start(nodes, args.start)

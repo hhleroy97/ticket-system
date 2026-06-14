@@ -1,0 +1,35 @@
+{
+  "schema_version": 3,
+  "repo": {
+    "name": "fixture",
+    "path": "/tmp/fixture",
+    "branch": "main",
+    "head": "abc1234",
+    "total_commits": 1,
+    "generated_at": "2026-06-13 00:00 UTC"
+  },
+  "stats": {
+    "file_count": 2,
+    "total_loc": 20,
+    "contributor_count": 1,
+    "edge_count": 1
+  },
+  "files": [
+    {"path": "alpha.py", "lang": "Python", "loc": 10, "commits": 1, "last_commit": "2026-01-01"},
+    {"path": "beta.py", "lang": "Python", "loc": 10, "commits": 1, "last_commit": "2026-01-01"}
+  ],
+  "edges": [{"source": "alpha.py", "target": "beta.py"}],
+  "graph": {
+    "nodes": [
+      {"id": "file:alpha.py", "kind": "file", "path": "alpha.py", "lang": "Python", "loc": 10},
+      {"id": "file:beta.py", "kind": "file", "path": "beta.py", "lang": "Python", "loc": 10},
+      {"id": "commit:abc1234", "kind": "commit", "sha": "abc1234", "message": "touch both files", "date": "2026-01-01"}
+    ],
+    "edges": [
+      {"source": "file:alpha.py", "target": "file:beta.py", "type": "imports"},
+      {"source": "commit:abc1234", "target": "file:alpha.py", "type": "modifies"},
+      {"source": "commit:abc1234", "target": "file:beta.py", "type": "modifies"}
+    ],
+    "stats": {"node_count": 3, "edge_count": 3, "commit_nodes": 1}
+  }
+}

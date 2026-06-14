@@ -6,39 +6,43 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent.parent
 REACH = HERE / "scripts" / "reach_query.py"
-INDEX = HERE / "docs" / "index.json"
+FIXTURE = HERE / "tests" / "fixtures" / "index_with_graph.json"
+MISSING = HERE / "tests" / "fixtures" / "missing-index.json"
 
 
 class ReachQueryTests(unittest.TestCase):
-    def test_cli_requires_index(self):
-        proc = subprocess.run(
-            [sys.executable, str(REACH), "--from", "scan.py"],
+    def run_reach(self, *args):
+        return subprocess.run(
+            [sys.executable, str(REACH), *args],
             capture_output=True,
             text=True,
             cwd=HERE,
         )
-        if INDEX.is_file():
-            self.assertEqual(proc.returncode, 0, proc.stderr)
-            data = json.loads(proc.stdout)
-            self.assertIn("reachable", data)
-            self.assertEqual(data["start"], "file:scan.py")
-        else:
-            self.assertNotEqual(proc.returncode, 0)
 
-    def test_resolve_file_path(self):
-        if not INDEX.is_file():
-            self.skipTest("docs/index.json missing")
-        index = json.loads(INDEX.read_text())
-        graph = index.get("graph") or {}
-        file_nodes = [n for n in graph.get("nodes", []) if n.get("kind") == "file"]
-        if not file_nodes:
-            self.skipTest("graph has no file nodes")
-        path = file_nodes[0]["path"]
-        proc = subprocess.run(
-            [sys.executable, str(REACH), "--from", path, "--depth", "1"],
-            capture_output=True,
-            text=True,
-            cwd=HERE,
+    def test_cli_errors_when_index_missing(self):
+        proc = self.run_reach("--from", "alpha.py", "--index", str(MISSING))
+        self.assertNotEqual(proc.returncode, 0)
+        self.assertIn("error: missing", proc.stderr)
+
+    def test_cli_queries_fixture_graph(self):
+        proc = self.run_reach(
+            "--from", "alpha.py",
+            "--index", str(FIXTURE),
+            "--depth", "1",
+            "--undirected",
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        data = json.loads(proc.stdout)
+        self.assertEqual(data["start"], "file:alpha.py")
+        self.assertIn("reachable", data)
+        labels = {item["label"] for item in data["reachable"]}
+        self.assertIn("beta.py", labels)
+
+    def test_resolve_file_path_from_fixture(self):
+        proc = self.run_reach(
+            "--from", "beta.py",
+            "--index", str(FIXTURE),
+            "--depth", "1",
         )
         self.assertEqual(proc.returncode, 0, proc.stderr)
         data = json.loads(proc.stdout)
