@@ -1,9 +1,9 @@
-# `scripts/github_intel`
+# `scripts/reach_query`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 385 |
+| LOC | 101 |
 | Commits | 2 |
 | Last commit | 2026-06-13 |
 

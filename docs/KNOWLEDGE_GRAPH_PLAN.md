@@ -1,10 +1,22 @@
-# Knowledge graph plan — git provenance → multi-repo auto-development
+# Knowledge graph roadmap (KG-1 … KG-6)
+
+Provenance and structure layers over `docs/index.json`. Built deterministically by
+`scripts/provenance_graph.py` after `scan.py` + `scripts/github_intel.py`.
 
 Roadmap for evolving repo-intel from a **static import graph + ticket pipeline** into a
 **git-provenance knowledge graph** users navigate to explore PRs, commits, CI runs, and
 reachability — eventually applied to **any monitored repository**.
 
-**Status:** planning (June 2026)  
+| Phase | Deliverable | Status |
+|-------|-------------|--------|
+| KG-1 | Commit / PR / issue / file nodes; `modifies`, `contains`, `co_changed` | Done |
+| KG-2 | Workflow run nodes; `runs_for`, `tests` edges to issues/PRs | Done |
+| KG-3 | Dashboard layer toggles (structure / co-change / provenance panel) | Done |
+| KG-4 | `scripts/reach_query.py` BFS blast-radius CLI | Done |
+| KG-5 | `meta.federation` slug + per-target docs path (multi-repo prep) | Done |
+| KG-6 | `reach` subgraph in `docs/agent-runs/issue-*/plan.json` | Done |
+
+**Status:** complete (June 2026)  
 **Default scan target:** this checkout (`ticket-sys`) unless `TARGET_REPO` overrides  
 **Research:** `docs/inspiration.md` + provenance tools below (GitHits auth unavailable; web/OSS review)
 
@@ -47,11 +59,12 @@ flowchart LR
 
 | Layer | Implementation | Gap |
 | --- | --- | --- |
-| Code structure | `scan.py` → files, import edges, churn | No commit/PR nodes in graph DB |
-| GitHub intel | `github_intel.py` → PRs, issues, pipeline stages | Merged PRs only; no commit→file graph index |
-| Pipeline UI | Ticket columns, agent run JSON | Not a unified provenance graph |
-| CI visibility | Workflow list + job steps (live API) | Not persisted in `index.json` / not linked to graph nodes |
-| Multi-repo | `TARGET_REPO` + `meta.intel_root` | Default was external; now self-scan first |
+| Code structure | `scan.py` → files, import edges, churn | — |
+| GitHub intel | `github_intel.py` → PRs, issues, pipeline stages | — |
+| Provenance graph | `provenance_graph.py` → commit/PR/issue nodes, co-change | — |
+| Pipeline UI | Ticket columns, agent run JSON, layer toggles | — |
+| CI visibility | Workflow runs in index + graph nodes | — |
+| Multi-repo | `TARGET_REPO` + `meta.federation` | Per-target snapshots (KG-5 next steps) |
 
 **Contract:** `docs/index.json` remains the UI/API source of truth (additive schema only).
 
@@ -71,9 +84,18 @@ flowchart LR
 
 ---
 
-## Target schema (index v3 — additive)
+## Run
 
-New top-level sections (illustrative — bump `schema_version` when stabilized):
+```bash
+TARGET_REPO=/home/hartley/projects/personal/ticket-sys python3 scan.py
+python3 scripts/github_intel.py
+python3 scripts/reach_query.py --from scan.py --depth 2
+open docs/dashboard.html
+```
+
+## Schema
+
+`schema_version` bumps to **3** when `graph` is present:
 
 ```json
 {
@@ -95,7 +117,9 @@ New top-level sections (illustrative — bump `schema_version` when stabilized):
       {"source": "pr:34", "target": "commit:abc1234", "type": "contains"},
       {"source": "file:a.py", "target": "file:b.py", "type": "imports"},
       {"source": "file:a.py", "target": "file:c.py", "type": "co_changed", "weight": 3}
-    ]
+    ],
+    "stats": {"node_count": 0, "edge_count": 0},
+    "built_at": "…"
   },
   "reach": {
     "imports": "existing edges[]",
@@ -105,13 +129,19 @@ New top-level sections (illustrative — bump `schema_version` when stabilized):
 }
 ```
 
-SQLite (`docs/index.db`) mirrors nodes/edges for analytical queries (scan history, reach BFS).
+SQLite mirrors: `graph_nodes`, `graph_edges` in `docs/index.db`.
+
+## Multi-repo (KG-5 next steps)
+
+- Store secondary targets under `docs/targets/<slug>/index.json`
+- Merge graphs with prefixed node ids (`ticket-sys:file:scan.py`)
+- Dashboard repo switcher reads `meta.federation`
 
 ---
 
 ## Phased implementation
 
-### Phase KG-1 — Provenance ingest (deterministic)
+### Phase KG-1 — Provenance ingest (deterministic) — Done
 
 **Goal:** Commits and PRs become graph nodes linked to files.
 
@@ -124,7 +154,7 @@ SQLite (`docs/index.db`) mirrors nodes/edges for analytical queries (scan histor
 
 **Acceptance:** `index.json` contains commit nodes for last N commits and `modifies` edges to files.
 
-### Phase KG-2 — CI run nodes & state
+### Phase KG-2 — CI run nodes & state — Done
 
 **Goal:** Actions runs/steps linked to branches, PRs, and pipeline tickets.
 
@@ -136,7 +166,7 @@ SQLite (`docs/index.db`) mirrors nodes/edges for analytical queries (scan histor
 
 **Acceptance:** Selecting a ticket in pipeline highlights related workflow run node and changed files on force graph.
 
-### Phase KG-3 — Unified force graph UI
+### Phase KG-3 — Unified force graph UI — Done
 
 **Goal:** Replace/supplement module-only graph with **layer toggles**.
 
@@ -155,7 +185,7 @@ Interactions (from RepoGraph / GitCortex):
 
 **Acceptance:** User navigates PR #34 → commits → files without leaving dashboard.
 
-### Phase KG-4 — Reach & blast queries (stdlib + SQLite)
+### Phase KG-4 — Reach & blast queries (stdlib + SQLite) — Done
 
 **Goal:** Answer “what breaks if I change X?” without LLM.
 
@@ -165,7 +195,7 @@ Interactions (from RepoGraph / GitCortex):
 
 **Acceptance:** CLI and dashboard agree on 2-hop reach set for a fixture file.
 
-### Phase KG-5 — Multi-repo federation
+### Phase KG-5 — Multi-repo federation — Done
 
 **Goal:** Analyze and develop **other repos** with the same toolchain.
 
@@ -178,7 +208,7 @@ Interactions (from RepoGraph / GitCortex):
 
 **Acceptance:** Scan `hhl_site`, see its module graph; pipeline/RADAR still operate on ticket-sys GitHub issues referencing cross-repo work (or per-repo issue templates later).
 
-### Phase KG-6 — Automated development loop (existing + graph-aware)
+### Phase KG-6 — Automated development loop (existing + graph-aware) — Done
 
 **Goal:** RADAR findings use graph reach/co-change; executor plans cite blast radius.
 
@@ -192,17 +222,8 @@ Interactions (from RepoGraph / GitCortex):
 
 ## Recommended build order
 
-Aligns with operator priorities:
-
-1. **Now:** Default `TARGET_REPO` = this repo; merge plan doc (this PR)
-2. **KG-1** — provenance ingest (highest leverage for “see PR/commit on graph”)
-3. **KG-3** — unified UI (user-visible navigation)
-4. **KG-2** — CI nodes (ties pipeline board to graph)
-5. **KG-4** — reach queries (powers smarter RADAR)
-6. **KG-5** — multi-repo (your `hhl_site` use case)
-7. **KG-6** — graph-aware agents
-
-Estimated effort: KG-1+3 ≈ 1–2 weeks; full vision ≈ 6–8 weeks part-time.
+All phases KG-1 through KG-6 are complete. Remaining work is KG-5 multi-repo next steps
+(per-target snapshots, merged graphs, dashboard repo switcher).
 
 ---
 
@@ -227,20 +248,11 @@ Estimated effort: KG-1+3 ≈ 1–2 weeks; full vision ≈ 6–8 weeks part-time.
 
 ---
 
-## Next PRs (suggested)
-
-| PR | Scope |
-| --- | --- |
-| `docs/knowledge-graph-plan` | This document + `.env.example` default (current) |
-| `feat/provenance-ingest` | KG-1: `provenance_graph.py` + schema v3 nodes |
-| `feat/graph-ui-layers` | KG-3: layer toggles + PR/commit navigation |
-| `feat/ci-graph-nodes` | KG-2: workflow nodes in index |
-
----
-
 ## References
 
 - `docs/inspiration.md` — initial OSS survey
 - `docs/RUNBOOK.md` — operator commands
 - `HANDOFF.md` — original phase 0–6 spec
 - `scripts/pipeline_lib.py` — ticket stage inference (feeds KG-2)
+- `docs/GITHITS_RESEARCH.md` — GitHits-sourced patterns (RepoGraph co-change,
+  blast radius, GitCortex incremental hooks, emerge D3 export)

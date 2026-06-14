@@ -22,6 +22,7 @@ from pipeline_lib import (  # noqa: E402
     fetch_open_pull_requests,
     fetch_workflow_runs,
 )
+from provenance_graph import merge_provenance_into_index  # noqa: E402
 FIXTURE_ROOT = HERE / "test-repos"
 PR_LIMIT = 30
 RADAR_LABEL_PREFIX = "radar:"
@@ -311,6 +312,7 @@ def merge_github_intel(index, repo, repo_slug):
         "pr_limit": PR_LIMIT,
         "fetched": True,
     }
+    merge_provenance_into_index(index, repo)
     return index
 
 
@@ -362,7 +364,20 @@ def main():
         )
 
     index_path.write_text(json.dumps(index, indent=2))
+    try:
+        sys.path.insert(0, str(HERE))
+        from scan import write_sqlite  # noqa: E402
+
+        write_sqlite(index, docs / "index.db")
+    except Exception as exc:
+        print(f"github_intel: sqlite refresh skipped ({exc})")
     regenerate_dashboard(index, docs)
+    stats = (index.get("graph") or {}).get("stats") or {}
+    if stats:
+        print(
+            f"github_intel: graph {stats.get('node_count', 0)} nodes, "
+            f"{stats.get('edge_count', 0)} edges"
+        )
     print(f"github_intel: updated {index_path} and {docs / 'dashboard.html'}")
 
 

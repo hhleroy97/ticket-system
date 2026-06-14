@@ -1,9 +1,9 @@
-# `scripts/github_intel`
+# `tests/test_agent_plan`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 385 |
+| LOC | 29 |
 | Commits | 2 |
 | Last commit | 2026-06-13 |
 

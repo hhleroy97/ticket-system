@@ -1,0 +1,11 @@
+{
+  "pr_number": 36,
+  "branch": "feat/knowledge-graph-all-phases",
+  "base": "main",
+  "conflict_files": [
+    "docs/KNOWLEDGE_GRAPH_PLAN.md"
+  ],
+  "started_at": "2026-06-14 00:14:46 UTC",
+  "finished_at": "2026-06-14 00:16:11 UTC",
+  "agent_exit": 0
+}
