@@ -24,6 +24,20 @@ class ParseApiPathTests(unittest.TestCase):
         self.assertEqual(parse_api_path("/api/issues/21/approve", "POST"), ("approve", 21))
 
 
+    def test_reach(self):
+        self.assertEqual(parse_api_path("/api/reach?from=scan.py", "GET"), ("reach", None))
+
+
+class ReachQueryTests(unittest.TestCase):
+    def test_query_reach_uses_index(self):
+        from dashboard_api import query_reach  # noqa: E402
+
+        if not (HERE / "docs" / "index.json").is_file():
+            self.skipTest("index.json missing")
+        result = query_reach("scan.py", depth=1)
+        self.assertIn("reachable", result)
+
+
 class ApproveIssueTests(unittest.TestCase):
     @patch("dashboard_api.subprocess.run")
     def test_adds_labels(self, mock_run):

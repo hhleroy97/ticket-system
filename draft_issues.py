@@ -9,16 +9,19 @@ from pathlib import Path
 FINDING = re.compile(
     r"^##\s+(?P<title>.+?)\s*\n"
     r"\*\*Files:\*\*\s*(?P<files>[^\n]+)\n"
-    r"\*\*Rationale:\*\*\s*(?P<rationale>[^\n]+)",
+    r"(?:\*\*Graph evidence:\*\*\s*(?P<graph_evidence>[^\n]+)\n)?"
+    r"\*\*Rationale:\*\*\s*(?P<rationale>[^\n]+)"
+    r"(?:\n\*\*Acceptance:\*\*\s*(?P<acceptance>[^\n]+))?",
     re.MULTILINE,
 )
 
-ISSUE_KEYS = ("title", "body", "rationale", "files")
+ISSUE_KEYS = ("title", "body", "rationale", "files", "graph_evidence", "acceptance")
 
 
 def validate_issue(issue):
-    """Return missing keys for a parse_findings issue dict (empty when valid)."""
-    return [key for key in ISSUE_KEYS if not issue.get(key)]
+    """Return missing required keys for a parse_findings issue dict (empty when valid)."""
+    required = ("title", "body", "rationale", "files")
+    return [key for key in required if not issue.get(key)]
 
 
 def parse_findings(text):
@@ -27,8 +30,24 @@ def parse_findings(text):
         title = m.group("title").strip()
         files = (m.group("files") or "").strip()
         rationale = (m.group("rationale") or "See RADAR findings.").strip()
-        body = f"{rationale}\n\n**Files:** {files or 'n/a'}"
-        issues.append({"title": title, "body": body, "rationale": rationale, "files": files})
+        graph_evidence = (m.group("graph_evidence") or "").strip()
+        acceptance = (m.group("acceptance") or "").strip()
+        body_parts = [rationale, "", f"**Files:** {files or 'n/a'}"]
+        if graph_evidence:
+            body_parts.extend(["", f"**Graph evidence:** {graph_evidence}"])
+        if acceptance:
+            body_parts.extend(["", f"**Acceptance:** {acceptance}"])
+        body = "\n".join(body_parts)
+        issues.append(
+            {
+                "title": title,
+                "body": body,
+                "rationale": rationale,
+                "files": files,
+                "graph_evidence": graph_evidence,
+                "acceptance": acceptance,
+            }
+        )
     return issues
 
 
