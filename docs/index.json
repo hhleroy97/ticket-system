@@ -9,14 +9,14 @@
     "name": "ticket-system",
     "path": "/home/runner/work/ticket-system/ticket-system",
     "branch": "main",
-    "head": "1828409",
-    "total_commits": 77,
-    "generated_at": "2026-06-14 00:09 UTC"
+    "head": "661bfdc",
+    "total_commits": 80,
+    "generated_at": "2026-06-14 00:13 UTC"
   },
   "package_roots": {},
   "stats": {
-    "file_count": 101,
-    "total_loc": 7941,
+    "file_count": 105,
+    "total_loc": 8283,
     "contributor_count": 4,
     "edge_count": 30
   },
@@ -24,12 +24,12 @@
     {
       "name": "Python",
       "files": 33,
-      "loc": 4598
+      "loc": 4802
     },
     {
       "name": "Markdown",
-      "files": 41,
-      "loc": 1281
+      "files": 44,
+      "loc": 1341
     },
     {
       "name": "Other",
@@ -43,8 +43,8 @@
     },
     {
       "name": "Shell",
-      "files": 7,
-      "loc": 279
+      "files": 8,
+      "loc": 357
     },
     {
       "name": "Config",
@@ -83,6 +83,14 @@
       "loc": 19,
       "size": 834,
       "commits": 5,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": ".github/CONFLICT_RESOLVER.md",
+      "lang": "Markdown",
+      "loc": 32,
+      "size": 1490,
+      "commits": 1,
       "last_commit": "2026-06-13"
     },
     {
@@ -145,8 +153,8 @@
       "path": ".github/workflows/resolve-conflicts.yml",
       "lang": "Config",
       "loc": 0,
-      "size": 1323,
-      "commits": 1,
+      "size": 2007,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -193,8 +201,8 @@
       "path": "README.md",
       "lang": "Markdown",
       "loc": 135,
-      "size": 7002,
-      "commits": 14,
+      "size": 7011,
+      "commits": 15,
       "last_commit": "2026-06-13"
     },
     {
@@ -216,17 +224,17 @@
     {
       "path": "docs/RUNBOOK.md",
       "lang": "Markdown",
-      "loc": 101,
-      "size": 3225,
-      "commits": 3,
+      "loc": 107,
+      "size": 3499,
+      "commits": 4,
       "last_commit": "2026-06-13"
     },
     {
       "path": "docs/dashboard.html",
       "lang": "HTML",
       "loc": 862,
-      "size": 54561,
-      "commits": 25,
+      "size": 55063,
+      "commits": 26,
       "last_commit": "2026-06-14"
     },
     {
@@ -234,15 +242,15 @@
       "lang": "Other",
       "loc": 0,
       "size": 36864,
-      "commits": 25,
+      "commits": 26,
       "last_commit": "2026-06-14"
     },
     {
       "path": "docs/index.json",
       "lang": "Config",
       "loc": 0,
-      "size": 20883,
-      "commits": 25,
+      "size": 21545,
+      "commits": 26,
       "last_commit": "2026-06-14"
     },
     {
@@ -382,6 +390,14 @@
       "last_commit": "2026-06-13"
     },
     {
+      "path": "docs/modules/scripts-resolve_pr_conflicts.md",
+      "lang": "Markdown",
+      "loc": 11,
+      "size": 230,
+      "commits": 1,
+      "last_commit": "2026-06-14"
+    },
+    {
       "path": "docs/modules/serve_dashboard.md",
       "lang": "Markdown",
       "loc": 11,
@@ -492,6 +508,14 @@
       "size": 221,
       "commits": 1,
       "last_commit": "2026-06-13"
+    },
+    {
+      "path": "docs/modules/tests-test_resolve_pr_conflicts.md",
+      "lang": "Markdown",
+      "loc": 11,
+      "size": 233,
+      "commits": 1,
+      "last_commit": "2026-06-14"
     },
     {
       "path": "docs/modules/tests-test_scan.md",
@@ -696,8 +720,16 @@
     {
       "path": "scripts/resolve_pr_conflicts.py",
       "lang": "Python",
-      "loc": 300,
-      "size": 9679,
+      "loc": 465,
+      "size": 15698,
+      "commits": 2,
+      "last_commit": "2026-06-13"
+    },
+    {
+      "path": "scripts/run_conflict_agent.sh",
+      "lang": "Shell",
+      "loc": 78,
+      "size": 2434,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
@@ -848,9 +880,9 @@
     {
       "path": "tests/test_resolve_pr_conflicts.py",
       "lang": "Python",
-      "loc": 100,
-      "size": 3008,
-      "commits": 1,
+      "loc": 139,
+      "size": 4329,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -889,15 +921,15 @@
     },
     {
       "source": "serve_dashboard.py",
+      "target": "scripts/dashboard_refresh.py"
+    },
+    {
+      "source": "serve_dashboard.py",
       "target": "scripts/repo_sync.py"
     },
     {
       "source": "serve_dashboard.py",
       "target": "scripts/dashboard_api.py"
-    },
-    {
-      "source": "serve_dashboard.py",
-      "target": "scripts/dashboard_refresh.py"
     },
     {
       "source": "tests/test_agent_progress.py",
@@ -917,15 +949,15 @@
     },
     {
       "source": "tests/test_docgen.py",
-      "target": "scan.py"
-    },
-    {
-      "source": "tests/test_docgen.py",
       "target": "draft_issues.py"
     },
     {
       "source": "tests/test_docgen.py",
       "target": "docgen.py"
+    },
+    {
+      "source": "tests/test_docgen.py",
+      "target": "scan.py"
     },
     {
       "source": "tests/test_github_intel.py",
@@ -937,15 +969,15 @@
     },
     {
       "source": "tests/test_pipeline_lib.py",
-      "target": "scripts/finalize_agent_run.py"
-    },
-    {
-      "source": "tests/test_pipeline_lib.py",
       "target": "scripts/pipeline_lib.py"
     },
     {
+      "source": "tests/test_pipeline_lib.py",
+      "target": "scripts/finalize_agent_run.py"
+    },
+    {
       "source": "tests/test_radar_report.py",
-      "target": "scan.py"
+      "target": "draft_issues.py"
     },
     {
       "source": "tests/test_radar_report.py",
@@ -953,7 +985,7 @@
     },
     {
       "source": "tests/test_radar_report.py",
-      "target": "draft_issues.py"
+      "target": "scan.py"
     },
     {
       "source": "tests/test_radar_tickets.py",
@@ -961,11 +993,11 @@
     },
     {
       "source": "tests/test_radar_tickets.py",
-      "target": "draft_issues.py"
+      "target": "scripts/radar_ticket_lib.py"
     },
     {
       "source": "tests/test_radar_tickets.py",
-      "target": "scripts/radar_ticket_lib.py"
+      "target": "draft_issues.py"
     },
     {
       "source": "tests/test_repo_config.py",
