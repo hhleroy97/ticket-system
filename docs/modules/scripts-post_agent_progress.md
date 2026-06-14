@@ -1,10 +1,10 @@
-# `tests/test_dashboard_refresh`
+# `scripts/post_agent_progress`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 29 |
-| Commits | 2 |
+| LOC | 111 |
+| Commits | 1 |
 | Last commit | 2026-06-13 |
 
 ---
