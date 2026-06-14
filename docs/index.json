@@ -9,27 +9,27 @@
     "name": "ticket-system",
     "path": "/home/runner/work/ticket-system/ticket-system",
     "branch": "main",
-    "head": "1a38878",
-    "total_commits": 74,
-    "generated_at": "2026-06-14 00:05 UTC"
+    "head": "1828409",
+    "total_commits": 77,
+    "generated_at": "2026-06-14 00:09 UTC"
   },
   "package_roots": {},
   "stats": {
-    "file_count": 98,
-    "total_loc": 7522,
+    "file_count": 101,
+    "total_loc": 7941,
     "contributor_count": 4,
-    "edge_count": 29
+    "edge_count": 30
   },
   "languages": [
     {
       "name": "Python",
-      "files": 31,
-      "loc": 4198
+      "files": 33,
+      "loc": 4598
     },
     {
       "name": "Markdown",
       "files": 41,
-      "loc": 1262
+      "loc": 1281
     },
     {
       "name": "Other",
@@ -48,7 +48,7 @@
     },
     {
       "name": "Config",
-      "files": 11,
+      "files": 12,
       "loc": 0
     }
   ],
@@ -142,6 +142,14 @@
       "last_commit": "2026-06-13"
     },
     {
+      "path": ".github/workflows/resolve-conflicts.yml",
+      "lang": "Config",
+      "loc": 0,
+      "size": 1323,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
       "path": ".github/workflows/scan-and-docs.yml",
       "lang": "Config",
       "loc": 0,
@@ -184,9 +192,9 @@
     {
       "path": "README.md",
       "lang": "Markdown",
-      "loc": 134,
-      "size": 6882,
-      "commits": 13,
+      "loc": 135,
+      "size": 7002,
+      "commits": 14,
       "last_commit": "2026-06-13"
     },
     {
@@ -208,34 +216,34 @@
     {
       "path": "docs/RUNBOOK.md",
       "lang": "Markdown",
-      "loc": 83,
-      "size": 2521,
-      "commits": 2,
+      "loc": 101,
+      "size": 3225,
+      "commits": 3,
       "last_commit": "2026-06-13"
     },
     {
       "path": "docs/dashboard.html",
       "lang": "HTML",
       "loc": 862,
-      "size": 81550,
-      "commits": 24,
-      "last_commit": "2026-06-13"
+      "size": 54561,
+      "commits": 25,
+      "last_commit": "2026-06-14"
     },
     {
       "path": "docs/index.db",
       "lang": "Other",
       "loc": 0,
       "size": 36864,
-      "commits": 24,
-      "last_commit": "2026-06-13"
+      "commits": 25,
+      "last_commit": "2026-06-14"
     },
     {
       "path": "docs/index.json",
       "lang": "Config",
       "loc": 0,
-      "size": 57598,
-      "commits": 24,
-      "last_commit": "2026-06-13"
+      "size": 20883,
+      "commits": 25,
+      "last_commit": "2026-06-14"
     },
     {
       "path": "docs/inspiration.md",
@@ -458,8 +466,8 @@
       "lang": "Markdown",
       "loc": 11,
       "size": 225,
-      "commits": 5,
-      "last_commit": "2026-06-13"
+      "commits": 6,
+      "last_commit": "2026-06-14"
     },
     {
       "path": "docs/modules/tests-test_radar_tickets.md",
@@ -686,6 +694,14 @@
       "last_commit": "2026-06-13"
     },
     {
+      "path": "scripts/resolve_pr_conflicts.py",
+      "lang": "Python",
+      "loc": 300,
+      "size": 9679,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
       "path": "scripts/run_executor_agent.sh",
       "lang": "Shell",
       "loc": 37,
@@ -830,6 +846,14 @@
       "last_commit": "2026-06-13"
     },
     {
+      "path": "tests/test_resolve_pr_conflicts.py",
+      "lang": "Python",
+      "loc": 100,
+      "size": 3008,
+      "commits": 1,
+      "last_commit": "2026-06-13"
+    },
+    {
       "path": "tests/test_scan.py",
       "lang": "Python",
       "loc": 149,
@@ -841,11 +865,11 @@
   "edges": [
     {
       "source": "scripts/create_radar_issues.py",
-      "target": "scripts/radar_ticket_lib.py"
+      "target": "draft_issues.py"
     },
     {
       "source": "scripts/create_radar_issues.py",
-      "target": "draft_issues.py"
+      "target": "scripts/radar_ticket_lib.py"
     },
     {
       "source": "scripts/dashboard_api.py",
@@ -897,11 +921,11 @@
     },
     {
       "source": "tests/test_docgen.py",
-      "target": "docgen.py"
+      "target": "draft_issues.py"
     },
     {
       "source": "tests/test_docgen.py",
-      "target": "draft_issues.py"
+      "target": "docgen.py"
     },
     {
       "source": "tests/test_github_intel.py",
@@ -913,19 +937,19 @@
     },
     {
       "source": "tests/test_pipeline_lib.py",
-      "target": "scripts/pipeline_lib.py"
-    },
-    {
-      "source": "tests/test_pipeline_lib.py",
       "target": "scripts/finalize_agent_run.py"
     },
     {
-      "source": "tests/test_radar_report.py",
-      "target": "radar_report.py"
+      "source": "tests/test_pipeline_lib.py",
+      "target": "scripts/pipeline_lib.py"
     },
     {
       "source": "tests/test_radar_report.py",
       "target": "scan.py"
+    },
+    {
+      "source": "tests/test_radar_report.py",
+      "target": "radar_report.py"
     },
     {
       "source": "tests/test_radar_report.py",
@@ -937,11 +961,11 @@
     },
     {
       "source": "tests/test_radar_tickets.py",
-      "target": "scripts/radar_ticket_lib.py"
+      "target": "draft_issues.py"
     },
     {
       "source": "tests/test_radar_tickets.py",
-      "target": "draft_issues.py"
+      "target": "scripts/radar_ticket_lib.py"
     },
     {
       "source": "tests/test_repo_config.py",
@@ -950,6 +974,10 @@
     {
       "source": "tests/test_repo_sync.py",
       "target": "scripts/repo_sync.py"
+    },
+    {
+      "source": "tests/test_resolve_pr_conflicts.py",
+      "target": "scripts/resolve_pr_conflicts.py"
     },
     {
       "source": "tests/test_scan.py",
