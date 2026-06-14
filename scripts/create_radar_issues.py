@@ -11,6 +11,7 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE / "scripts"))
 
 from draft_issues import ISSUE_KEYS, parse_findings, validate_issue
+from operator_feedback import filter_and_rank_findings, load_feedback
 from radar_ticket_lib import labels_for_issue, select_issues
 
 
@@ -82,15 +83,23 @@ def main():
 
     candidates = candidates_from_report(path)
     existing = list_open_titles(repo)
-    chosen = select_issues(candidates, existing)
+    feedback = load_feedback()
+    ranked = filter_and_rank_findings(candidates, feedback)
+    skipped = len(candidates) - len(ranked)
+    chosen = select_issues(ranked, existing)
 
     if not chosen:
-        print("no new issues to create (duplicates or empty findings)")
+        msg = "no new issues to create (duplicates or empty findings)"
+        if skipped:
+            msg += f"; {skipped} deprioritized by operator feedback"
+        print(msg)
         return
 
     for issue in chosen:
         create_issue(repo, issue, dry_run=dry_run)
     print(f"created {len(chosen)} issue(s)")
+    if skipped:
+        print(f"skipped {skipped} finding(s) deprioritized by operator feedback")
 
 
 if __name__ == "__main__":

@@ -1,10 +1,10 @@
-# `scripts/dashboard_api`
+# `tests/test_cursor_agent`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 251 |
-| Commits | 2 |
+| LOC | 26 |
+| Commits | 1 |
 | Last commit | 2026-06-13 |
 
 ## Provenance

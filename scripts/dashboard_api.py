@@ -12,12 +12,14 @@ sys.path.insert(0, str(HERE / "scripts"))
 
 from pipeline_lib import enrich_runs_with_jobs, fetch_run_jobs  # noqa: E402
 from graph_lib import reach_query  # noqa: E402
+from operator_feedback import append_feedback  # noqa: E402
+from request_issue import create_request_issue  # noqa: E402
 
 INDEX = HERE / "docs" / "index.json"
 RADAR_LABEL_PREFIX = "radar:"
 WORKFLOW_LIMIT = 20
 
-ISSUE_PATH = re.compile(r"^/api/issues/(\d+)(?:/approve)?$")
+ISSUE_PATH = re.compile(r"^/api/issues/(\d+)(?:/(approve|dismiss))?$")
 WORKFLOW_RUN_PATH = re.compile(r"^/api/workflows/(\d+)$")
 
 
@@ -115,7 +117,24 @@ def fetch_radar_issues(repo_slug):
     return issues, None
 
 
+def fetch_issue(repo_slug, issue_number):
+    proc = run_gh(
+        repo_slug,
+        "issue",
+        "view",
+        str(issue_number),
+        "--json",
+        "number,title,labels,state",
+    )
+    if proc.returncode != 0:
+        return None, (proc.stderr or proc.stdout or "gh issue view failed").strip()
+    return json.loads(proc.stdout or "{}"), None
+
+
 def approve_issue(repo_slug, issue_number, auto_merge=False):
+    issue, err = fetch_issue(repo_slug, issue_number)
+    if err:
+        return None, err
     labels_add = ["radar:approved"]
     if auto_merge:
         labels_add.append("radar:auto-merge")
@@ -128,11 +147,43 @@ def approve_issue(repo_slug, issue_number, auto_merge=False):
     proc = subprocess.run(cmd, capture_output=True, text=True, errors="replace")
     if proc.returncode != 0:
         return None, (proc.stderr or proc.stdout or "gh issue edit failed").strip()
+    append_feedback(
+        "approved",
+        issue.get("title") or f"issue #{issue_number}",
+        issue_number=issue_number,
+        source="dashboard",
+    )
     return {
         "number": issue_number,
         "labels_added": labels_add,
         "labels_removed": ["radar:proposed"],
     }, None
+
+
+def dismiss_issue(repo_slug, issue_number, reason=""):
+    issue, err = fetch_issue(repo_slug, issue_number)
+    if err:
+        return None, err
+    append_feedback(
+        "dismissed",
+        issue.get("title") or f"issue #{issue_number}",
+        reason=reason,
+        issue_number=issue_number,
+        source="dashboard",
+    )
+    cmd = ["gh", "issue", "close", str(issue_number)]
+    if repo_slug:
+        cmd.extend(["--repo", repo_slug])
+    if reason:
+        cmd.extend(["--comment", reason])
+    proc = subprocess.run(cmd, capture_output=True, text=True, errors="replace")
+    if proc.returncode != 0:
+        return None, (proc.stderr or proc.stdout or "gh issue close failed").strip()
+    return {"number": issue_number, "closed": True}, None
+
+
+def create_request(repo_slug, message, acceptance=None):
+    return create_request_issue(repo_slug, message, acceptance=acceptance)
 
 
 def fetch_workflow_runs(repo_slug, limit=WORKFLOW_LIMIT, with_jobs=True):
@@ -183,12 +234,18 @@ def parse_api_path(path, method):
         return ("workflows", None)
     if path.startswith("/api/reach") and method == "GET":
         return ("reach", None)
+    if path == "/api/request" and method == "POST":
+        return ("request", None)
     m = WORKFLOW_RUN_PATH.match(path)
     if m and method == "GET":
         return ("workflow_run", int(m.group(1)))
     if path == "/api/issues" and method == "GET":
         return ("issues", None)
     m = ISSUE_PATH.match(path)
-    if m and method == "POST" and path.endswith("/approve"):
-        return ("approve", int(m.group(1)))
+    if m and method == "POST":
+        action = m.group(2)
+        if action == "approve":
+            return ("approve", int(m.group(1)))
+        if action == "dismiss":
+            return ("dismiss", int(m.group(1)))
     return (None, None)

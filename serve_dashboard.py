@@ -26,6 +26,8 @@ sys.path.insert(0, str(HERE / "scripts"))
 from cursor_agent import argv as cursor_agent_argv  # noqa: E402
 from dashboard_api import (  # noqa: E402
     approve_issue,
+    create_request,
+    dismiss_issue,
     fetch_radar_issues,
     fetch_workflow_run_detail,
     fetch_workflow_runs,
@@ -278,6 +280,44 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 self._send_json(500, {"error": err})
                 return
             self._send_json(200, {"reply": reply})
+            return
+
+        if path == "/api/request":
+            slug = self._require_gh()
+            if not slug:
+                return
+            try:
+                payload = self._read_json_body()
+            except json.JSONDecodeError:
+                self._send_json(400, {"error": "invalid JSON"})
+                return
+            message = (payload.get("message") or "").strip()
+            acceptance = (payload.get("acceptance") or "").strip() or None
+            if not message:
+                self._send_json(400, {"error": "message required"})
+                return
+            result, err = create_request(slug, message, acceptance=acceptance)
+            if err:
+                self._send_json(500, {"error": err})
+                return
+            self._send_json(200, result)
+            return
+
+        resource, issue_number = parse_api_path(path, "POST")
+        if resource == "dismiss":
+            slug = self._require_gh()
+            if not slug:
+                return
+            try:
+                payload = self._read_json_body()
+            except json.JSONDecodeError:
+                payload = {}
+            reason = (payload.get("reason") or "Dismissed from dashboard").strip()
+            result, err = dismiss_issue(slug, issue_number, reason=reason)
+            if err:
+                self._send_json(500, {"error": err})
+                return
+            self._send_json(200, result)
             return
 
         resource, issue_number = parse_api_path(path, "POST")
