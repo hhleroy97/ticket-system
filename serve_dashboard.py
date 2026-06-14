@@ -23,6 +23,7 @@ HOST = "127.0.0.1"
 
 sys.path.insert(0, str(HERE / "scripts"))
 
+from cursor_agent import argv as cursor_agent_argv  # noqa: E402
 from dashboard_api import (  # noqa: E402
     approve_issue,
     fetch_radar_issues,
@@ -132,7 +133,7 @@ def run_cursor_chat(message):
         f"User question: {message}"
     )
     proc = subprocess.run(
-        ["cursor-agent", "-p", "--model", "composer-2.5", prompt],
+        cursor_agent_argv(prompt, model="composer-2.5"),
         capture_output=True,
         text=True,
         env={**os.environ, "CURSOR_API_KEY": api_key},

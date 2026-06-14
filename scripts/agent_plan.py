@@ -13,6 +13,7 @@ HERE = Path(__file__).resolve().parent.parent
 INDEX = HERE / "docs" / "index.json"
 sys.path.insert(0, str(HERE / "scripts"))
 
+from cursor_agent import argv as cursor_agent_argv  # noqa: E402
 from graph_lib import co_change_neighbors, load_index as load_graph_index, load_provenance, reach_query  # noqa: E402
 
 
@@ -60,7 +61,7 @@ def run_plan_agent(issue_num, title, base="main"):
         f"{issue_num})). Keep the plan minimal."
     )
     proc = subprocess.run(
-        ["cursor-agent", "-p", "--model", "auto", prompt],
+        cursor_agent_argv(prompt, model="auto"),
         capture_output=True,
         text=True,
         env={**os.environ, "CURSOR_API_KEY": api_key},
