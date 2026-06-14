@@ -1,10 +1,10 @@
-# `scripts/github_intel`
+# `scripts/graph_lib`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 385 |
-| Commits | 2 |
+| LOC | 120 |
+| Commits | 1 |
 | Last commit | 2026-06-13 |
 
 ## Provenance
