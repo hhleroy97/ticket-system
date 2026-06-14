@@ -92,6 +92,7 @@ repo-intel/
 | --- | --- | --- |
 | `test.yml` | push/PR | Runs `run_tests.py` |
 | `auto-merge.yml` | after `test` on PRs | Merges safe `bot/*` docs PRs and low-risk `issue-*` PRs |
+| `resolve-conflicts.yml` | push to `main`, cron, manual | Merges `main` into open PRs; auto-fixes doc-only conflicts |
 | `scan-and-docs.yml` | daily cron + non-docs pushes | Rescan + docgen → **direct push to main** |
 | `radar.yml` | weekly cron | Scan → report → push to main → **draft issues in same job** |
 | `radar-tickets.yml` | manual push to `main` (`docs/radar/*.md`) | Same drafting when RADAR md changes outside `radar.yml` |
