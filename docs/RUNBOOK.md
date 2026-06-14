@@ -104,4 +104,47 @@ git worktree remove ../ticket-sys-wt/feature
 | Executor doesn’t start | Issue needs `radar:approved` label event; re-add label to retrigger |
 | Pages missing live features | Use `serve_dashboard.py`, not static `file://` |
 
+## Full loop UAT (RADAR → approve → executor)
+
+Automated ladder in `scripts/uat_full_loop.py`:
+
+```bash
+# 1. Local pipeline (tests, RADAR report, draft_issues parse, graph_delta)
+python3 scripts/uat_full_loop.py --smoke
+
+# 2. Smoke + read-only GitHub checks (gh auth, open radar issues)
+python3 scripts/uat_full_loop.py --dry-run
+
+# 3. Re-scan before smoke (optional)
+python3 scripts/uat_full_loop.py --smoke --refresh
+
+# 4. Approve an issue — triggers executor workflow in CI
+python3 scripts/uat_full_loop.py --approve N
+
+# 5. After executor runs: verify issue artifacts, branch, PR
+python3 scripts/uat_full_loop.py --issue N
+
+# 6. If issue-N branch exists locally: run verify_executor_branch.sh
+python3 scripts/uat_full_loop.py --issue N --verify-branch
+```
+
+**Manual approval** (same as dashboard Approve button):
+
+```bash
+gh issue edit N --add-label radar:approved --remove-label radar:proposed
+gh run list --workflow=executor.yml --limit 3
+```
+
+**Pass criteria for a full loop:**
+
+| Step | Check |
+| --- | --- |
+| RADAR | `docs/radar/YYYY-MM-DD.md` sections parse via `draft_issues.py` |
+| Approve | Issue has `radar:approved`; executor workflow starts |
+| Agent | `docs/agent-runs/issue-N/plan.json` and `run.json` appear |
+| Verify | `verify_executor_branch.sh` passes (tests + graph_delta) |
+| PR | PR from `issue-N` branch opens; CI green |
+
+Use a **low-risk** finding (docs/tests only) with `radar:auto-merge` for the first live run.
+
 See also `docs/inspiration.md`, `docs/KNOWLEDGE_GRAPH_PLAN.md`, and `AGENTS.md`.
