@@ -13,7 +13,7 @@ DRAFT = HERE / "draft_issues.py"
 import sys
 
 sys.path.insert(0, str(HERE))
-from radar_report import CHURN_THRESHOLD, check_dependency_graph, check_stale_high_churn
+from radar_report import CHURN_THRESHOLD, check_dependency_graph, check_provenance_graph_missing, check_stale_high_churn
 from draft_issues import ISSUE_KEYS
 
 
@@ -44,6 +44,10 @@ class StaleHighChurnTests(unittest.TestCase):
         edges = [{"source": "missing.py", "target": "hotspot.py"}]
         report = check_stale_high_churn(files, edges)
         self.assertIn("No Stale High-Churn Modules Detected", report)
+
+    def test_flags_missing_provenance_graph(self):
+        report = check_provenance_graph_missing({"schema_version": 2})
+        self.assertIn("Provenance Graph Not Built", report)
 
     def test_primary_index_no_stale_draft_issues_hotspot(self):
         index = json.loads((HERE / "docs" / "index.json").read_text())

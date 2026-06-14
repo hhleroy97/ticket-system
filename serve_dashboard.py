@@ -12,7 +12,7 @@ import subprocess
 import sys
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 HERE = Path(__file__).resolve().parent
 DOCS = HERE / "docs"
@@ -30,6 +30,7 @@ from dashboard_api import (  # noqa: E402
     fetch_workflow_runs,
     gh_available,
     parse_api_path,
+    query_reach,
     repo_slug,
 )
 from repo_sync import get_state, start_background_sync, sync_once  # noqa: E402
@@ -216,6 +217,19 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 self._send_json(500, {"error": err})
                 return
             self._send_json(200, {"issues": issues})
+            return
+
+        if resource == "reach":
+            qs = parse_qs(urlparse(self.path).query)
+            file_path = (qs.get("from") or [""])[0].strip()
+            if not file_path:
+                self._send_json(400, {"error": "query param 'from' required"})
+                return
+            try:
+                depth = int((qs.get("depth") or ["2"])[0])
+            except ValueError:
+                depth = 2
+            self._send_json(200, query_reach(file_path, depth=depth))
             return
 
         if path == "/api/sync":

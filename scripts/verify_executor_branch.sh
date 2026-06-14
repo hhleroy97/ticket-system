@@ -44,5 +44,12 @@ fi
 
 python3 run_tests.py
 
+if [ -f docs/index.json ]; then
+  python3 scripts/graph_delta.py --base "${BASE}" || {
+    echo "verify_executor_branch: graph provenance check failed" >&2
+    exit 1
+  }
+fi
+
 restore_incidental_scan_artifacts
 assert_clean_tree

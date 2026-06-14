@@ -21,6 +21,7 @@ class AgentPlanReachTests(unittest.TestCase):
         )
         self.assertEqual(summary[0]["file"], "alpha.py")
         self.assertIn("neighbors", summary[0])
+        self.assertIn("co_changed", summary[0])
         labels = {n["label"] for n in summary[0]["neighbors"]}
         self.assertIn("beta.py", labels)
 

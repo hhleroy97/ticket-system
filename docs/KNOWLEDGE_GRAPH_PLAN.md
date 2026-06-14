@@ -227,6 +227,22 @@ All phases KG-1 through KG-6 are complete. Remaining work is KG-5 multi-repo nex
 
 ---
 
+## Phase 2 — Provenance loop (KG-7 … KG-15)
+
+| Phase | Deliverable | Status |
+|-------|-------------|--------|
+| KG-7 | Graph-aware RADAR rules (co-change without tests, missing graph) | Done |
+| KG-8 | Rich issue schema (`graph_evidence`, `acceptance`) | Done |
+| KG-9 | `scripts/graph_delta.py` executor verification | Done |
+| KG-10 | Provenance sections in `docgen.py` | Done |
+| KG-11 | `/api/reach` dashboard endpoint | Done |
+| KG-12 | `scripts/graph_lib.py` shared reach/co-change | Done |
+| KG-13 | Executor graph contract in EXECUTOR.md | Done |
+| KG-14 | Author → file edges (bus factor) | Planned |
+| KG-15 | Workflow step nodes in graph | Planned |
+
+---
+
 ## Technical decisions (proposed)
 
 | Decision | Choice | Rationale |

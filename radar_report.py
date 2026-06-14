@@ -71,15 +71,18 @@ def format_files(paths):
     return ", ".join(f"`{path}`" for path in paths)
 
 
-def render_finding(title, files, rationale):
-    return "\n".join(
-        [
-            f"## {title}",
-            f"**Files:** {format_files(files)}",
-            f"**Rationale:** {rationale}",
-            "",
-        ]
-    )
+def render_finding(title, files, rationale, graph_evidence=None, acceptance=None):
+    lines = [
+        f"## {title}",
+        f"**Files:** {format_files(files)}",
+    ]
+    if graph_evidence:
+        lines.append(f"**Graph evidence:** {graph_evidence}")
+    lines.append(f"**Rationale:** {rationale}")
+    if acceptance:
+        lines.append(f"**Acceptance:** {acceptance}")
+    lines.append("")
+    return "\n".join(lines)
 
 
 def check_stale_high_churn(files, edges):
@@ -194,6 +197,65 @@ def check_dashboard_tests(files, edges):
         dash_paths + test_paths[:3],
         "The dashboard template and generated HTML are indexed, but no test module "
         "imports them or asserts rendered output, leaving dashboard drift undetected.",
+        acceptance="Add focused dashboard tests that import or render template output.",
+    )
+
+
+def check_provenance_graph_missing(index):
+    graph = index.get("graph") or {}
+    if graph.get("nodes") and graph.get("edges"):
+        return ""
+    return render_finding(
+        "Provenance Graph Not Built",
+        ["scripts/provenance_graph.py", "scripts/github_intel.py", "docs/index.json"],
+        "`docs/index.json` has no `graph` section. Run `github_intel.py` after `scan.py` "
+        "so RADAR, docgen, and reach queries can use commit/PR/co-change edges.",
+        acceptance="index.json schema_version >= 3 with non-empty graph.nodes after intel refresh.",
+    )
+
+
+def check_co_change_without_tests(index, edges):
+    graph = index.get("graph") or {}
+    prov_edges = graph.get("edges") or []
+    if not prov_edges:
+        return ""
+
+    incoming, _ = build_graph(edges)
+    tested = {
+        target
+        for target, sources in incoming.items()
+        if any(is_test_path(src) for src in sources)
+    }
+
+    flagged = []
+    evidence_parts = []
+    for edge in prov_edges:
+        if edge.get("type") != "co_changed":
+            continue
+        for node_id in (edge.get("source"), edge.get("target")):
+            if not str(node_id).startswith("file:"):
+                continue
+            path = node_id[5:]
+            if is_test_path(path) or not path.endswith(".py"):
+                continue
+            if path in tested:
+                continue
+            weight = edge.get("weight") or 1
+            if path not in flagged:
+                flagged.append(path)
+                evidence_parts.append(f"co_change({weight}) on `{path}`")
+
+    if not flagged:
+        return ""
+
+    flagged = sorted(set(flagged))[:8]
+    return render_finding(
+        "Co-Changed Production Modules Lack Test Import Edges",
+        flagged + ["docs/index.json", "scripts/provenance_graph.py"],
+        "Provenance co-change edges link these production modules to frequent joint edits, "
+        "but no indexed test imports them — graph reach and coverage signals are weak.",
+        graph_evidence="; ".join(evidence_parts[:6]),
+        acceptance="Add or extend tests importing flagged modules; refresh graph via github_intel.",
     )
 
 
@@ -228,9 +290,11 @@ def generate_findings(index):
     edges = index.get("edges", [])
     stats = index.get("stats", {})
     sections = [
+        check_provenance_graph_missing(index),
         check_stale_high_churn(files, edges),
         check_dependency_graph(files, edges, stats),
         check_untested_modules(files, edges),
+        check_co_change_without_tests(index, edges),
         check_dashboard_tests(files, edges),
         check_radar_pipeline(files),
     ]

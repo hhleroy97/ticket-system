@@ -11,6 +11,9 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent.parent
 INDEX = HERE / "docs" / "index.json"
+sys.path.insert(0, str(HERE / "scripts"))
+
+from graph_lib import co_change_neighbors, load_index as load_graph_index, load_provenance, reach_query  # noqa: E402
 
 
 def utc_now():
@@ -18,47 +21,25 @@ def utc_now():
 
 
 def reach_summary_for_files(paths, depth=2, index_path=None):
-    """Return blast-radius neighbors for planned file paths from index graph."""
+    """Return blast-radius and co-change context for planned file paths."""
     path = Path(index_path) if index_path else INDEX
     if not path.is_file() or not paths:
         return []
-    index = json.loads(path.read_text())
-    graph = index.get("graph") or {}
-    nodes = graph.get("nodes") or []
-    edges = graph.get("edges") or []
-    node_by_id = {n["id"]: n for n in nodes}
-    adj = {}
-    for edge in edges:
-        if edge.get("type") not in ("imports", "co_changed", "modifies"):
-            continue
-        src, tgt = edge["source"], edge["target"]
-        adj.setdefault(src, set()).add(tgt)
-        adj.setdefault(tgt, set()).add(src)
+    index = load_graph_index(path)
+    _, edges, _ = load_provenance(index)
 
     summaries = []
-    for path in paths:
-        start = f"file:{path}"
-        if start not in node_by_id:
-            continue
-        seen = {start}
-        frontier = {start}
-        for _ in range(depth):
-            nxt = set()
-            for node in frontier:
-                for neighbor in adj.get(node, ()):
-                    if neighbor in seen:
-                        continue
-                    seen.add(neighbor)
-                    nxt.add(neighbor)
-            frontier = nxt
-        neighbors = []
-        for nid in sorted(seen):
-            if nid == start:
-                continue
-            node = node_by_id.get(nid, {})
-            label = node.get("path") or node.get("message") or node.get("title") or nid
-            neighbors.append({"id": nid, "kind": node.get("kind"), "label": label})
-        summaries.append({"file": path, "depth": depth, "neighbors": neighbors[:20]})
+    for file_path in paths:
+        reach = reach_query(file_path, depth=depth, index=index)
+        co = co_change_neighbors(file_path, edges)
+        summaries.append(
+            {
+                "file": file_path,
+                "depth": depth,
+                "neighbors": (reach.get("reachable") or [])[:20],
+                "co_changed": [{"path": p, "weight": w} for p, w in co[:10]],
+            }
+        )
     return summaries
 
 
