@@ -1,5 +1,6 @@
-import json
+import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -8,6 +9,24 @@ sys.path.insert(0, str(HERE / "scripts"))
 
 from provenance_graph import build_provenance_graph, merge_provenance_into_index, node_id  # noqa: E402
 from graph_lib import authors_for_file, load_provenance  # noqa: E402
+
+
+def make_author_git_fixture():
+    """Minimal git repo with one commit so author edges are CI-independent."""
+    tmp = tempfile.TemporaryDirectory()
+    repo = Path(tmp.name)
+    rel_path = "src/sample.py"
+    (repo / "src").mkdir(parents=True)
+    (repo / rel_path).write_text("x = 1\n", encoding="utf-8")
+    for cmd in (
+        ["git", "init", "-b", "main"],
+        ["git", "config", "user.email", "author@example.com"],
+        ["git", "config", "user.name", "Fixture Author"],
+        ["git", "add", "."],
+        ["git", "commit", "-m", "add sample"],
+    ):
+        subprocess.run(cmd, cwd=repo, check=True, capture_output=True, text=True)
+    return tmp, repo, rel_path
 
 
 class ProvenanceGraphTests(unittest.TestCase):
@@ -60,7 +79,8 @@ class ProvenanceGraphTests(unittest.TestCase):
         self.assertIn("co_change_edges", graph["stats"])
 
     def test_author_nodes_and_authored_edges(self):
-        path = "scripts/provenance_graph.py"
+        tmp, repo, path = make_author_git_fixture()
+        self.addCleanup(tmp.cleanup)
         index = {
             "files": [{"path": path, "lang": "Python", "loc": 1}],
             "edges": [],
@@ -69,7 +89,7 @@ class ProvenanceGraphTests(unittest.TestCase):
             "issues": [],
             "workflow_runs": [],
         }
-        graph = build_provenance_graph(index, HERE)
+        graph = build_provenance_graph(index, repo)
         author_nodes = [n for n in graph["nodes"] if n["kind"] == "author"]
         self.assertGreater(len(author_nodes), 0)
         self.assertTrue(all(n.get("email") or n.get("name") for n in author_nodes))
@@ -82,22 +102,8 @@ class ProvenanceGraphTests(unittest.TestCase):
         self.assertGreaterEqual(file_authored[0].get("weight", 0), 1)
 
     def test_author_stats_keys(self):
-        index = {
-            "files": [{"path": "scan.py", "lang": "Python", "loc": 1}],
-            "edges": [],
-            "pull_requests": [],
-            "open_pull_requests": [],
-            "issues": [],
-            "workflow_runs": [],
-        }
-        graph = build_provenance_graph(index, HERE)
-        self.assertIn("author_nodes", graph["stats"])
-        self.assertIn("authored_edges", graph["stats"])
-        self.assertGreaterEqual(graph["stats"]["author_nodes"], 1)
-        self.assertGreaterEqual(graph["stats"]["authored_edges"], 1)
-
-    def test_authors_for_file_helper(self):
-        path = "scripts/provenance_graph.py"
+        tmp, repo, path = make_author_git_fixture()
+        self.addCleanup(tmp.cleanup)
         index = {
             "files": [{"path": path, "lang": "Python", "loc": 1}],
             "edges": [],
@@ -106,7 +112,24 @@ class ProvenanceGraphTests(unittest.TestCase):
             "issues": [],
             "workflow_runs": [],
         }
-        graph = build_provenance_graph(index, HERE)
+        graph = build_provenance_graph(index, repo)
+        self.assertIn("author_nodes", graph["stats"])
+        self.assertIn("authored_edges", graph["stats"])
+        self.assertGreaterEqual(graph["stats"]["author_nodes"], 1)
+        self.assertGreaterEqual(graph["stats"]["authored_edges"], 1)
+
+    def test_authors_for_file_helper(self):
+        tmp, repo, path = make_author_git_fixture()
+        self.addCleanup(tmp.cleanup)
+        index = {
+            "files": [{"path": path, "lang": "Python", "loc": 1}],
+            "edges": [],
+            "pull_requests": [],
+            "open_pull_requests": [],
+            "issues": [],
+            "workflow_runs": [],
+        }
+        graph = build_provenance_graph(index, repo)
         index["graph"] = graph
         _, edges, node_by_id = load_provenance(index)
         authors = authors_for_file(path, edges, node_by_id)
