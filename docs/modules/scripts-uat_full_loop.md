@@ -1,10 +1,10 @@
-# `scripts/agent_plan`
+# `scripts/uat_full_loop`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 110 |
-| Commits | 5 |
+| LOC | 437 |
+| Commits | 1 |
 | Last commit | 2026-06-13 |
 
 ## Provenance
