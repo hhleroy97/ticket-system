@@ -155,6 +155,8 @@
   .auto-merge-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px}
 
   .wf-item{padding:10px 16px;border-bottom:1px solid var(--line);font-size:12px}
+  .wf-item.clickable{cursor:pointer}
+  .wf-item.clickable:hover{background:var(--panel2)}
   .wf-item:last-child{border-bottom:none}
   .wf-row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
   .wf-name{font-weight:500;line-height:1.35}
@@ -186,6 +188,21 @@
   .wf-step.active{color:var(--amber)}
   .wf-step.done{color:#86efac}
   .wf-step.fail{color:#f87171}
+  .ci-spine{padding:10px 14px;font-size:12px}
+  .ci-spine-empty{color:var(--faint);font-size:12px;padding:10px 14px}
+  .ci-spine-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+  .ci-spine-row:last-child{border-bottom:none}
+  .ci-spine-label{font-family:var(--mono);font-size:10px;color:var(--muted);min-width:52px}
+  .ci-step-chip{font-family:var(--mono);font-size:10px;padding:4px 8px;border-radius:6px;border:1px solid var(--line);
+       background:var(--panel2);cursor:pointer;color:var(--muted)}
+  .ci-step-chip.fail{border-color:rgba(248,113,113,.45);color:#f87171}
+  .ci-step-chip.active{border-color:var(--amber);color:var(--text)}
+  .ci-run-chip{font-family:var(--mono);font-size:10px;padding:4px 8px;border-radius:6px;border:1px solid var(--line);
+       background:var(--panel2);color:var(--teal)}
+  .learning-item{padding:8px 14px;border-bottom:1px solid var(--line);font-size:11px;line-height:1.4}
+  .learning-item .act{font-family:var(--mono);font-size:10px;color:var(--teal);margin-right:6px}
+  .learning-counts{padding:8px 14px;font-family:var(--mono);font-size:10px;color:var(--muted);border-bottom:1px solid var(--line)}
+  .node.ops-hl{stroke:#60a5fa;stroke-width:2.5px}
   .agent-meta{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:6px;line-height:1.45}
   .monitored-badge{font-family:var(--mono);font-size:10px;color:var(--violet);border:1px solid rgba(167,139,250,.35);
        padding:2px 8px;border-radius:999px;margin-left:8px}
@@ -234,6 +251,7 @@
               <button type="button" class="layer-btn on" data-layer="structure">Structure</button>
               <button type="button" class="layer-btn" data-layer="cochange">Co-change</button>
               <button type="button" class="layer-btn on" data-layer="provenance">Provenance</button>
+              <button type="button" class="layer-btn" data-layer="operations">Operations</button>
             </div>
             <div class="hint" id="graphHint"></div>
           </div>
@@ -265,6 +283,13 @@
         </div>
         <div class="side-scroll" id="provList" style="max-height:200px"></div>
       </div>
+      <div class="panel" style="margin-top:18px">
+        <div class="ph">
+          <h2>CI spine</h2>
+          <div class="hint" id="ciSpineHint">select a pipeline ticket</div>
+        </div>
+        <div class="side-scroll" id="ciSpine" style="max-height:220px"></div>
+      </div>
     </div>
 
     <div>
@@ -281,6 +306,13 @@
           <div class="hint" id="wfHint">live when local</div>
         </div>
         <div class="side-scroll" id="workflowList"></div>
+      </div>
+      <div class="panel" style="margin-bottom:18px">
+        <div class="ph">
+          <h2>Learning</h2>
+          <div class="hint" id="learningHint">operator feedback</div>
+        </div>
+        <div class="side-scroll" id="learningList" style="max-height:200px"></div>
       </div>
       <div class="panel">
         <div class="ph">
@@ -331,6 +363,8 @@ let selectedIssue = null;
 let selectedReachFile = null;
 let reachDepth = 2;
 let reachResult = null;
+let WORKFLOW_RUNS = [];
+let selectedCiStep = null;
 
 const SCAN_META = DATA.meta || {};
 const scanTargetPath = SCAN_META.scan_target || DATA.repo.path || '';
@@ -480,10 +514,118 @@ function renderAgentTimeline(ticket) {
     snaps.map(s => `<div class="snap">${s.captured_at}: ${s.commit_count} commit(s), ${s.file_count} file(s)</div>`).join('');
 }
 
+function issueFromBranch(branch) {
+  const m = /^issue-(\d+)$/i.exec(branch || '');
+  return m ? Number(m[1]) : null;
+}
+
+function runsForIssue(issueNum) {
+  const branch = `issue-${issueNum}`;
+  const fromLive = (WORKFLOW_RUNS || []).filter(r => r.branch === branch);
+  if (fromLive.length) return fromLive;
+  const iid = `issue:${issueNum}`;
+  const runIds = new Set();
+  (GRAPH.edges || []).forEach(e => {
+    if (e.type === 'runs_for' && e.target === iid) runIds.add(e.source);
+  });
+  const ticket = (PIPELINE.tickets || []).find(t => t.issue_number === issueNum);
+  const pr = ticket && ticket.open_pr;
+  if (pr) {
+    const pid = `pr:${pr.number}`;
+    (GRAPH.edges || []).forEach(e => {
+      if (e.type === 'tests' && e.target === pid) runIds.add(e.source);
+    });
+  }
+  return [...runIds].map(id => {
+    const node = (GRAPH.nodes || []).find(n => n.id === id);
+    if (!node) return null;
+    return {
+      id: node.run_id,
+      name: node.name,
+      status: node.status,
+      conclusion: node.conclusion,
+      branch: node.branch,
+      jobs: [],
+    };
+  }).filter(Boolean);
+}
+
+function ciStepKey(runId, jobIdx, stepNum) {
+  return `${runId}:${jobIdx}:${stepNum}`;
+}
+
+function filesForCiStep(runId, jobIdx, stepNum) {
+  const sid = `step:${runId}:${jobIdx}:${stepNum}`;
+  const files = new Set();
+  (GRAPH.edges || []).forEach(e => {
+    if (e.type === 'covers' && e.source === sid && e.target.startsWith('file:')) {
+      files.add(e.target.slice(5));
+    }
+  });
+  if (files.size) return files;
+  const run = runsForIssue(selectedIssue).find(r => String(r.id) === String(runId));
+  const branch = run && run.branch;
+  if (!branch) return files;
+  const ticket = (PIPELINE.tickets || []).find(t => t.issue_number === selectedIssue);
+  if (ticket && ticket.agent_run) {
+    (ticket.agent_run.files || []).forEach(f => files.add(f));
+  }
+  if (ticket && ticket.open_pr) {
+    (ticket.open_pr.files || []).forEach(f => files.add(f));
+  }
+  return files;
+}
+
+function renderCiSpine() {
+  const el = document.getElementById('ciSpine');
+  const hint = document.getElementById('ciSpineHint');
+  if (!el) return;
+  if (!selectedIssue) {
+    el.innerHTML = '<div class="ci-spine-empty">Select a pipeline ticket to trace issue → CI runs → steps → files.</div>';
+    hint.textContent = 'select a pipeline ticket';
+    return;
+  }
+  const runs = runsForIssue(selectedIssue);
+  if (!runs.length) {
+    el.innerHTML = '<div class="ci-spine-empty">No workflow runs linked to this issue yet.</div>';
+    hint.textContent = `#${selectedIssue} · no runs`;
+    return;
+  }
+  hint.textContent = `#${selectedIssue} · ${runs.length} run(s)`;
+  el.innerHTML = runs.map(run => {
+    const runLabel = `${run.name || 'run'} · ${run.conclusion || run.status || '—'}`;
+    const jobs = run.jobs || [];
+    if (!jobs.length) {
+      return `<div class="ci-spine-row"><span class="ci-spine-label">run</span><span class="ci-run-chip">${runLabel}</span></div>`;
+    }
+    const stepsHtml = jobs.flatMap((job, jobIdx) =>
+      (job.steps || []).map(step => {
+        const key = ciStepKey(run.id, jobIdx, step.number);
+        const cls = ['ci-step-chip'];
+        if (step.conclusion === 'failure') cls.push('fail');
+        if (selectedCiStep === key) cls.push('active');
+        return `<span class="${cls.join(' ')}" data-ci-step="${key}" title="${job.name || ''}">${step.number}. ${step.name}</span>`;
+      })
+    ).join('');
+    return `<div class="ci-spine-row"><span class="ci-spine-label">#${selectedIssue}</span>
+      <span class="ci-run-chip">${runLabel}</span>${stepsHtml ? `<span class="ci-spine-label">→</span>${stepsHtml}` : ''}</div>`;
+  }).join('');
+  el.querySelectorAll('[data-ci-step]').forEach(chip => {
+    chip.addEventListener('click', () => {
+      selectedCiStep = chip.dataset.ciStep;
+      graphLayers.operations = true;
+      document.querySelector('#graphLayers .layer-btn[data-layer="operations"]')?.classList.add('on');
+      renderCiSpine();
+      updateGraphHighlight();
+    });
+  });
+}
+
 function selectIssue(number) {
   selectedIssue = number;
   selectedPr = null;
   selectedCommit = null;
+  selectedCiStep = null;
   const ticket = (PIPELINE.tickets || []).find(t => t.issue_number === number)
     || ISSUES.find(i => i.number === number);
   renderPipelineBoard();
@@ -491,6 +633,7 @@ function selectIssue(number) {
   renderPrList();
   renderAgentCommitStrip(ticket);
   renderAgentTimeline(ticket);
+  renderCiSpine();
   updateGraphHighlight();
 }
 
@@ -671,7 +814,7 @@ function renderWorkflows(runs) {
       else if (step.conclusion === 'failure') stepCls += ' fail';
       return `<div class="${stepCls}">${step.number || ''}. ${step.name} · ${step.status}${step.conclusion ? ' (' + step.conclusion + ')' : ''}</div>`;
     }).join('')}</div>` : '';
-    return `<div class="wf-item">
+    return `<div class="wf-item${issueFromBranch(run.branch) ? ' clickable' : ''}" data-branch="${run.branch || ''}">
       <div class="wf-row">
         <div class="wf-name">${run.name}${run.title ? ': ' + run.title : ''}</div>
         <span class="wf-status ${cls}">${wfStatusLabel(run)}</span>
@@ -679,6 +822,12 @@ function renderWorkflows(runs) {
       <div class="wf-meta">${run.branch || run.event || ''} · ${when} ${link}</div>${stepHtml}
     </div>`;
   }).join('');
+  el.querySelectorAll('.wf-item.clickable').forEach(item => {
+    item.addEventListener('click', () => {
+      const num = issueFromBranch(item.dataset.branch);
+      if (num) selectIssue(num);
+    });
+  });
 }
 
 async function pollWorkflows() {
@@ -689,8 +838,11 @@ async function pollWorkflows() {
   try {
     const res = await fetch('/api/workflows');
     const data = await res.json();
-    if (res.ok) renderWorkflows(data.runs || []);
-    else renderWorkflows([]);
+    if (res.ok) {
+      WORKFLOW_RUNS = data.runs || [];
+      renderWorkflows(WORKFLOW_RUNS);
+      if (selectedIssue) renderCiSpine();
+    } else renderWorkflows([]);
   } catch (_) {
     renderWorkflows([]);
   }
@@ -735,6 +887,13 @@ function startSyncPolling() {
 
 function activeFileSet() {
   let base = null;
+  if (selectedCiStep && graphLayers.operations) {
+    const parts = selectedCiStep.split(':');
+    if (parts.length >= 3) {
+      base = filesForCiStep(parts[0], parts[1], parts[2]);
+      if (base.size) return base;
+    }
+  }
   if (selectedIssue) {
     const ticket = (PIPELINE.tickets || []).find(t => t.issue_number === selectedIssue);
     const agent = ticket && ticket.agent_run;
@@ -818,10 +977,12 @@ function selectPr(number) {
   selectedPr = PULL_REQUESTS.find(p => p.number === number) || null;
   selectedCommit = null;
   selectedIssue = null;
+  selectedCiStep = null;
   renderPrList();
   renderPipelineBoard();
   renderIssueList();
   renderCommitStrip();
+  renderCiSpine();
   updateGraphHighlight();
 }
 
@@ -859,13 +1020,16 @@ const commitsByFile = {};
 });
 nodes = nodes.map(n=>({...n,id:n.path}));
 
-const graphLayers = {structure:true, cochange:false, provenance:true};
+const graphLayers = {structure:true, cochange:false, provenance:true, operations:false};
 let links = importLinks.slice();
 
 function graphHintText() {
   const parts = [`${nodes.length} modules`, `${links.length} edges`];
   if (GRAPH.stats && GRAPH.stats.node_count) {
     parts.push(`${GRAPH.stats.commit_nodes || 0} commits in graph`);
+  }
+  if (GRAPH.stats && GRAPH.stats.workflow_step_nodes) {
+    parts.push(`${GRAPH.stats.workflow_step_nodes} CI steps`);
   }
   return parts.join(' · ');
 }
@@ -1024,8 +1188,10 @@ document.querySelectorAll('#graphLayers .layer-btn').forEach(btn => {
     if (layer === 'structure') graphLayers.structure = !graphLayers.structure;
     if (layer === 'cochange') graphLayers.cochange = !graphLayers.cochange;
     if (layer === 'provenance') graphLayers.provenance = !graphLayers.provenance;
+    if (layer === 'operations') graphLayers.operations = !graphLayers.operations;
     btn.classList.toggle('on', graphLayers[layer === 'cochange' ? 'cochange' : layer]);
     if (layer === 'provenance') renderProvenancePanel();
+    else if (layer === 'operations') updateGraphHighlight();
     else rebuildGraphLinks();
   });
 });
@@ -1079,9 +1245,11 @@ function updateGraphHighlight() {
   const files = activeFileSet();
   const highlight = files && files.size;
   const origin = selectedReachFile;
+  const opsMode = graphLayers.operations && selectedCiStep;
   node.classed('dim', d => highlight && !files.has(d.path))
       .classed('hl', d => highlight && files.has(d.path) && d.path !== origin)
-      .classed('reach-origin', d => origin && d.path === origin);
+      .classed('reach-origin', d => origin && d.path === origin)
+      .classed('ops-hl', d => opsMode && files.has(d.path));
   link.classed('hl', d => {
     if (!highlight) return false;
     const s = d.source.id || d.source;
@@ -1101,6 +1269,7 @@ renderIssueList();
 renderPipelineBoard();
 renderCommitStrip();
 renderProvenancePanel();
+renderCiSpine();
 renderReachPanel();
 startWorkflowPolling();
 startSyncPolling();

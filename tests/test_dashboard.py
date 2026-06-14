@@ -66,6 +66,16 @@ class RenderDashboardTests(unittest.TestCase):
         for marker in ('id="reachList"', 'id="reachDepth"', 'id="reachClear"', 'reachQueryClient'):
             self.assertIn(marker, shell)
 
+    def test_ci_spine_and_operations_in_template(self):
+        shell = TEMPLATE.read_text()
+        for marker in (
+            'data-layer="operations"',
+            'id="ciSpine"',
+            'renderCiSpine',
+            'runsForIssue',
+        ):
+            self.assertIn(marker, shell)
+
 
 class ScanDashboardTests(unittest.TestCase):
     def run_scan(self, target):
