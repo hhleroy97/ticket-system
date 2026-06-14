@@ -6,9 +6,11 @@ Strategy (same-repo branches only):
   1. Merge origin/main into the PR branch.
   2. If conflicts are limited to regeneratable docs artifacts, take main's version and
      rerun scan (+ github_intel when gh is available), then commit and push.
-  3. Otherwise abort the merge and comment on the PR listing conflicted paths.
+  3. If code conflicts remain, invoke a scoped Composer executor agent
+     (scripts/run_conflict_agent.sh) to resolve only conflicted paths, run tests, and push.
+  4. If the agent is unavailable or ineligible, abort and comment on the PR.
 
-Stdlib + gh CLI only. Safe to run from GitHub Actions or locally:
+Stdlib + gh CLI (+ cursor-agent when CURSOR_API_KEY is set). Safe to run from CI:
   python3 scripts/resolve_pr_conflicts.py --all
   python3 scripts/resolve_pr_conflicts.py --pr 36 --dry-run
 """
@@ -20,11 +22,13 @@ import json
 import os
 import subprocess
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable
 
 HERE = Path(__file__).resolve().parent.parent
+MAX_AGENT_FILES = 12
+CONFLICT_MARKERS = ("<<<<<<<", "=======", ">>>>>>>")
 
 REGENERATABLE_EXACT = {
     "docs/index.json",
@@ -45,7 +49,7 @@ class Assessment:
     draft: bool
     action: str
     detail: str
-    conflict_files: list[str]
+    conflict_files: list[str] = field(default_factory=list)
 
 
 def run(cmd, *, cwd=None, check=True, env=None):
@@ -74,9 +78,41 @@ def is_regeneratable(path: str) -> bool:
     return any(path.startswith(prefix) for prefix in REGENERATABLE_PREFIXES)
 
 
+def split_conflicts(conflicted: Iterable[str]) -> tuple[list[str], list[str]]:
+    docs, code = [], []
+    for path in conflicted:
+        if is_regeneratable(path):
+            docs.append(path)
+        else:
+            code.append(path)
+    return docs, code
+
+
 def can_auto_resolve(conflicted: Iterable[str]) -> tuple[bool, list[str]]:
     blocked = [path for path in conflicted if not is_regeneratable(path)]
     return not blocked, blocked
+
+
+def agent_enabled(explicit: bool | None) -> bool:
+    if explicit is False:
+        return False
+    if explicit is True:
+        return bool(os.environ.get("CURSOR_API_KEY"))
+    # default: use agent when key present (CI) or CONFLICT_AGENT=1 locally
+    if os.environ.get("CONFLICT_AGENT", "").lower() in ("0", "false", "no"):
+        return False
+    return bool(os.environ.get("CURSOR_API_KEY"))
+
+
+def is_agent_eligible(code_files: list[str]) -> tuple[bool, str]:
+    if not code_files:
+        return False, "no code conflicts"
+    if len(code_files) > MAX_AGENT_FILES:
+        return False, f"too many conflicted files ({len(code_files)} > {MAX_AGENT_FILES})"
+    for path in code_files:
+        if path.startswith(".github/workflows/"):
+            return False, "workflow file conflicts require maintainer PAT"
+    return True, ""
 
 
 def list_open_prs(pr_number: int | None) -> list[dict]:
@@ -137,7 +173,6 @@ def assess_pr(row: dict) -> Assessment:
         draft=draft,
         action=action,
         detail=detail,
-        conflict_files=[],
     )
 
 
@@ -157,6 +192,21 @@ def conflicted_files() -> list[str]:
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
 
 
+def files_with_markers(paths: Iterable[str]) -> list[str]:
+    bad = []
+    for rel in paths:
+        path = HERE / rel
+        if not path.is_file():
+            continue
+        try:
+            text = path.read_text(errors="replace")
+        except OSError:
+            continue
+        if any(marker in text for marker in CONFLICT_MARKERS):
+            bad.append(rel)
+    return bad
+
+
 def configure_git_user():
     name = os.environ.get("GIT_AUTHOR_NAME", "github-actions[bot]")
     email = os.environ.get("GIT_AUTHOR_EMAIL", "41898282+github-actions[bot]@users.noreply.github.com")
@@ -172,31 +222,135 @@ def regenerate_docs():
     run([python, str(HERE / "scripts" / "github_intel.py")], env=env, check=False)
 
 
-def resolve_conflicts_on_branch(conflicted: list[str]) -> tuple[bool, str]:
-    auto_ok, blocked = can_auto_resolve(conflicted)
-    if not auto_ok:
-        return False, f"non-doc conflicts: {', '.join(blocked)}"
-
-    for path in conflicted:
+def resolve_doc_conflicts(doc_files: list[str]) -> tuple[bool, str]:
+    if not doc_files:
+        return True, ""
+    for path in doc_files:
         run(["git", "checkout", "--theirs", "--", path], check=False)
         run(["git", "add", "--", path], check=False)
+    remaining = [path for path in doc_files if path in conflicted_files()]
+    if remaining:
+        return False, f"doc conflicts unresolved: {', '.join(remaining)}"
+    regenerate_docs()
+    run(["git", "add", "docs"], check=False)
+    return True, "regenerated docs"
 
+
+def run_tests() -> tuple[bool, str]:
+    python = os.environ.get("PYTHON", sys.executable)
+    proc = run([python, str(HERE / "run_tests.py")], check=False)
+    if proc.returncode != 0:
+        tail = (proc.stderr or proc.stdout or "run_tests failed").strip().splitlines()
+        return False, tail[-1] if tail else "run_tests failed"
+    return True, "tests passed"
+
+
+def run_conflict_agent(pr_number: int, head_ref: str, code_files: list[str]) -> tuple[bool, str]:
+    script = HERE / "scripts" / "run_conflict_agent.sh"
+    if not script.is_file():
+        return False, "run_conflict_agent.sh missing"
+    csv = ",".join(code_files)
+    proc = run(["bash", str(script), str(pr_number), head_ref, csv], check=False)
+    if proc.returncode != 0:
+        err = (proc.stderr or proc.stdout or "conflict agent failed").strip()
+        return False, err.splitlines()[-1][:500]
+    return True, "scoped conflict agent finished"
+
+
+def complete_merge_commit(pr_number: int, scoped_files: list[str]) -> None:
     remaining = conflicted_files()
     if remaining:
-        return False, f"unresolved after checkout --theirs: {', '.join(remaining)}"
+        raise RuntimeError(f"still conflicted: {remaining}")
+    markers = files_with_markers(scoped_files)
+    if markers:
+        raise RuntimeError(f"conflict markers remain in: {markers}")
+    run(
+        [
+            "git",
+            "commit",
+            "--no-edit",
+            "-m",
+            f"chore: resolve merge conflicts with main (PR #{pr_number})",
+        ],
+        check=True,
+    )
 
-    regenerate_docs()
-    run(["git", "add", "docs"])
-    return True, "regenerated docs after merging main"
+
+def resolve_merge_conflicts(
+    assessment: Assessment,
+    files: list[str],
+    *,
+    use_agent: bool,
+) -> tuple[bool, str, str]:
+    """Return (ok, detail, resolution_kind). kind: docs|agent|none"""
+    doc_files, code_files = split_conflicts(files)
+
+    if doc_files:
+        ok, msg = resolve_doc_conflicts(doc_files)
+        if not ok:
+            return False, msg, "none"
+
+    remaining = conflicted_files()
+    if not remaining:
+        return True, "doc conflicts resolved", "docs"
+
+    _, code_remaining = split_conflicts(remaining)
+    if not code_remaining:
+        return True, "doc conflicts resolved", "docs"
+
+    eligible, reason = is_agent_eligible(code_remaining)
+    if not eligible:
+        return False, reason or "agent ineligible", "none"
+
+    if not agent_enabled(use_agent):
+        return False, "semantic conflicts require CURSOR_API_KEY / scoped agent", "none"
+
+    ok, msg = run_conflict_agent(assessment.number, assessment.head_ref, code_remaining)
+    if not ok:
+        return False, msg, "none"
+
+    markers = files_with_markers(code_remaining)
+    if markers or conflicted_files():
+        return False, f"agent left conflicts in {markers or conflicted_files()}", "none"
+
+    tests_ok, test_msg = run_tests()
+    if not tests_ok:
+        return False, test_msg, "none"
+
+    try:
+        complete_merge_commit(assessment.number, code_remaining)
+    except RuntimeError as exc:
+        return False, str(exc), "none"
+
+    run(["git", "add", f"docs/agent-runs/pr-{assessment.number}/"], check=False)
+    if not run(["git", "diff", "--cached", "--quiet"], check=False).returncode == 0:
+        run(
+            [
+                "git",
+                "commit",
+                "-m",
+                f"docs: conflict agent trace for PR #{assessment.number}",
+            ],
+            check=False,
+        )
+
+    return True, f"agent resolved {len(code_remaining)} file(s); {test_msg}", "agent"
 
 
-def try_resolve_pr(assessment: Assessment, *, dry_run: bool) -> Assessment:
+def abort_merge():
+    run(["git", "merge", "--abort"], check=False)
+
+
+def try_resolve_pr(assessment: Assessment, *, dry_run: bool, use_agent: bool | None) -> Assessment:
     if assessment.action not in ("conflict", "behind"):
         return assessment
 
     if dry_run:
-        verb = "merge" if assessment.action == "behind" else "merge and attempt doc regeneration"
-        assessment.detail = f"dry-run: would {verb} origin/main into {assessment.head_ref}"
+        agent_note = ""
+        if agent_enabled(use_agent):
+            agent_note = "; would invoke scoped conflict agent for code conflicts"
+        verb = "merge" if assessment.action == "behind" else "merge and resolve conflicts"
+        assessment.detail = f"dry-run: would {verb} origin/main into {assessment.head_ref}{agent_note}"
         return assessment
 
     configure_git_user()
@@ -217,39 +371,41 @@ def try_resolve_pr(assessment: Assessment, *, dry_run: bool) -> Assessment:
 
     files = conflicted_files()
     assessment.conflict_files = files
-    ok, msg = resolve_conflicts_on_branch(files)
-    if not ok:
-        run(["git", "merge", "--abort"], check=False)
-        assessment.action = "manual"
+
+    ok, msg, kind = resolve_merge_conflicts(assessment, files, use_agent=use_agent)
+    if ok:
+        run(["git", "push", "origin", f"HEAD:{assessment.head_ref}"], check=True)
+        assessment.action = "fixed"
         assessment.detail = msg
-        file_list = "\n".join(f"- `{path}`" for path in files) or "- (unknown)"
-        comment_on_pr(
-            assessment.number,
-            "**Conflict bot:** could not auto-resolve merge conflicts with `main`.\n\n"
-            f"Blocked paths:\n{file_list}\n\n"
-            f"Reason: {msg}\n\n"
-            "Please resolve manually (`git merge origin/main` locally) or rebase onto `main`.",
-        )
+        if kind == "docs":
+            comment_on_pr(
+                assessment.number,
+                "**Conflict bot:** merged `main`, auto-resolved doc conflicts, regenerated "
+                f"artifacts, and pushed to `{assessment.head_ref}`.\n\n"
+                f"Paths: {', '.join(f'`{p}`' for p in files)}",
+            )
+        else:
+            comment_on_pr(
+                assessment.number,
+                "**Conflict bot:** merged `main`, scoped **Composer agent** resolved semantic "
+                f"conflicts, tests passed, and pushed to `{assessment.head_ref}`.\n\n"
+                f"Agent trace: `docs/agent-runs/pr-{assessment.number}/run.json`",
+            )
         return assessment
 
-    run(
-        [
-            "git",
-            "commit",
-            "-m",
-            f"chore: merge main and regenerate docs (conflict bot PR #{assessment.number})",
-        ],
-        check=True,
-    )
-    run(["git", "push", "origin", f"HEAD:{assessment.head_ref}"], check=True)
-    assessment.action = "fixed"
+    abort_merge()
+    assessment.action = "manual"
     assessment.detail = msg
+    file_list = "\n".join(f"- `{path}`" for path in files) or "- (unknown)"
+    agent_hint = ""
+    if not agent_enabled(use_agent):
+        agent_hint = "\n\n_Set `CURSOR_API_KEY` in repo secrets to enable scoped agent resolution._"
     comment_on_pr(
         assessment.number,
-        "**Conflict bot:** merged `main`, auto-resolved doc conflicts, regenerated "
-        "`docs/index.json` / dashboard, and pushed to "
-        f"`{assessment.head_ref}`.\n\n"
-        f"Conflicted paths (docs only): {', '.join(f'`{p}`' for p in files)}",
+        "**Conflict bot:** could not auto-resolve merge conflicts with `main`.\n\n"
+        f"Blocked paths:\n{file_list}\n\n"
+        f"Reason: {msg}{agent_hint}\n\n"
+        "Resolve manually (`git merge origin/main`) or re-run with agent enabled.",
     )
     return assessment
 
@@ -258,9 +414,7 @@ def print_assessment(item: Assessment):
     extra = ""
     if item.conflict_files:
         extra = f" conflicts={item.conflict_files}"
-    print(
-        f"PR #{item.number} [{item.action}] {item.head_ref}: {item.detail}{extra}"
-    )
+    print(f"PR #{item.number} [{item.action}] {item.head_ref}: {item.detail}{extra}")
 
 
 def main():
@@ -273,11 +427,22 @@ def main():
         action="store_true",
         help="assess only; do not merge, push, or comment fixes",
     )
+    parser.add_argument(
+        "--no-agent",
+        action="store_true",
+        help="never invoke scoped conflict agent (doc auto-fix only)",
+    )
+    parser.add_argument(
+        "--agent",
+        action="store_true",
+        help="require scoped conflict agent for code conflicts (needs CURSOR_API_KEY)",
+    )
     args = parser.parse_args()
 
     if not os.environ.get("GITHUB_REPOSITORY"):
         sys.exit("error: GITHUB_REPOSITORY is required (set by Actions or export locally)")
 
+    use_agent = False if args.no_agent else True if args.agent else None
     pr_number = args.pr if args.pr else None
     rows = list_open_prs(pr_number)
     if not rows:
@@ -288,7 +453,7 @@ def main():
     for row in rows:
         item = assess_pr(row)
         if item.action in ("conflict", "behind"):
-            item = try_resolve_pr(item, dry_run=args.dry_run)
+            item = try_resolve_pr(item, dry_run=args.dry_run, use_agent=use_agent)
             if item.action == "manual":
                 exit_code = 1
         print_assessment(item)

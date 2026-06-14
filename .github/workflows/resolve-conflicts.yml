@@ -17,6 +17,11 @@ on:
         required: false
         type: boolean
         default: false
+      no_agent:
+        description: "Skip scoped conflict agent (doc auto-fix only)"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -30,10 +35,18 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install Cursor CLI
+        if: github.event_name != 'workflow_dispatch' || inputs.no_agent != true
+        run: |
+          curl https://cursor.com/install -fsSL | bash
+          echo "$HOME/.cursor/bin" >> "$GITHUB_PATH"
+
       - name: Assess and fix merge conflicts
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+          CONFLICT_AGENT: "1"
         run: |
           set -euo pipefail
           args=()
@@ -45,4 +58,8 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dry_run }}" = "true" ]; then
             args+=(--dry-run)
           fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.no_agent }}" = "true" ]; then
+            args+=(--no-agent)
+          fi
+          chmod +x scripts/run_conflict_agent.sh
           python3 scripts/resolve_pr_conflicts.py "${args[@]}"

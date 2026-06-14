@@ -76,10 +76,16 @@ For each open same-repo PR it:
 
 1. **Assesses** merge status (`MERGEABLE`, `CONFLICTING`, `BEHIND`, fork/draft skips).
 2. **Fixes** by merging `origin/main` into the PR branch.
-3. **Auto-resolves** doc-only conflicts (`docs/index.json`, `docs/dashboard.html`, `docs/modules/*`) by regenerating via `scan.py` + `github_intel.py`.
-4. **Comments** on the PR with results; code conflicts require manual resolution.
+3. **Auto-resolves** doc-only conflicts (`docs/index.json`, dashboard, module docs) via scan + github_intel.
+4. **Scoped agent** — for code conflicts, runs Composer 2.5 with `.github/CONFLICT_RESOLVER.md`
+   (only conflicted paths, max 12 files, no workflow edits); runs tests before push.
+5. **Comments** on the PR; trace at `docs/agent-runs/pr-<N>/run.json`.
 
-Fork PRs and non-doc conflicts are never auto-edited.
+Requires `CURSOR_API_KEY` secret for semantic resolution. Fork PRs and workflow conflicts are never auto-edited.
+
+```bash
+gh workflow run resolve-conflicts.yml -f no_agent=true   # doc-only mode
+```
 
 ## Parallel development (worktrees)
 
