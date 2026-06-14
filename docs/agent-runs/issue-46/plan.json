@@ -1,0 +1,53 @@
+{
+  "issue_number": 46,
+  "title": "request: Add KG-14 author-to-file edges in provenance graph",
+  "base": "main",
+  "created_at": "2026-06-14 01:15:05 UTC",
+  "plan": {
+    "summary": "Implement KG-14 by adding deterministic author nodes and weighted author-to-file provenance edges, with focused tests and a small roadmap doc update.",
+    "steps": [
+      "Inspect current provenance graph edge conventions and choose an additive edge type/name for author-to-file links.",
+      "Extend scripts/provenance_graph.py to collect commit author identity from git log, add author nodes, and emit weighted author-to-file edges for indexed files only.",
+      "Update shared graph edge handling if reach/provenance helpers should traverse the new edge type.",
+      "Add tests covering author nodes, author-to-file edges, weights, and stats without adding dependencies.",
+      "Update the knowledge graph plan to mark KG-14 complete and run python3 run_tests.py."
+    ],
+    "files_likely_touched": [
+      "scripts/provenance_graph.py",
+      "scripts/graph_lib.py",
+      "tests/test_provenance_graph.py",
+      "docs/KNOWLEDGE_GRAPH_PLAN.md"
+    ],
+    "commit_plan": [
+      "feat: add author-to-file provenance edges (#46)",
+      "test: cover author provenance graph edges (#46)",
+      "docs: mark KG-14 author edges complete (#46)"
+    ]
+  },
+  "reach": [
+    {
+      "file": "scripts/provenance_graph.py",
+      "depth": 2,
+      "neighbors": [],
+      "co_changed": []
+    },
+    {
+      "file": "scripts/graph_lib.py",
+      "depth": 2,
+      "neighbors": [],
+      "co_changed": []
+    },
+    {
+      "file": "tests/test_provenance_graph.py",
+      "depth": 2,
+      "neighbors": [],
+      "co_changed": []
+    },
+    {
+      "file": "docs/KNOWLEDGE_GRAPH_PLAN.md",
+      "depth": 2,
+      "neighbors": [],
+      "co_changed": []
+    }
+  ]
+}

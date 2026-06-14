@@ -1,0 +1,24 @@
+{
+  "issue_number": 46,
+  "branch": "issue-46",
+  "base": "main",
+  "commits": [],
+  "files": [],
+  "commit_count": 0,
+  "file_count": 0,
+  "diff_stat": "",
+  "captured_at": "2026-06-14 01:16:06 UTC",
+  "partial": true,
+  "snapshots": [
+    {
+      "captured_at": "2026-06-14 01:15:36 UTC",
+      "commit_count": 0,
+      "file_count": 0
+    },
+    {
+      "captured_at": "2026-06-14 01:16:06 UTC",
+      "commit_count": 0,
+      "file_count": 0
+    }
+  ]
+}
