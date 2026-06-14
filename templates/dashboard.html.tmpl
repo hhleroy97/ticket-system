@@ -139,7 +139,11 @@
   .chat-row input:disabled{opacity:.5}
   .chat-row button{background:var(--teal);color:var(--ink);border:none;border-radius:8px;padding:10px 14px;
        font-family:var(--disp);font-weight:600;font-size:13px;cursor:pointer}
+  .chat-row button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line);font-weight:500}
   .chat-row button:disabled{opacity:.4;cursor:not-allowed}
+  .btn-dismiss{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:6px;margin-left:6px;
+       border:1px solid var(--line);background:var(--panel2);color:var(--muted);cursor:pointer}
+  .btn-dismiss:hover{color:var(--text);border-color:var(--faint)}
   .chat-hint{font-size:12px;color:var(--faint);line-height:1.45}
   .gh-link{color:var(--teal);text-decoration:none}
   .gh-link:hover{text-decoration:underline}
@@ -286,7 +290,8 @@
         <div class="chat-box">
           <div class="chat-log" id="chatLog"></div>
           <div class="chat-row">
-            <input id="chatInput" type="text" placeholder="Ask about PRs, issues, or the graph…" disabled>
+            <input id="chatInput" type="text" placeholder="Ask or describe what to build…" disabled>
+            <button id="chatTicket" class="secondary" disabled title="Create radar:proposed issue">Ticket</button>
             <button id="chatSend" disabled>Send</button>
           </div>
           <div class="chat-hint" id="chatDisabledHint"></div>
@@ -549,6 +554,7 @@ function renderIssueList() {
     const approveUi = localActions && !approved ? `
       <div class="issue-actions">
         <button class="btn-approve" data-approve="${issue.number}">Approve</button>
+        <button class="btn-dismiss" data-dismiss="${issue.number}">Dismiss</button>
         <label class="auto-merge-lbl"><input type="checkbox" data-automerge="${issue.number}"> auto-merge</label>
       </div>` : (approved ? `<div class="issue-actions"><span class="badge radar-approved">executor triggered</span></div>` : '');
     return `<div class="issue-item${active}" data-issue="${issue.number}">
@@ -563,9 +569,31 @@ function renderIssueList() {
         approveIssue(Number(btn.dataset.approve));
       });
     });
+    el.querySelectorAll('[data-dismiss]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        dismissIssue(Number(btn.dataset.dismiss));
+      });
+    });
     el.querySelectorAll('.issue-item[data-issue]').forEach(item => {
       item.addEventListener('click', () => selectIssue(Number(item.dataset.issue)));
     });
+  }
+}
+
+async function dismissIssue(number) {
+  if (!confirm(`Dismiss issue #${number}? This logs feedback and closes the issue.`)) return;
+  try {
+    const res = await fetch(`/api/issues/${number}/dismiss`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({reason: 'Dismissed from dashboard'}),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'dismiss failed');
+    await refreshIssues();
+  } catch (err) {
+    alert('Dismiss failed: ' + err.message);
   }
 }
 
@@ -1082,6 +1110,7 @@ startLivePolling();
 const chatEnabled = !!(DATA.meta && DATA.meta.local_chat);
 const chatInput = document.getElementById('chatInput');
 const chatSend = document.getElementById('chatSend');
+const chatTicket = document.getElementById('chatTicket');
 const chatLog = document.getElementById('chatLog');
 const chatDisabledHint = document.getElementById('chatDisabledHint');
 
@@ -1089,9 +1118,36 @@ if (chatEnabled) {
   document.getElementById('chatHint').textContent = 'connected';
   chatInput.disabled = false;
   chatSend.disabled = false;
-  chatDisabledHint.textContent = 'Chat uses cursor-agent locally. Context includes index stats, PRs, and issues.';
+  chatTicket.disabled = false;
+  chatDisabledHint.textContent = 'Send = ask · Ticket = create radar:proposed issue from your request.';
 } else {
-  chatDisabledHint.textContent = 'Run python3 serve_dashboard.py for Cursor chat (requires CURSOR_API_KEY in .env).';
+  chatDisabledHint.textContent = 'Run python3 serve_dashboard.py for Cursor chat and ticket creation (requires gh auth).';
+}
+
+async function createTicketFromChat() {
+  const message = chatInput.value.trim();
+  if (!message || !chatEnabled) return;
+  chatTicket.disabled = true;
+  chatLog.innerHTML += `<div class="user">Ticket: ${message}</div>`;
+  chatLog.innerHTML += `<div class="bot">…</div>`;
+  chatLog.scrollTop = chatLog.scrollHeight;
+  try {
+    const res = await fetch('/api/request', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message}),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'create failed');
+    chatLog.lastElementChild.textContent =
+      `Created #${data.number || '?'}: ${data.title || message}\n${data.url || ''}`;
+    chatInput.value = '';
+    await refreshIssues();
+  } catch (err) {
+    chatLog.lastElementChild.textContent = 'Error: ' + err.message;
+  }
+  chatTicket.disabled = false;
+  chatLog.scrollTop = chatLog.scrollHeight;
 }
 
 async function sendChat() {
@@ -1119,7 +1175,8 @@ async function sendChat() {
 }
 
 chatSend.addEventListener('click', sendChat);
-chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendChat(); });
+chatTicket.addEventListener('click', createTicketFromChat);
+chatInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) sendChat(); });
 </script>
 </body>
 </html>
