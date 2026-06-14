@@ -248,6 +248,64 @@ def build_provenance_graph(index, repo):
             if pr.get("head_ref") == branch:
                 add_edge(rid, node_id("pr", str(pr["number"])), "tests")
 
+    step_count = 0
+    branch_files_cache = {}
+
+    def files_for_branch(branch):
+        if branch not in branch_files_cache:
+            paths = set()
+            for pr in index.get("open_pull_requests") or []:
+                if pr.get("head_ref") != branch:
+                    continue
+                for commit in pr.get("commits") or []:
+                    for path in commit.get("files") or []:
+                        if path in file_paths:
+                            paths.add(path)
+            match = HEAD_ISSUE.match(branch or "")
+            if match:
+                issue_num = int(match.group(1))
+                for ticket in (index.get("pipeline") or {}).get("tickets") or []:
+                    if ticket.get("issue_number") != issue_num:
+                        continue
+                    agent = ticket.get("agent_run") or {}
+                    for path in agent.get("files") or []:
+                        if path in file_paths:
+                            paths.add(path)
+            branch_files_cache[branch] = sorted(paths)
+        return branch_files_cache[branch]
+
+    for run in index.get("workflow_runs") or []:
+        run_id = run.get("id")
+        if not run_id:
+            continue
+        rid = node_id("run", str(run_id))
+        branch = run.get("branch") or ""
+        touched = files_for_branch(branch)
+        for job_idx, job in enumerate(run.get("jobs") or []):
+            for step in job.get("steps") or []:
+                step_num = step.get("number")
+                if step_num is None:
+                    continue
+                sid = node_id("step", f"{run_id}:{job_idx}:{step_num}")
+                add_node(
+                    {
+                        "id": sid,
+                        "kind": "workflow_step",
+                        "run_id": run_id,
+                        "job": job.get("name") or "",
+                        "name": step.get("name") or "",
+                        "number": step_num,
+                        "status": step.get("status") or "",
+                        "conclusion": step.get("conclusion") or "",
+                    }
+                )
+                add_edge(rid, sid, "has_step")
+                step_count += 1
+                if step.get("conclusion") == "failure":
+                    add_edge(sid, rid, "failed_at")
+                for path in touched:
+                    add_edge(sid, node_id("file", path), "covers")
+
     return {
         "nodes": nodes,
         "edges": edges,
@@ -261,6 +319,7 @@ def build_provenance_graph(index, repo):
             "pull_request_nodes": pr_count,
             "issue_nodes": issue_count,
             "workflow_run_nodes": run_count,
+            "workflow_step_nodes": step_count,
         },
         "built_at": utc_now(),
     }

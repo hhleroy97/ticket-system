@@ -1,49 +1,49 @@
 {
   "schema_version": 2,
   "meta": {
-    "intel_root": "/home/runner/work/ticket-system/ticket-system",
-    "scan_target": "/home/runner/work/ticket-system/ticket-system",
+    "intel_root": "/home/hartley/projects/personal/ticket-sys",
+    "scan_target": "/home/hartley/projects/personal/ticket-sys",
     "scan_target_is_self": true,
     "federation": {
-      "primary_slug": "ticket-system",
-      "docs_path": "/home/runner/work/ticket-system/ticket-system/docs"
+      "primary_slug": "ticket-sys",
+      "docs_path": "/home/hartley/projects/personal/ticket-sys/docs"
     }
   },
   "repo": {
-    "name": "ticket-system",
-    "path": "/home/runner/work/ticket-system/ticket-system",
-    "branch": "main",
-    "head": "eebb462",
-    "total_commits": 114,
-    "generated_at": "2026-06-14 01:34 UTC"
+    "name": "ticket-sys",
+    "path": "/home/hartley/projects/personal/ticket-sys",
+    "branch": "feat/kg15-ci-spine-reflection",
+    "head": "7550f80",
+    "total_commits": 117,
+    "generated_at": "2026-06-14 01:36 UTC"
   },
   "package_roots": {},
   "stats": {
-    "file_count": 146,
-    "total_loc": 11665,
+    "file_count": 148,
+    "total_loc": 12516,
     "contributor_count": 4,
-    "edge_count": 53
+    "edge_count": 56
   },
   "languages": [
     {
       "name": "Python",
-      "files": 49,
-      "loc": 6982
+      "files": 51,
+      "loc": 7407
     },
     {
       "name": "Markdown",
       "files": 63,
-      "loc": 1893
+      "loc": 1901
     },
     {
       "name": "Other",
       "files": 9,
-      "loc": 1244
+      "loc": 1453
     },
     {
       "name": "HTML",
       "files": 1,
-      "loc": 1182
+      "loc": 1391
     },
     {
       "name": "Shell",
@@ -229,15 +229,15 @@
       "path": "docs/KNOWLEDGE_GRAPH_PLAN.md",
       "lang": "Markdown",
       "loc": 274,
-      "size": 11126,
+      "size": 11123,
       "commits": 4,
       "last_commit": "2026-06-14"
     },
     {
       "path": "docs/RUNBOOK.md",
       "lang": "Markdown",
-      "loc": 172,
-      "size": 5838,
+      "loc": 180,
+      "size": 6476,
       "commits": 6,
       "last_commit": "2026-06-13"
     },
@@ -276,26 +276,26 @@
     {
       "path": "docs/dashboard.html",
       "lang": "HTML",
-      "loc": 1182,
-      "size": 77032,
-      "commits": 37,
-      "last_commit": "2026-06-14"
+      "loc": 1391,
+      "size": 310342,
+      "commits": 39,
+      "last_commit": "2026-06-13"
     },
     {
       "path": "docs/index.db",
       "lang": "Other",
       "loc": 0,
-      "size": 61440,
-      "commits": 37,
-      "last_commit": "2026-06-14"
+      "size": 237568,
+      "commits": 39,
+      "last_commit": "2026-06-13"
     },
     {
       "path": "docs/index.json",
       "lang": "Config",
       "loc": 0,
-      "size": 31981,
-      "commits": 37,
-      "last_commit": "2026-06-14"
+      "size": 338001,
+      "commits": 39,
+      "last_commit": "2026-06-13"
     },
     {
       "path": "docs/inspiration.md",
@@ -414,7 +414,7 @@
       "lang": "Markdown",
       "loc": 15,
       "size": 286,
-      "commits": 4,
+      "commits": 5,
       "last_commit": "2026-06-13"
     },
     {
@@ -446,7 +446,7 @@
       "lang": "Markdown",
       "loc": 15,
       "size": 286,
-      "commits": 2,
+      "commits": 3,
       "last_commit": "2026-06-13"
     },
     {
@@ -462,8 +462,8 @@
       "lang": "Markdown",
       "loc": 15,
       "size": 290,
-      "commits": 4,
-      "last_commit": "2026-06-14"
+      "commits": 6,
+      "last_commit": "2026-06-13"
     },
     {
       "path": "docs/modules/scripts-radar_ticket_lib.md",
@@ -557,9 +557,9 @@
       "path": "docs/modules/tests-test_dashboard.md",
       "lang": "Markdown",
       "loc": 15,
-      "size": 285,
-      "commits": 4,
-      "last_commit": "2026-06-14"
+      "size": 286,
+      "commits": 5,
+      "last_commit": "2026-06-13"
     },
     {
       "path": "docs/modules/tests-test_dashboard_api.md",
@@ -646,8 +646,8 @@
       "lang": "Markdown",
       "loc": 15,
       "size": 293,
-      "commits": 4,
-      "last_commit": "2026-06-14"
+      "commits": 6,
+      "last_commit": "2026-06-13"
     },
     {
       "path": "docs/modules/tests-test_radar_report.md",
@@ -844,8 +844,8 @@
     {
       "path": "scripts/dashboard_api.py",
       "lang": "Python",
-      "loc": 251,
-      "size": 8121,
+      "loc": 257,
+      "size": 8279,
       "commits": 3,
       "last_commit": "2026-06-13"
     },
@@ -868,9 +868,9 @@
     {
       "path": "scripts/github_intel.py",
       "lang": "Python",
-      "loc": 385,
-      "size": 12270,
-      "commits": 2,
+      "loc": 389,
+      "size": 12450,
+      "commits": 3,
       "last_commit": "2026-06-13"
     },
     {
@@ -892,17 +892,17 @@
     {
       "path": "scripts/operator_feedback.py",
       "lang": "Python",
-      "loc": 109,
-      "size": 3081,
+      "loc": 141,
+      "size": 4123,
       "commits": 1,
       "last_commit": "2026-06-13"
     },
     {
       "path": "scripts/pipeline_lib.py",
       "lang": "Python",
-      "loc": 407,
-      "size": 12614,
-      "commits": 1,
+      "loc": 424,
+      "size": 13170,
+      "commits": 2,
       "last_commit": "2026-06-13"
     },
     {
@@ -916,9 +916,9 @@
     {
       "path": "scripts/provenance_graph.py",
       "lang": "Python",
-      "loc": 272,
-      "size": 8512,
-      "commits": 3,
+      "loc": 331,
+      "size": 10993,
+      "commits": 4,
       "last_commit": "2026-06-13"
     },
     {
@@ -944,6 +944,14 @@
       "size": 1350,
       "commits": 3,
       "last_commit": "2026-06-13"
+    },
+    {
+      "path": "scripts/reflect_cycle.py",
+      "lang": "Python",
+      "loc": 132,
+      "size": 4535,
+      "commits": 0,
+      "last_commit": null
     },
     {
       "path": "scripts/repo_config.py",
@@ -1012,17 +1020,17 @@
     {
       "path": "serve_dashboard.py",
       "lang": "Python",
-      "loc": 384,
-      "size": 13539,
+      "loc": 389,
+      "size": 13665,
       "commits": 4,
       "last_commit": "2026-06-13"
     },
     {
       "path": "templates/dashboard.html.tmpl",
       "lang": "Other",
-      "loc": 1182,
-      "size": 53247,
-      "commits": 6,
+      "loc": 1391,
+      "size": 61847,
+      "commits": 7,
       "last_commit": "2026-06-13"
     },
     {
@@ -1068,16 +1076,16 @@
     {
       "path": "tests/test_dashboard.py",
       "lang": "Python",
-      "loc": 94,
-      "size": 3396,
-      "commits": 3,
+      "loc": 106,
+      "size": 3751,
+      "commits": 4,
       "last_commit": "2026-06-13"
     },
     {
       "path": "tests/test_dashboard_api.py",
       "lang": "Python",
-      "loc": 68,
-      "size": 2396,
+      "loc": 71,
+      "size": 2511,
       "commits": 3,
       "last_commit": "2026-06-13"
     },
@@ -1156,9 +1164,9 @@
     {
       "path": "tests/test_provenance_graph.py",
       "lang": "Python",
-      "loc": 141,
-      "size": 5201,
-      "commits": 3,
+      "loc": 201,
+      "size": 7563,
+      "commits": 4,
       "last_commit": "2026-06-13"
     },
     {
@@ -1184,6 +1192,14 @@
       "size": 1665,
       "commits": 2,
       "last_commit": "2026-06-13"
+    },
+    {
+      "path": "tests/test_reflect_cycle.py",
+      "lang": "Python",
+      "loc": 95,
+      "size": 3237,
+      "commits": 0,
+      "last_commit": null
     },
     {
       "path": "tests/test_repo_config.py",
@@ -1233,11 +1249,11 @@
     },
     {
       "source": "scripts/agent_plan.py",
-      "target": "scripts/graph_lib.py"
+      "target": "scripts/cursor_agent.py"
     },
     {
       "source": "scripts/agent_plan.py",
-      "target": "scripts/cursor_agent.py"
+      "target": "scripts/graph_lib.py"
     },
     {
       "source": "scripts/create_radar_issues.py",
@@ -1245,11 +1261,11 @@
     },
     {
       "source": "scripts/create_radar_issues.py",
-      "target": "scripts/operator_feedback.py"
+      "target": "scripts/radar_ticket_lib.py"
     },
     {
       "source": "scripts/create_radar_issues.py",
-      "target": "scripts/radar_ticket_lib.py"
+      "target": "scripts/operator_feedback.py"
     },
     {
       "source": "scripts/dashboard_api.py",
@@ -1257,11 +1273,11 @@
     },
     {
       "source": "scripts/dashboard_api.py",
-      "target": "scripts/graph_lib.py"
+      "target": "scripts/operator_feedback.py"
     },
     {
       "source": "scripts/dashboard_api.py",
-      "target": "scripts/operator_feedback.py"
+      "target": "scripts/graph_lib.py"
     },
     {
       "source": "scripts/dashboard_api.py",
@@ -1274,6 +1290,10 @@
     {
       "source": "scripts/finalize_agent_run.py",
       "target": "scripts/pipeline_lib.py"
+    },
+    {
+      "source": "scripts/github_intel.py",
+      "target": "scripts/reflect_cycle.py"
     },
     {
       "source": "scripts/github_intel.py",
@@ -1305,10 +1325,6 @@
     },
     {
       "source": "serve_dashboard.py",
-      "target": "scripts/dashboard_refresh.py"
-    },
-    {
-      "source": "serve_dashboard.py",
       "target": "scripts/dashboard_api.py"
     },
     {
@@ -1318,6 +1334,10 @@
     {
       "source": "serve_dashboard.py",
       "target": "scripts/repo_sync.py"
+    },
+    {
+      "source": "serve_dashboard.py",
+      "target": "scripts/dashboard_refresh.py"
     },
     {
       "source": "tests/test_agent_plan.py",
@@ -1357,11 +1377,11 @@
     },
     {
       "source": "tests/test_github_intel.py",
-      "target": "scripts/github_intel.py"
+      "target": "serve_dashboard.py"
     },
     {
       "source": "tests/test_github_intel.py",
-      "target": "serve_dashboard.py"
+      "target": "scripts/github_intel.py"
     },
     {
       "source": "tests/test_graph_lib.py",
@@ -1369,11 +1389,11 @@
     },
     {
       "source": "tests/test_operator_feedback.py",
-      "target": "scripts/operator_feedback.py"
+      "target": "scripts/request_issue.py"
     },
     {
       "source": "tests/test_operator_feedback.py",
-      "target": "scripts/request_issue.py"
+      "target": "scripts/operator_feedback.py"
     },
     {
       "source": "tests/test_pipeline_lib.py",
@@ -1397,19 +1417,15 @@
     },
     {
       "source": "tests/test_radar_report.py",
-      "target": "draft_issues.py"
-    },
-    {
-      "source": "tests/test_radar_report.py",
       "target": "scan.py"
     },
     {
-      "source": "tests/test_radar_tickets.py",
+      "source": "tests/test_radar_report.py",
       "target": "draft_issues.py"
     },
     {
       "source": "tests/test_radar_tickets.py",
-      "target": "scripts/operator_feedback.py"
+      "target": "draft_issues.py"
     },
     {
       "source": "tests/test_radar_tickets.py",
@@ -1418,6 +1434,18 @@
     {
       "source": "tests/test_radar_tickets.py",
       "target": "scripts/radar_ticket_lib.py"
+    },
+    {
+      "source": "tests/test_radar_tickets.py",
+      "target": "scripts/operator_feedback.py"
+    },
+    {
+      "source": "tests/test_reflect_cycle.py",
+      "target": "scripts/reflect_cycle.py"
+    },
+    {
+      "source": "tests/test_reflect_cycle.py",
+      "target": "scripts/operator_feedback.py"
     },
     {
       "source": "tests/test_repo_config.py",
@@ -1439,11 +1467,5 @@
       "source": "tests/test_uat_full_loop.py",
       "target": "scripts/uat_full_loop.py"
     }
-  ],
-  "pull_requests": [],
-  "issues": [],
-  "github": {
-    "fetched": false,
-    "reason": "gh unavailable"
-  }
+  ]
 }

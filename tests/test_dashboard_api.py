@@ -33,6 +33,9 @@ class ParseApiPathTests(unittest.TestCase):
     def test_reach(self):
         self.assertEqual(parse_api_path("/api/reach?from=scan.py", "GET"), ("reach", None))
 
+    def test_feedback(self):
+        self.assertEqual(parse_api_path("/api/feedback", "GET"), ("feedback", None))
+
 
 class ReachQueryTests(unittest.TestCase):
     def test_query_reach_uses_index(self):

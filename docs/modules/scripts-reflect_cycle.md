@@ -1,11 +1,11 @@
-# `scripts/pipeline_lib`
+# `scripts/reflect_cycle`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 424 |
-| Commits | 2 |
-| Last commit | 2026-06-13 |
+| LOC | 132 |
+| Commits | 0 |
+| Last commit | — |
 
 ## Provenance
 

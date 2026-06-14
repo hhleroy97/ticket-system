@@ -136,6 +136,66 @@ class ProvenanceGraphTests(unittest.TestCase):
         self.assertGreater(len(authors), 0)
         self.assertGreaterEqual(authors[0][1], 1)
 
+    def test_workflow_step_nodes_and_edges(self):
+        index = {
+            "files": [{"path": "scan.py", "lang": "Python", "loc": 1}],
+            "edges": [],
+            "pull_requests": [],
+            "open_pull_requests": [
+                {
+                    "number": 47,
+                    "head_ref": "issue-46",
+                    "issue_numbers": [46],
+                    "commits": [{"sha": "abc1234", "files": ["scan.py"]}],
+                }
+            ],
+            "issues": [{"number": 46, "title": "test issue"}],
+            "workflow_runs": [
+                {
+                    "id": 99001,
+                    "name": "test",
+                    "branch": "issue-46",
+                    "status": "completed",
+                    "conclusion": "failure",
+                    "jobs": [
+                        {
+                            "name": "test",
+                            "steps": [
+                                {
+                                    "name": "Run tests",
+                                    "number": 3,
+                                    "status": "completed",
+                                    "conclusion": "failure",
+                                }
+                            ],
+                        }
+                    ],
+                }
+            ],
+            "pipeline": {
+                "tickets": [
+                    {
+                        "issue_number": 46,
+                        "agent_run": {"files": ["scan.py"]},
+                    }
+                ]
+            },
+        }
+        graph = build_provenance_graph(index, HERE)
+        steps = [n for n in graph["nodes"] if n["kind"] == "workflow_step"]
+        self.assertEqual(len(steps), 1)
+        self.assertEqual(steps[0]["name"], "Run tests")
+        self.assertIn("workflow_step_nodes", graph["stats"])
+        self.assertEqual(graph["stats"]["workflow_step_nodes"], 1)
+
+        has_step = [e for e in graph["edges"] if e["type"] == "has_step"]
+        self.assertEqual(len(has_step), 1)
+        covers = [e for e in graph["edges"] if e["type"] == "covers"]
+        self.assertGreaterEqual(len(covers), 1)
+        self.assertEqual(covers[0]["target"], node_id("file", "scan.py"))
+        failed = [e for e in graph["edges"] if e["type"] == "failed_at"]
+        self.assertEqual(len(failed), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

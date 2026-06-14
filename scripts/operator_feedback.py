@@ -14,6 +14,8 @@ DEFAULT_PATH = HERE / "docs" / "operator-feedback.jsonl"
 
 REJECT_ACTIONS = frozenset({"rejected", "dismissed", "closed"})
 APPROVE_ACTIONS = frozenset({"approved", "merged", "request_created"})
+OUTCOME_PENALTY_ACTIONS = frozenset({"ci_failed", "blast_radius_miss"})
+OUTCOME_BOOST_ACTIONS = frozenset({"ci_passed"})
 SKIP_AFTER_REJECTIONS = 2
 
 
@@ -95,10 +97,40 @@ def should_skip_finding(title: str, entries: list[dict]) -> bool:
     return rejection_count(title, entries) >= SKIP_AFTER_REJECTIONS
 
 
+def outcome_penalty_count(title: str, entries: list[dict]) -> int:
+    return sum(
+        1
+        for entry in entries
+        if entry.get("action") in OUTCOME_PENALTY_ACTIONS
+        and titles_similar(title, entry.get("title", ""))
+    )
+
+
 def score_finding(title: str, entries: list[dict]) -> int:
     if should_skip_finding(title, entries):
         return -1000
-    return approval_count(title, entries) * 2
+    score = approval_count(title, entries) * 2
+    score -= outcome_penalty_count(title, entries) * 3
+    score += sum(
+        1
+        for entry in entries
+        if entry.get("action") in OUTCOME_BOOST_ACTIONS
+        and titles_similar(title, entry.get("title", ""))
+    )
+    return score
+
+
+def feedback_summary(entries: list[dict] | None = None, limit: int = 12) -> dict:
+    rows = entries if entries is not None else load_feedback()
+    counts: dict[str, int] = {}
+    for entry in rows:
+        action = entry.get("action") or "unknown"
+        counts[action] = counts.get(action, 0) + 1
+    return {
+        "total": len(rows),
+        "counts": counts,
+        "recent": list(reversed(rows[-limit:])),
+    }
 
 
 def filter_and_rank_findings(candidates: list[dict], entries: list[dict]) -> list[dict]:

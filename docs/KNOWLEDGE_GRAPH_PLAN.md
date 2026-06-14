@@ -239,7 +239,7 @@ All phases KG-1 through KG-6 are complete. Remaining work is KG-5 multi-repo nex
 | KG-12 | `scripts/graph_lib.py` shared reach/co-change | Done |
 | KG-13 | Executor graph contract in EXECUTOR.md | Done |
 | KG-14 | Author → file edges (bus factor) | Done |
-| KG-15 | Workflow step nodes in graph | Planned |
+| KG-15 | Workflow step nodes in graph | Done |
 
 ---
 
