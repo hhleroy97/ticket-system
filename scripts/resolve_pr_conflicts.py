@@ -292,11 +292,25 @@ def resolve_merge_conflicts(
 
     remaining = conflicted_files()
     if not remaining:
-        return True, "doc conflicts resolved", "docs"
+        tests_ok, test_msg = run_tests()
+        if not tests_ok:
+            return False, test_msg, "none"
+        try:
+            complete_merge_commit(assessment.number, doc_files)
+        except RuntimeError as exc:
+            return False, str(exc), "none"
+        return True, f"doc conflicts resolved; {test_msg}", "docs"
 
     _, code_remaining = split_conflicts(remaining)
     if not code_remaining:
-        return True, "doc conflicts resolved", "docs"
+        tests_ok, test_msg = run_tests()
+        if not tests_ok:
+            return False, test_msg, "none"
+        try:
+            complete_merge_commit(assessment.number, doc_files)
+        except RuntimeError as exc:
+            return False, str(exc), "none"
+        return True, f"doc conflicts resolved; {test_msg}", "docs"
 
     eligible, reason = is_agent_eligible(code_remaining)
     if not eligible:
