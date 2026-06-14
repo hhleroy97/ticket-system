@@ -147,4 +147,26 @@ gh run list --workflow=executor.yml --limit 3
 
 Use a **low-risk** finding (docs/tests only) with `radar:auto-merge` for the first live run.
 
+## Self-improving loop (operator requests)
+
+Your approve/dismiss actions and explicit requests steer the next RADAR cycle.
+
+**Feedback log:** `docs/operator-feedback.jsonl` (append-only JSON lines)
+
+| Action | When |
+| --- | --- |
+| `request_created` | Dashboard **Ticket** or `scripts/request_issue.py` |
+| `approved` | Dashboard **Approve** or `gh issue edit … radar:approved` |
+| `dismissed` | Dashboard **Dismiss** (closes issue + logs) |
+
+After **two dismissals** of similar finding titles, RADAR stops proposing that theme. Approved themes rank higher in `create_radar_issues.py`.
+
+```bash
+# Create issue from your request (radar:proposed + radar:request)
+python3 scripts/request_issue.py "Add KG-14 author edges" --acceptance "Author nodes in graph"
+
+# Dashboard: type request → click Ticket (or Send for chat only)
+# Dismiss noisy RADAR tickets to teach deprioritization
+```
+
 See also `docs/inspiration.md`, `docs/KNOWLEDGE_GRAPH_PLAN.md`, and `AGENTS.md`.

@@ -1,11 +1,11 @@
-# `scripts/dashboard_api`
+# `tests/test_operator_feedback`
 
 | Metric | Value |
 | --- | --- |
 | Language | Python |
-| LOC | 251 |
-| Commits | 2 |
-| Last commit | 2026-06-13 |
+| LOC | 83 |
+| Commits | 0 |
+| Last commit | — |
 
 ## Provenance
 

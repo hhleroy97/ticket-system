@@ -73,6 +73,19 @@ class RadarTicketLibTests(unittest.TestCase):
         self.assertFalse(is_low_risk(issue))
         self.assertNotIn("radar:auto-merge", labels_for_issue(issue))
 
+    def test_feedback_skips_deprioritized(self):
+        from operator_feedback import append_feedback, filter_and_rank_findings, load_feedback
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "fb.jsonl"
+            title = "Stale High-Churn Modules With Quiet Dependents"
+            append_feedback("dismissed", title, path=path)
+            append_feedback("dismissed", title, path=path)
+            candidates = [{"title": title}, {"title": "Other Finding"}]
+            ranked = filter_and_rank_findings(candidates, load_feedback(path))
+            self.assertEqual(len(ranked), 1)
+            self.assertEqual(ranked[0]["title"], "Other Finding")
+
 
 if __name__ == "__main__":
     unittest.main()

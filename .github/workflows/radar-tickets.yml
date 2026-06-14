@@ -24,6 +24,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh label create "radar:proposed" --color "fbca04" --description "RADAR draft — not actionable until approved" 2>/dev/null || true
+          gh label create "radar:request" --color "c5def5" --description "Operator request — created from dashboard/CLI" 2>/dev/null || true
           gh label create "radar:approved" --color "0e8a16" --description "Human or auto approved — executor may run" 2>/dev/null || true
           gh label create "radar:auto-merge" --color "1d76db" --description "Low risk — auto-merge executor PR when tests pass" 2>/dev/null || true
 
