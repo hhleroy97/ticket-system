@@ -49,7 +49,7 @@ def git_commits_with_files(repo, limit=COMMIT_LIMIT):
         if len(parts) < 5:
             continue
         sha, message, date, author_name, author_email = parts
-        files_proc = git(repo, "diff-tree", "--no-commit-id", "--name-only", "-r", sha)
+        files_proc = git(repo, "diff-tree", "--root", "--no-commit-id", "--name-only", "-r", sha)
         files = []
         if files_proc.returncode == 0:
             files = [f.strip() for f in files_proc.stdout.splitlines() if f.strip()]
