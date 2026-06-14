@@ -1,0 +1,47 @@
+{
+  "issue_number": 46,
+  "branch": "issue-46",
+  "base": "main",
+  "commits": [
+    {
+      "sha": "5925fa9",
+      "full_sha": "5925fa93f97698a1122e5d7b01a83728adf2e415",
+      "message": "docs: mark KG-14 author edges complete (#46)",
+      "files": [
+        "docs/KNOWLEDGE_GRAPH_PLAN.md",
+        "docs/agent-runs/issue-46/plan.json",
+        "docs/agent-runs/issue-46/run.json"
+      ]
+    },
+    {
+      "sha": "a544602",
+      "full_sha": "a5446027fba18240fd8a8ea6c66739c7c0b45f56",
+      "message": "test: cover author provenance graph edges (#46)",
+      "files": [
+        "tests/test_provenance_graph.py"
+      ]
+    },
+    {
+      "sha": "5b86523",
+      "full_sha": "5b865239afa8e1ac3c4c777e1deffd461e740f93",
+      "message": "feat: add author-to-file provenance edges (#46)",
+      "files": [
+        "scripts/graph_lib.py",
+        "scripts/provenance_graph.py"
+      ]
+    }
+  ],
+  "files": [
+    "docs/KNOWLEDGE_GRAPH_PLAN.md",
+    "docs/agent-runs/issue-46/plan.json",
+    "docs/agent-runs/issue-46/run.json",
+    "scripts/graph_lib.py",
+    "scripts/provenance_graph.py",
+    "tests/test_provenance_graph.py"
+  ],
+  "commit_count": 3,
+  "file_count": 6,
+  "diff_stat": "docs/KNOWLEDGE_GRAPH_PLAN.md       |  2 +-\n docs/agent-runs/issue-46/plan.json | 53 +++++++++++++++++++++++++++++++++++\n docs/agent-runs/issue-46/run.json  | 24 ++++++++++++++++\n scripts/graph_lib.py               | 18 +++++++++++-\n scripts/provenance_graph.py        | 48 ++++++++++++++++++++++++++++++--\n tests/test_provenance_graph.py     | 57 +++++++++++++++++++++++++++++++++++++-\n 6 files changed, 197 insertions(+), 5 deletions(-)",
+  "captured_at": "2026-06-14 01:16:24 UTC",
+  "partial": false
+}

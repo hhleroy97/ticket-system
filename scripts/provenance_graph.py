@@ -30,15 +30,25 @@ def node_id(kind, key):
     return f"{kind}:{key}"
 
 
+def normalize_author_key(email, name):
+    key = (email or "").strip().lower()
+    if key:
+        return key
+    return (name or "unknown").strip().lower()
+
+
 def git_commits_with_files(repo, limit=COMMIT_LIMIT):
-    proc = git(repo, "log", f"-{limit}", "--format=%H%x09%s%x09%ai")
+    proc = git(repo, "log", f"-{limit}", "--format=%H%x09%s%x09%ai%x09%an%x09%ae")
     if proc.returncode != 0 or not proc.stdout.strip():
         return []
     commits = []
     for line in proc.stdout.splitlines():
         if "\t" not in line:
             continue
-        sha, message, date = line.split("\t", 2)
+        parts = line.split("\t", 4)
+        if len(parts) < 5:
+            continue
+        sha, message, date, author_name, author_email = parts
         files_proc = git(repo, "diff-tree", "--no-commit-id", "--name-only", "-r", sha)
         files = []
         if files_proc.returncode == 0:
@@ -48,6 +58,8 @@ def git_commits_with_files(repo, limit=COMMIT_LIMIT):
                 "sha": sha,
                 "message": message.split("\n")[0][:200],
                 "date": date.split()[0] if date else "",
+                "author_name": author_name.strip(),
+                "author_email": author_email.strip(),
                 "files": files,
             }
         )
@@ -90,6 +102,8 @@ def build_provenance_graph(index, repo):
             )
 
     co_change_counts = defaultdict(int)
+    author_meta = {}
+    author_file_counts = defaultdict(int)
     commit_nodes = 0
     for commit in git_commits_with_files(repo):
         short = commit["sha"][:7]
@@ -111,8 +125,36 @@ def build_provenance_graph(index, repo):
                 for p2 in paths[i + 1 :]:
                     key = tuple(sorted((p1, p2)))
                     co_change_counts[key] += 1
+        akey = normalize_author_key(commit.get("author_email"), commit.get("author_name"))
+        author_meta[akey] = {
+            "name": commit.get("author_name") or "",
+            "email": commit.get("author_email") or "",
+        }
         for path in paths:
             add_edge(cid, node_id("file", path), "modifies")
+            author_file_counts[(akey, path)] += 1
+
+    author_nodes = 0
+    for akey, meta in sorted(author_meta.items()):
+        add_node(
+            {
+                "id": node_id("author", akey),
+                "kind": "author",
+                "name": meta["name"],
+                "email": meta["email"],
+            }
+        )
+        author_nodes += 1
+
+    authored_edges = 0
+    for (akey, path), weight in sorted(author_file_counts.items()):
+        add_edge(
+            node_id("author", akey),
+            node_id("file", path),
+            "authored",
+            weight=weight,
+        )
+        authored_edges += 1
 
     co_edges = 0
     for (p1, p2), freq in co_change_counts.items():
@@ -214,6 +256,8 @@ def build_provenance_graph(index, repo):
             "edge_count": len(edges),
             "commit_nodes": commit_nodes,
             "co_change_edges": co_edges,
+            "author_nodes": author_nodes,
+            "authored_edges": authored_edges,
             "pull_request_nodes": pr_count,
             "issue_nodes": issue_count,
             "workflow_run_nodes": run_count,
