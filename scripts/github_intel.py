@@ -18,6 +18,7 @@ sys.path.insert(0, str(HERE / "scripts"))
 
 from pipeline_lib import (  # noqa: E402
     build_pipeline,
+    enrich_runs_for_graph,
     enrich_runs_with_jobs,
     fetch_open_pull_requests,
     fetch_workflow_runs,
@@ -299,6 +300,7 @@ def merge_github_intel(index, repo, repo_slug):
                     issue["linked_prs"].append(pr["number"])
     workflow_runs = fetch_workflow_runs(repo_slug)
     workflow_runs = enrich_runs_with_jobs(repo_slug, workflow_runs)
+    workflow_runs = enrich_runs_for_graph(repo_slug, workflow_runs)
     index["pull_requests"] = pull_requests
     index["open_pull_requests"] = open_pull_requests
     index["issues"] = issues

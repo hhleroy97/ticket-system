@@ -387,6 +387,23 @@ def build_pipeline(issues, open_prs, merged_prs, workflow_runs, repo, repo_slug=
     }
 
 
+def enrich_runs_for_graph(repo_slug, runs, max_fetches=8):
+    """Attach job steps to issue-branch runs for KG-15 provenance graph."""
+    if not repo_slug:
+        return runs
+    enriched = []
+    fetches = 0
+    for run in runs:
+        row = dict(run)
+        branch = row.get("branch") or ""
+        if branch.startswith("issue-") and not row.get("jobs") and fetches < max_fetches:
+            jobs, _err = fetch_run_jobs(repo_slug, row["id"])
+            row["jobs"] = jobs
+            fetches += 1
+        enriched.append(row)
+    return enriched
+
+
 def enrich_runs_with_jobs(repo_slug, runs, max_runs=5):
     if not repo_slug:
         return runs
