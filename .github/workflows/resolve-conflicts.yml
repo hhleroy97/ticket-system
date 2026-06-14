@@ -1,0 +1,65 @@
+name: resolve-conflicts
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # Re-check open PRs every 6 hours (main may have moved via direct bot pushes).
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: "PR number (leave empty to scan all open PRs)"
+        required: false
+        type: string
+      dry_run:
+        description: "Assess only — do not merge, push, or comment fixes"
+        required: false
+        type: boolean
+        default: false
+      no_agent:
+        description: "Skip scoped conflict agent (doc auto-fix only)"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  assess-and-fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Cursor CLI
+        if: github.event_name != 'workflow_dispatch' || inputs.no_agent != true
+        run: |
+          curl https://cursor.com/install -fsSL | bash
+          echo "$HOME/.cursor/bin" >> "$GITHUB_PATH"
+
+      - name: Assess and fix merge conflicts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+          CONFLICT_AGENT: "1"
+        run: |
+          set -euo pipefail
+          args=()
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ inputs.pr }}" ]; then
+            args=(--pr "${{ inputs.pr }}")
+          else
+            args=(--all)
+          fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dry_run }}" = "true" ]; then
+            args+=(--dry-run)
+          fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.no_agent }}" = "true" ]; then
+            args+=(--no-agent)
+          fi
+          chmod +x scripts/run_conflict_agent.sh
+          python3 scripts/resolve_pr_conflicts.py "${args[@]}"

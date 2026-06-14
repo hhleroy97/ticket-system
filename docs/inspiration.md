@@ -44,3 +44,21 @@ initial research; sources are public READMEs and project docs (June 2026).
 
 - GitHub dependency graph (manifest-level, not import AST): repo **Insights → Dependency graph**
 - HANDOFF.md build plan vs current implementation gap analysis: see `docs/RUNBOOK.md`
+- **Roadmap:** `docs/KNOWLEDGE_GRAPH_PLAN.md` — git provenance graph, PR/commit/CI navigation, multi-repo
+
+## Git provenance knowledge graphs (research)
+
+| Project | URL | Relevant patterns |
+| --- | --- | --- |
+| **RepoGraph** | https://github.com/FalkorDB/RepoGraph | commit→file→module graph, co-change coupling, blast radius, D3 force UI |
+| **GitCortex** | https://github.com/bharath03-a/gitcortex | incremental commit indexing, branch-aware graph, MCP queries, `gcx viz` |
+| **Noumenon** | https://github.com/leifericf/noumenon | staged pipeline: import → enrich → analyze; commits/authors as entities |
+| **git-mind** | https://github.com/flyingrobots/git-mind | Git-native semantic graph; issues/tasks/commits with provenance replay |
+| **git-warp** | https://github.com/git-stunts/git-warp | Causal provenance substrate; worldlines for versioned graph state |
+
+### Planned adoption (see KNOWLEDGE_GRAPH_PLAN.md)
+
+- **KG-1:** commit/PR nodes + `modifies` / `contains` edges (deterministic)
+- **KG-2:** workflow run/step nodes linked to pipeline tickets
+- **KG-3:** layered force graph (structure + provenance + CI)
+- **KG-5:** `TARGET_REPO` switch for analyzing other repos with same contract

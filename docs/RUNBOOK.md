@@ -6,7 +6,7 @@ Day-to-day commands for the ticket-sys checkout.
 
 ```bash
 cp .env.example .env
-# TARGET_REPO = project you monitor (e.g. hhl_site)
+# TARGET_REPO defaults to this repo; override to monitor another project (e.g. hhl_site)
 # CURSOR_API_KEY = for local chat + CI executor
 gh auth login
 ./hooks/install.sh   # optional pre-commit
@@ -63,6 +63,30 @@ gh pr create --title "feat: …" --body "…"
 # merge after test.yml green
 ```
 
+## Merge conflict bot
+
+Workflow **resolve-conflicts** runs when `main` moves, every 6 hours, or manually:
+
+```bash
+gh workflow run resolve-conflicts.yml
+gh workflow run resolve-conflicts.yml -f pr=36 -f dry_run=true   # assess only
+```
+
+For each open same-repo PR it:
+
+1. **Assesses** merge status (`MERGEABLE`, `CONFLICTING`, `BEHIND`, fork/draft skips).
+2. **Fixes** by merging `origin/main` into the PR branch.
+3. **Auto-resolves** doc-only conflicts (`docs/index.json`, dashboard, module docs) via scan + github_intel.
+4. **Scoped agent** — for code conflicts, runs Composer 2.5 with `.github/CONFLICT_RESOLVER.md`
+   (only conflicted paths, max 12 files, no workflow edits); runs tests before push.
+5. **Comments** on the PR; trace at `docs/agent-runs/pr-<N>/run.json`.
+
+Requires `CURSOR_API_KEY` secret for semantic resolution. Fork PRs and workflow conflicts are never auto-edited.
+
+```bash
+gh workflow run resolve-conflicts.yml -f no_agent=true   # doc-only mode
+```
+
 ## Parallel development (worktrees)
 
 ```bash
@@ -80,4 +104,4 @@ git worktree remove ../ticket-sys-wt/feature
 | Executor doesn’t start | Issue needs `radar:approved` label event; re-add label to retrigger |
 | Pages missing live features | Use `serve_dashboard.py`, not static `file://` |
 
-See also `docs/inspiration.md` and `AGENTS.md`.
+See also `docs/inspiration.md`, `docs/KNOWLEDGE_GRAPH_PLAN.md`, and `AGENTS.md`.

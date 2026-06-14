@@ -59,6 +59,11 @@ Merge after `test.yml` passes. Regenerated `docs/*` from a local scan belong in 
 Scheduled **RADAR** and **scan-and-docs** jobs still push generated docs to `main` via
 `push_to_main.sh` (bot exception). Executor tickets always land as `issue-<N>` PRs.
 
+## Roadmap
+
+See **`docs/KNOWLEDGE_GRAPH_PLAN.md`** for the git-provenance knowledge graph vision
+(commits, PRs, CI runs on a navigable force graph; multi-repo analysis via `TARGET_REPO`).
+
 ## Layout
 
 ```
@@ -87,6 +92,7 @@ repo-intel/
 | --- | --- | --- |
 | `test.yml` | push/PR | Runs `run_tests.py` |
 | `auto-merge.yml` | after `test` on PRs | Merges safe `bot/*` docs PRs and low-risk `issue-*` PRs |
+| `resolve-conflicts.yml` | push to `main`, cron, manual | Merges `main` into PRs; doc regen + scoped agent for code conflicts |
 | `scan-and-docs.yml` | daily cron + non-docs pushes | Rescan + docgen → **direct push to main** |
 | `radar.yml` | weekly cron | Scan → report → push to main → **draft issues in same job** |
 | `radar-tickets.yml` | manual push to `main` (`docs/radar/*.md`) | Same drafting when RADAR md changes outside `radar.yml` |
