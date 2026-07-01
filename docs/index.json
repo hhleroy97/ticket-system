@@ -13,9 +13,9 @@
     "name": "ticket-system",
     "path": "/home/runner/work/ticket-system/ticket-system",
     "branch": "main",
-    "head": "5a8cba4",
-    "total_commits": 139,
-    "generated_at": "2026-06-30 10:53 UTC"
+    "head": "af90ad3",
+    "total_commits": 140,
+    "generated_at": "2026-07-01 11:19 UTC"
   },
   "package_roots": {},
   "stats": {
@@ -277,25 +277,25 @@
       "path": "docs/dashboard.html",
       "lang": "HTML",
       "loc": 1391,
-      "size": 86660,
-      "commits": 60,
-      "last_commit": "2026-06-29"
+      "size": 86786,
+      "commits": 61,
+      "last_commit": "2026-06-30"
     },
     {
       "path": "docs/index.db",
       "lang": "Other",
       "loc": 0,
       "size": 61440,
-      "commits": 60,
-      "last_commit": "2026-06-29"
+      "commits": 61,
+      "last_commit": "2026-06-30"
     },
     {
       "path": "docs/index.json",
       "lang": "Config",
       "loc": 0,
-      "size": 33351,
-      "commits": 60,
-      "last_commit": "2026-06-29"
+      "size": 33523,
+      "commits": 61,
+      "last_commit": "2026-06-30"
     },
     {
       "path": "docs/inspiration.md",
@@ -1301,15 +1301,19 @@
     },
     {
       "source": "scripts/create_radar_issues.py",
-      "target": "draft_issues.py"
-    },
-    {
-      "source": "scripts/create_radar_issues.py",
       "target": "scripts/operator_feedback.py"
     },
     {
+      "source": "scripts/create_radar_issues.py",
+      "target": "draft_issues.py"
+    },
+    {
       "source": "scripts/dashboard_api.py",
-      "target": "scripts/pipeline_lib.py"
+      "target": "scripts/request_issue.py"
+    },
+    {
+      "source": "scripts/dashboard_api.py",
+      "target": "scripts/operator_feedback.py"
     },
     {
       "source": "scripts/dashboard_api.py",
@@ -1317,11 +1321,7 @@
     },
     {
       "source": "scripts/dashboard_api.py",
-      "target": "scripts/operator_feedback.py"
-    },
-    {
-      "source": "scripts/dashboard_api.py",
-      "target": "scripts/request_issue.py"
+      "target": "scripts/pipeline_lib.py"
     },
     {
       "source": "scripts/dashboard_refresh.py",
@@ -1365,7 +1365,11 @@
     },
     {
       "source": "serve_dashboard.py",
-      "target": "scripts/repo_sync.py"
+      "target": "scripts/dashboard_api.py"
+    },
+    {
+      "source": "serve_dashboard.py",
+      "target": "scripts/dashboard_refresh.py"
     },
     {
       "source": "serve_dashboard.py",
@@ -1373,11 +1377,7 @@
     },
     {
       "source": "serve_dashboard.py",
-      "target": "scripts/dashboard_api.py"
-    },
-    {
-      "source": "serve_dashboard.py",
-      "target": "scripts/dashboard_refresh.py"
+      "target": "scripts/repo_sync.py"
     },
     {
       "source": "tests/test_agent_plan.py",
@@ -1409,19 +1409,19 @@
     },
     {
       "source": "tests/test_docgen.py",
-      "target": "draft_issues.py"
-    },
-    {
-      "source": "tests/test_docgen.py",
       "target": "scan.py"
     },
     {
-      "source": "tests/test_github_intel.py",
-      "target": "serve_dashboard.py"
+      "source": "tests/test_docgen.py",
+      "target": "draft_issues.py"
     },
     {
       "source": "tests/test_github_intel.py",
       "target": "scripts/github_intel.py"
+    },
+    {
+      "source": "tests/test_github_intel.py",
+      "target": "serve_dashboard.py"
     },
     {
       "source": "tests/test_graph_lib.py",
@@ -1429,19 +1429,19 @@
     },
     {
       "source": "tests/test_operator_feedback.py",
-      "target": "scripts/operator_feedback.py"
-    },
-    {
-      "source": "tests/test_operator_feedback.py",
       "target": "scripts/request_issue.py"
     },
     {
-      "source": "tests/test_pipeline_lib.py",
-      "target": "scripts/pipeline_lib.py"
+      "source": "tests/test_operator_feedback.py",
+      "target": "scripts/operator_feedback.py"
     },
     {
       "source": "tests/test_pipeline_lib.py",
       "target": "scripts/finalize_agent_run.py"
+    },
+    {
+      "source": "tests/test_pipeline_lib.py",
+      "target": "scripts/pipeline_lib.py"
     },
     {
       "source": "tests/test_provenance_graph.py",
@@ -1453,10 +1453,6 @@
     },
     {
       "source": "tests/test_radar_report.py",
-      "target": "radar_report.py"
-    },
-    {
-      "source": "tests/test_radar_report.py",
       "target": "scan.py"
     },
     {
@@ -1464,8 +1460,12 @@
       "target": "draft_issues.py"
     },
     {
+      "source": "tests/test_radar_report.py",
+      "target": "radar_report.py"
+    },
+    {
       "source": "tests/test_radar_tickets.py",
-      "target": "scripts/radar_ticket_lib.py"
+      "target": "scripts/operator_feedback.py"
     },
     {
       "source": "tests/test_radar_tickets.py",
@@ -1473,7 +1473,7 @@
     },
     {
       "source": "tests/test_radar_tickets.py",
-      "target": "scripts/operator_feedback.py"
+      "target": "scripts/radar_ticket_lib.py"
     },
     {
       "source": "tests/test_radar_tickets.py",
